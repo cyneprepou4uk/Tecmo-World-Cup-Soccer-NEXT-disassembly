@@ -14,42 +14,14 @@
 .import _loc_03_F9A5
 .import _WriteSoundID_b03
 
-.export _loc_01_8006_minus1
-_loc_01_8006:
-_loc_01_8006_minus1 = _loc_01_8006 - 1
-	JMP _loc_01_80A3
 .export _loc_01_8015_minus1
 _loc_01_8015:
 _loc_01_8015_minus1 = _loc_01_8015 - 1
 	JMP _loc_01_8596
-.export _loc_01_8030
-_loc_01_8030:
-	JMP _loc_01_89F3
 .export _loc_01_8033_minus1
 _loc_01_8033:
 _loc_01_8033_minus1 = _loc_01_8033 - 1
 	JMP _loc_01_8341
-.export _loc_01_8036
-_loc_01_8036:
-	JMP _loc_01_8BE8
-.export _loc_01_8039
-_loc_01_8039:
-	JMP _loc_01_8D1A
-.export _loc_01_803F
-_loc_01_803F:
-	JMP _loc_01_8B6B
-.export _loc_01_8042
-_loc_01_8042:
-	JMP _loc_01_8B24
-.export _loc_01_8045
-_loc_01_8045:
-	JMP _loc_01_886C
-.export _loc_01_8048
-_loc_01_8048:
-	JMP _loc_01_88B2
-.export _loc_01_804B
-_loc_01_804B:
-	JMP _loc_01_8B3F
 
 .export _loc_01_804E
 _loc_01_804E:
@@ -113,6 +85,8 @@ bra_01_809E:
 	RTS
 
 _loc_01_80A3:
+.export _loc_01_80A3_minus1
+_loc_01_80A3_minus1 = _loc_01_80A3 - 1
 	LDA #$01
 	JSR _FrameDelay_b03
 	LDA #$00
@@ -1252,6 +1226,7 @@ bra_01_8854:
 	BNE bra_01_8854
 	RTS
 
+.export _loc_01_886C
 _loc_01_886C:
 .scope
 temp = $2E
@@ -1303,6 +1278,7 @@ bra_01_887D:
 	RTS
 .endscope
 
+.export _loc_01_88B2
 _loc_01_88B2:
 	PHA
 	JSR _SelectInitialPlayerDataAddress_b03
@@ -1506,6 +1482,7 @@ table_01_8933_89EA:
 	JSR _SelectPlayerSubroutine_b03
 	RTS
 
+.export _loc_01_89F3
 _loc_01_89F3:
 	STA $7A
 	LDY #$00
@@ -1700,6 +1677,7 @@ bra_01_8B0C:
 table_01_8B19:		; 11 байтов для игроков, читается из 2х мест
 .byte $00,$03,$03,$03,$03,$02,$01,$02,$01,$02,$01
 
+.export _loc_01_8B24
 _loc_01_8B24:
 	TAX
 	LDY #$00
@@ -1719,6 +1697,7 @@ table_01_8B3B:		; для некого рандома
 .byte $55,$AA
 .byte $64,$B2
 
+.export _loc_01_8B3F
 _loc_01_8B3F:
 	SEC
 	LDA ball_pos_y_lo
@@ -1746,6 +1725,7 @@ _loc_01_8B3F:
 	CLC
 	RTS
 
+.export _loc_01_8B6B
 _loc_01_8B6B:
 	BIT plr_w_ball
 	BPL bra_01_8B73
@@ -1833,6 +1813,7 @@ _SetBotTimerThrowIn_b01:		; вычисление таймера для бота,
 	STA (plr_data),Y
 	RTS
 
+.export _loc_01_8BE8
 _loc_01_8BE8:
 	BIT $82
 	BMI bra_01_8BFD
@@ -2016,6 +1997,7 @@ _loc_01_8D11:
 	PLA
 	RTS
 
+.export _loc_01_8D1A
 _loc_01_8D1A:
 	LDA #$00
 	STA $2B

@@ -4,7 +4,7 @@
 
 .import _MusicDriver_b00
 .import _loc_01_804E
-.import _loc_01_8006_minus1
+.import _loc_01_80A3_minus1
 .import _loc_01_81D9
 .import _loc_01_827E
 .import _loc_01_87ED
@@ -18,16 +18,16 @@
 .import _loc_01_83AA
 .import _loc_01_8361
 .import _loc_01_8A71
-.import _loc_01_8030
+.import _loc_01_89F3
 .import _loc_01_8033_minus1
-.import _loc_01_8036
-.import _loc_01_8039
+.import _loc_01_8BE8
+.import _loc_01_8D1A
 .import _SetBotTimerThrowIn_b01
-.import _loc_01_803F
-.import _loc_01_8042
-.import _loc_01_8045
-.import _loc_01_8048
-.import _loc_01_804B
+.import _loc_01_8B6B
+.import _loc_01_8B24
+.import _loc_01_886C
+.import _loc_01_88B2
+.import _loc_01_8B3F
 .import _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
 .import _loc_02_8003
 .import _loc_02_800C_minus1
@@ -1951,14 +1951,14 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
-	JSR _loc_01_8039
+	JSR _loc_01_8D1A
 	LDX #$0D
 	LDA #$78
 	STA $01,X
 	LDA #$02
 	STA $02,X
-	LDA #>_loc_01_8006_minus1
-	LDY #<_loc_01_8006_minus1
+	LDA #>_loc_01_80A3_minus1
+	LDY #<_loc_01_80A3_minus1
 	JSR _SetSubReturnAddressForLater_b03
 	LDX #$11
 	LDA #$96
@@ -4734,7 +4734,7 @@ table_03_E15B:		; ограничение кипера на зоне
 .byte $D0,$00,$A8,$00,$C0,$00
 
 _loc_03_E167:
-	JSR _loc_01_8030
+	JSR _loc_01_89F3
 	LDY #plr_init_spd_fr
 	LDA $77
 	STA (plr_data),Y
@@ -4946,7 +4946,7 @@ bra_03_E28C:
 	BCC bra_03_E34D
 	LDA plr_cur_id
 	LDX #$01
-	JSR _loc_01_8030
+	JSR _loc_01_89F3
 	LDA $77
 	STA $041D
 	LDA $78
@@ -5072,7 +5072,7 @@ _loc_03_E3E1:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда CPU завладел мячом
-	JSR _loc_01_804B
+	JSR _loc_01_8B3F
 	BCC bra_03_E40F
 	BCS bra_03_E410
 bra_03_E405:
@@ -5843,7 +5843,7 @@ bra_03_E915:
 	BIT game_mode_flags
 	BMI bra_03_E934
 ; бряк сработал через кадр когда CPU завладел мячом
-	JSR _loc_01_8036
+	JSR _loc_01_8BE8
 	BIT bot_behav
 	BPL bra_03_E934
 	JMP BotShootingOrPassing_03_EA25
@@ -6291,7 +6291,7 @@ bra_03_EC8A:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда CPU завладел мячом
-	JSR _loc_01_803F
+	JSR _loc_01_8B6B
 	LDA #$06
 	JSR _loc_03_E0A5
 	JMP _loc_03_ECB0
@@ -6761,8 +6761,8 @@ _PlayerStateDead:		; F016
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_01_8045
-	JSR _loc_01_8048
+	JSR _loc_01_886C
+	JSR _loc_01_88B2
 	JMP SelectNextIndexForPlayers
 
 _PlayerStateDodge:		; F067
@@ -7704,7 +7704,7 @@ bra_03_F7CB:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда CPU готовится пробивать пенальти и уже стоит с мячом
-	JSR _loc_01_8042
+	JSR _loc_01_8B24
 	JMP _loc_03_F7FF
 bra_03_F7F5:
 	LDA #(BTN_A | BTN_B)
@@ -7768,7 +7768,7 @@ bra_03_F846:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда игрок в пенальти ударил по мячу и тот уже полетел
-	JSR _loc_01_8042
+	JSR _loc_01_8B24
 	JMP _loc_03_F888
 bra_03_F878:
 	LDA #(BTN_UP | BTN_LEFT | BTN_RIGHT)
