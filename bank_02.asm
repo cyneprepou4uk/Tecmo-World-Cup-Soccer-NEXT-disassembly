@@ -827,10 +827,7 @@ bra_02_8665:
 BannedTeamsSpriteDisplay:		; 8671
 ; отображение забаненых команд в списке в меню выбора команд
 	PHP
-	LDA $2A
-	ASL
-	ASL
-	TAY
+	LDY $2A
 	PLP
 	BCS bra_02_8680
 	LDA #$F8
@@ -2900,9 +2897,6 @@ bra_02_A2CD:
 	ADC #$00
 	STA oam_t,X
 	INX
-	INX
-	INX
-	INX
 	DEC $2C
 	BPL bra_02_A2A9
 	RTS
@@ -2934,9 +2928,6 @@ _loc_02_A304:
 	STA oam_a,X
 	LDA $2C
 	STA oam_x,X
-	INX
-	INX
-	INX
 	INX
 bra_02_A322:
 	LDA $2C
@@ -3897,12 +3888,23 @@ table_02_B3C1:		; 3 буквы имен команд
 .byte $4B,$4F,$52
 .byte $4A,$50,$4E
 
-_loc_02_B3F1:
+_loc_02_B3F1:		; начальная позиция флагов на экране со счетом и пропуск этого экрана
 	LDX #$00
+	LDY #$00
 bra_02_B3F3:
 	LDA table_02_B4AD,X
-	STA oam_mem,X
+	STA oam_y,Y
 	INX
+	LDA table_02_B4AD,X
+	STA oam_t,Y
+	INX
+	LDA table_02_B4AD,X
+	STA oam_a,Y
+	INX
+	LDA table_02_B4AD,X
+	STA oam_x,Y
+	INX
+	INY
 	CPX #$18
 	BNE bra_02_B3F3
 	LDA #$2C
@@ -3939,14 +3941,13 @@ bra_02_B436:
 	LDA a: $E3
 	ORA a: $E4
 	BNE bra_02_B41F
-	JMP _loc_02_B457
+	RTS
 bra_02_B452:
 	LDA a: $E9
 	BEQ bra_02_B436
-_loc_02_B457:
 	RTS
 
-_loc_02_B458:
+_loc_02_B458:		; флаги на экране со счетом
 	DEC a: $E5
 	BNE bra_02_B487
 	LDA a: $E7
@@ -3958,10 +3959,19 @@ _loc_02_B458:
 	LDY #$00
 bra_02_B467:
 	LDA table_02_B4C5,X
-	STA oam_mem,Y
+	STA oam_y,Y
+	INX
+	LDA table_02_B4C5,X
+	STA oam_t,Y
+	INX
+	LDA table_02_B4C5,X
+	STA oam_a,Y
+	INX
+	LDA table_02_B4C5,X
+	STA oam_x,Y
 	INX
 	INY
-	CPY #$10
+	CPY #$04
 	BNE bra_02_B467
 	INC a: $E7
 	LDA a: $E7
@@ -3995,12 +4005,25 @@ bra_02_B4AC:
 	RTS
 
 table_02_B4AD:		; параметры спрайтов флагов на экране со счетом (начальные байты)
-.byte $38,$B5,$00,$78,$F0,$BD,$00,$80,$38,$B5,$00,$8A,$F0,$BD,$00,$92
-.byte $3F,$69,$01,$68,$3F,$69,$01,$90
+.byte $38,$B5,$00,$78
+.byte $F0,$BD,$00,$80
+.byte $38,$B5,$00,$8A
+.byte $F0,$BD,$00,$92
+.byte $3F,$69,$01,$68
+.byte $3F,$69,$01,$90
 
 table_02_B4C5:		; параметры спрайтов флагов на экране со счетом (анимация)
-.byte $38,$B5,$00,$78,$F0,$BD,$00,$80,$38,$B5,$00,$8A,$F0,$BD,$00,$92
-.byte $38,$B7,$00,$78,$38,$BD,$00,$80,$38,$B7,$00,$8A,$38,$BD,$00,$92
-.byte $38,$BF,$00,$78,$F0,$BD,$00,$80,$38,$BF,$00,$8A,$F0,$BD,$00,$92
+.byte $38,$B5,$00,$78
+.byte $F0,$BD,$00,$80
+.byte $38,$B5,$00,$8A
+.byte $F0,$BD,$00,$92
+.byte $38,$B7,$00,$78
+.byte $38,$BD,$00,$80
+.byte $38,$B7,$00,$8A
+.byte $38,$BD,$00,$92
+.byte $38,$BF,$00,$78
+.byte $F0,$BD,$00,$80
+.byte $38,$BF,$00,$8A
+.byte $F0,$BD,$00,$92
 
 ; B4F5 fill FF

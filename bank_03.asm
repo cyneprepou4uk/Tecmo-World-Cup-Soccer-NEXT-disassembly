@@ -1689,9 +1689,6 @@ HideAllSprites:		; CAAF
 @loop:
 	STA oam_y,Y
 	INY
-	INY
-	INY
-	INY
 	BNE @loop
 	RTS
 
@@ -4420,7 +4417,7 @@ _loc_03_DE96:
 	LDA #$00
 	STA $5B
 	STA ram_unk_5D
-	LDA #$40
+	LDA #$FF
 	STA $5C
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_8024
@@ -4478,9 +4475,6 @@ bra_03_DEF7:
 	LDA #$F8
 @hide_unused_sprites:
 	STA oam_y,X
-	INX
-	INX
-	INX
 	INX
 	BNE @try_to_quit_loop
 	LDX $60
@@ -8036,9 +8030,6 @@ bra_03_F9A4:
 
 _loc_03_F9A5:
 	INX
-	INX
-	INX
-	INX
 	BNE bra_03_F9AD
 	LDX $60
 bra_03_F9AD:
@@ -8125,9 +8116,6 @@ y_pos 	= $2E
 	STA oam_t,X
 	INC oam_t,X
 	INX
-	INX
-	INX
-	INX
 @skip:
 	INY
 	DEC counter
@@ -8137,9 +8125,6 @@ y_pos 	= $2E
 	LDA #$F8
 @hide_sprites_loop:
 	STA oam_y,X
-	INX
-	INX
-	INX
 	INX
 	BNE @hide_sprites_loop
 	RTS
@@ -8440,16 +8425,10 @@ table_03_FBFA:		; угол движения ботов
 .byte $BC,$40
 .byte $FF,$FF	; эти 2 FF были считаны
 
-; FC7A (свободное место) !!! удалить при необходимости
-.res 854,$FF
-
 RESET_VECTOR:
 	LDA #$00
 	STA $8000
 	JMP _jmp_ResetHandler
-
-; FFD8 (свободное место) !!! удалить при необходимости
-.res 34,$00
 
 .segment "VECTORS"
 .word NMI_VECTOR
