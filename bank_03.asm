@@ -9,7 +9,7 @@
 .import _loc_01_827E
 .import _loc_01_87ED
 .import _loc_01_88E0
-.import _loc_01_8015_minus1
+.import _loc_01_8596_minus1
 .import _loc_01_863C
 .import _loc_01_8696
 .import _loc_01_878F
@@ -19,7 +19,7 @@
 .import _loc_01_8361
 .import _loc_01_8A71
 .import _loc_01_89F3
-.import _loc_01_8033_minus1
+.import _loc_01_8341_minus1
 .import _loc_01_8BE8
 .import _loc_01_8D1A
 .import _SetBotTimerThrowIn_b01
@@ -29,18 +29,18 @@
 .import _loc_01_88B2
 .import _loc_01_8B3F
 .import _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
-.import _loc_02_8003
+.import _loc_02_83C9
 .import _loc_02_800C_minus1
 .import _LoadLogoPalette_b02
 .import _loc_02_8015_minus1
 .import _MainMenuScreenFunction_b03
-.import _loc_02_801E
-.import _loc_02_8021
-.import _loc_02_8024
-.import _loc_02_8027
-.import _loc_02_802A
+.import _loc_02_9842
+.import _loc_02_974F
+.import _loc_02_A02A
+.import _loc_02_A0F0
+.import _loc_02_A1ED
 .import _loc_02_A330_minus1
-.import _loc_02_8030
+.import _loc_02_8033
 .import _loc_02_B000
 
 _RESET_VECTOR:		; C081
@@ -464,7 +464,7 @@ ContinueWalkthrough_03_C36E:		; переход сюда если играть п
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_02_8003
+	JSR _loc_02_83C9
 	PHA
 	LDA #$02
 	STA prg_bank
@@ -713,7 +713,7 @@ SetPauseInGame:		; C58E
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_02_8030
+	JSR _loc_02_8033
 @infinite_loop:
 ; ожидание выхода из паузы
 	LDA $23
@@ -1973,8 +1973,8 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	STA $01,X
 	LDA #$02
 	STA $02,X
-	LDA #>_loc_01_8015_minus1
-	LDY #<_loc_01_8015_minus1
+	LDA #>_loc_01_8596_minus1
+	LDY #<_loc_01_8596_minus1
 	JSR _SetSubReturnAddressForLater_b03
 	LDA team_w_ball
 	CLC
@@ -2155,7 +2155,7 @@ _loc_03_CE73_minus1 = _loc_03_CE73 - 1
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал при переходе в пенальти после экрана со счетом, который еще виднелся
-	JSR _loc_02_8024
+	JSR _loc_02_A02A
 	LDA byte_for_2000
 	AND #$7F
 	STA $2000
@@ -2200,7 +2200,7 @@ _loc_03_CECB:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал перед осветлением экрана при переходе в пенальти
-	JSR _loc_02_8027
+	JSR _loc_02_A0F0
 bra_03_CEF0:
 	LDA #$01
 	JSR _FrameDelay_b03
@@ -2216,7 +2216,7 @@ bra_03_CEF0:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает перед отображением счета в пенальти после гола/отбития удара
-	JSR _loc_02_802A
+	JSR _loc_02_A1ED
 	LDA $8E
 	STA $2A
 	SEC
@@ -2514,7 +2514,7 @@ bra_03_D12C:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончился таймер надписи out of play throw in
-	JSR _loc_02_8021
+	JSR _loc_02_974F
 	LDA #$80
 	STA plr_wo_ball
 	LDA #$00
@@ -2601,7 +2601,7 @@ bra_03_D1D3:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончилась надпись out of play goal kick
-	JSR _loc_02_801E
+	JSR _loc_02_9842
 	LDA plr_w_ball
 	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
@@ -2756,7 +2756,7 @@ bra_03_D2BC:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончилась надпись out of play corner kick
-	JSR _loc_02_801E
+	JSR _loc_02_9842
 	LDA #$80
 	STA plr_wo_ball
 	JSR _loc_03_DCED
@@ -2859,8 +2859,8 @@ bra_03_D3F2:
 	STA $01,X
 	LDA #$02
 	STA $02,X
-	LDA #>_loc_01_8033_minus1
-	LDY #<_loc_01_8033_minus1
+	LDA #>_loc_01_8341_minus1
+	LDY #<_loc_01_8341_minus1
 	JSR _SetSubReturnAddressForLater_b03
 	LDA #$00
 	STA $09
@@ -3105,7 +3105,7 @@ _loc_03_D5AD:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
-	JSR _loc_02_801E
+	JSR _loc_02_9842
 	LDA #$C0
 	STA $2B
 	LDA #$01

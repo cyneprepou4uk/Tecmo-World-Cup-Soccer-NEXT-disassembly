@@ -14,15 +14,6 @@
 .import _loc_03_F9A5
 .import _WriteSoundID_b03
 
-.export _loc_01_8015_minus1
-_loc_01_8015:
-_loc_01_8015_minus1 = _loc_01_8015 - 1
-	JMP _loc_01_8596
-.export _loc_01_8033_minus1
-_loc_01_8033:
-_loc_01_8033_minus1 = _loc_01_8033 - 1
-	JMP _loc_01_8341
-
 .export _loc_01_804E
 _loc_01_804E:
 	LDA #$00
@@ -457,6 +448,8 @@ table_01_8331:
 .byte $18,$04
 
 _loc_01_8341:
+.export _loc_01_8341_minus1
+_loc_01_8341_minus1 = _loc_01_8341 - 1
 	LDA #$21
 _loc_01_8343:
 	PHA
@@ -789,6 +782,8 @@ TeamPlette_table:		; 8556
 .byte $30,$16,$36,$0F
 
 _loc_01_8596:
+.export _loc_01_8596_minus1
+_loc_01_8596_minus1 = _loc_01_8596 - 1
 	BIT $03D2
 	BMI bra_01_85A3
 	LDA #$01

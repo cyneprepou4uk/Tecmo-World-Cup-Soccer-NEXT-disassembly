@@ -17,10 +17,6 @@
 .import _ReadBytes_0380_AfterJSR_b03
 .import _WriteSoundID_b03
 
-	JMP _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
-.export _loc_02_8003
-_loc_02_8003:
-	JMP _loc_02_83C9
 	JMP _SpectatorsPaletteAndFlagsOnTeamSelectScreen
 .export _loc_02_800C_minus1
 _loc_02_800C:
@@ -30,24 +26,8 @@ _loc_02_800C_minus1 = _loc_02_800C - 1
 _loc_02_8015:
 _loc_02_8015_minus1 = _loc_02_8015 - 1
 	JMP _loc_02_80D1
-.export _loc_02_801E
-_loc_02_801E:
-	JMP _loc_02_9842
-.export _loc_02_8021
-_loc_02_8021:
-	JMP _loc_02_974F
-.export _loc_02_8024
-_loc_02_8024:
-	JMP _loc_02_A02A
-.export _loc_02_8027
-_loc_02_8027:
-	JMP _loc_02_A0F0
-.export _loc_02_802A
-_loc_02_802A:
-	JMP _loc_02_A1ED
-.export _loc_02_8030
-_loc_02_8030:
-	JMP _loc_02_8033
+
+.export _loc_02_8033
 _loc_02_8033:
 	LDA #$09
 	STA $6D
@@ -461,6 +441,7 @@ table_02_8399:		; 3 буквы имен команд, чтение из 3х ме
 .byte $4B,$4F,$52
 .byte $4A,$50,$4E
 
+.export _loc_02_83C9
 _loc_02_83C9:
 	BIT game_mode_flags
 	BMI bra_02_8409
@@ -2039,6 +2020,7 @@ table_02_95BF:
 .byte $55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55
 .byte $00
 
+.export _loc_02_974F
 _loc_02_974F:
 	LDX #$00
 	STX $2C
@@ -2197,6 +2179,7 @@ bra_02_9838:
 bra_02_9841:
 	RTS
 
+.export _loc_02_9842
 _loc_02_9842:
 	ASL
 	TAX
@@ -2506,6 +2489,7 @@ table_02_9922_9FD2:
 .byte $60,$01,$20,$03,$00,$01,$E0,$02,$E0,$01,$C0,$01,$80,$01,$E0
 .byte $02,$00,$01,$E0,$01,$20,$01,$00,$03,$60,$00,$00,$02
 
+.export _loc_02_A02A
 _loc_02_A02A:
 	LDX #$00
 	LDA #$02
@@ -2608,6 +2592,7 @@ bra_02_A0DC:
 .word pal_buffer
 	RTS
 
+.export _loc_02_A0F0
 _loc_02_A0F0:
 	JSR _loc_02_A19F
 	JSR _HideAllSprites_b03
@@ -2739,6 +2724,7 @@ bra_02_A1CB:
 	BNE bra_02_A1BC
 	RTS
 
+.export _loc_02_A1ED
 _loc_02_A1ED:
 	JSR _HideAllSprites_b03
 	LDA byte_for_2000
