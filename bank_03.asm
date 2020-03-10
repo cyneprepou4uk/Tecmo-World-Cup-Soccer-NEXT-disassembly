@@ -1845,15 +1845,7 @@ _loc_03_CC23:
 	TAX
 	PLP
 	BCC @rts
-	TXA
-	EOR #$FF		; EOR 16бит, можно сделать прыжок на общую подпрограмму
-	TAX
-	TYA
-	EOR #$FF
-	TAY
-	INX
-	BNE @rts
-	INY
+	JMP _EOR_16bit_b03
 @rts:
 	RTS
 
