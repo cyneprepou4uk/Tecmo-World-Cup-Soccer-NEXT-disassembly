@@ -17,16 +17,6 @@
 .import _ReadBytes_0380_AfterJSR_b03
 .import _WriteSoundID_b03
 
-	JMP _SpectatorsPaletteAndFlagsOnTeamSelectScreen
-.export _loc_02_800C_minus1
-_loc_02_800C:
-_loc_02_800C_minus1 = _loc_02_800C - 1
-	JMP _loc_02_8A1A
-.export _loc_02_8015_minus1
-_loc_02_8015:
-_loc_02_8015_minus1 = _loc_02_8015 - 1
-	JMP _loc_02_80D1
-
 .export _loc_02_8033
 _loc_02_8033:
 	LDA #$09
@@ -124,6 +114,8 @@ _loc_02_80B9:
 	RTS
 
 _loc_02_80D1:
+.export _loc_02_80D1_minus1
+_loc_02_80D1_minus1 = _loc_02_80D1 - 1
 	JSR _ClearNametable_b03
 	JSR _HideAllSprites_b03
 	LDX #$00
@@ -1331,6 +1323,8 @@ bra_02_8A19:
 	RTS
 
 _loc_02_8A1A:
+.export _loc_02_8A1A_minus1
+_loc_02_8A1A_minus1 = _loc_02_8A1A - 1
 	LDA byte_for_2000
 	AND #$FC
 	ORA #$20

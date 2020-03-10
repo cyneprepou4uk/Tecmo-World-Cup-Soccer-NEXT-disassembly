@@ -30,9 +30,9 @@
 .import _loc_01_8B3F
 .import _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
 .import _loc_02_83C9
-.import _loc_02_800C_minus1
+.import _loc_02_8A1A_minus1
 .import _LoadLogoPalette_b02
-.import _loc_02_8015_minus1
+.import _loc_02_80D1_minus1
 .import _MainMenuScreenFunction_b03
 .import _loc_02_9842
 .import _loc_02_974F
@@ -392,8 +392,8 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	STA $01,X
 	LDA #$04
 	STA $02,X
-	LDA #>_loc_02_800C_minus1
-	LDY #<_loc_02_800C_minus1
+	LDA #>_loc_02_8A1A_minus1
+	LDY #<_loc_02_8A1A_minus1
 	JSR _SetSubReturnAddressForLater_b03
 @delay_loop:
 	LDA #$01
@@ -551,8 +551,8 @@ _loc_03_C425:
 	STA $01,X
 	LDA #$04
 	STA $02,X
-	LDA #>_loc_02_8015_minus1
-	LDY #<_loc_02_8015_minus1
+	LDA #>_loc_02_80D1_minus1
+	LDY #<_loc_02_80D1_minus1
 	JSR _SetSubReturnAddressForLater_b03
 @wait:		; будет выполняться ежекадрово, выхода из титров не существует
 	LDA #$01
