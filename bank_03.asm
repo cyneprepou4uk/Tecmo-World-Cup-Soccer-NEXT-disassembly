@@ -122,8 +122,7 @@ _RESET_VECTOR:		; C081
 	LDX #$10
 	LDA #$01
 	JSR _LoadScreenPalette_b03
-	JSR _ReadBytes_0380_AfterJSR_b03
-.word pal_buffer
+	INC $0300
 	LDX #$01
 	LDA #$1E
 	STA $01,X
@@ -221,20 +220,15 @@ _WriteToPPU_Palette_and_Background:		; C1EB
 	LDA $0300
 	BEQ _WriteToPPU_Background
 ; запись палитры
-; много лишнего кода, палитра всегда в 0380, можно читать адреса напрямую
 	DEC $0300
-	SEC
-	SBC #$01
-	ASL
-	TAX
-	LDA $0301,X		; всегда 80
+	LDA #<pal_buffer
 	STA $3D
-	LDA $0302,X		; всегда 03
+	LDA #>pal_buffer
 	STA $3E
 	LDY #$00
 @set_ppu_addr:
 	LDA ($3D),Y		; всегда читается из 0380
-	BEQ @rts		; вряд ли в 0380 когда-либо будет 00, там почти все время 20
+	BEQ @rts		; вряд ли в 0380 когда-либо будет 00, там почти все время 20, возможно можно удалить
 	TAX
 	INY
 	LDA ($3D),Y
@@ -607,8 +601,7 @@ _loc_03_C4B8:
 	LDX #$10
 	LDA #$08
 	JSR _LoadScreenPalette_b03
-	JSR _ReadBytes_0380_AfterJSR_b03
-.word pal_buffer
+	INC $0300
 	LDA #$1C
 	STA chr_bank
 	LDA #$1A
@@ -1655,37 +1648,6 @@ bra_03_CB09:
 	STA pal_buf_cnt
 	RTS
 
-.export _ReadBytes_0380_AfterJSR_b03
-_ReadBytes_0380_AfterJSR_b03:		; CB18
-	TSX
-	LDA $0101,X
-	STA $3F
-	PHA
-	LDA $0102,X
-	STA $40
-	PLA
-	CLC
-	ADC #$02
-	STA $0101,X			; изменить адрес возврата + 2
-	BCC @skip
-	INC $0102,X
-@skip:
-	TYA					; сохранить Y
-	PHA
-	LDA $0300
-	ASL
-	TAX
-	LDY #$01			; прочитать байты после JSR
-	LDA ($3F),Y
-	STA $0301,X
-	INY
-	LDA ($3F),Y
-	STA $0302,X
-	INC $0300
-	PLA
-	TAY					; вернуть Y
-	RTS
-
 .export _EOR_16bit_plus2_b03
 _EOR_16bit_plus2_b03:		; CB4A
 	JSR _EOR_16bit_b03
@@ -1927,8 +1889,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	JSR _ReadBytes_0380_AfterJSR_b03
-.word pal_buffer
+	INC $0300
 	LDA #MUSIC_FIELD
 	JSR _WriteSoundID_b03
 	LDA #$00
@@ -2303,8 +2264,7 @@ _loc_03_CF97:
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
 	JSR _TeamsPalette_and_BallPalette_b01
-	JSR _ReadBytes_0380_AfterJSR_b03
-.word pal_buffer
+	INC $0300
 	RTS
 
 table_03_CFBA:		; читаются сразу все 32 байта таблицы

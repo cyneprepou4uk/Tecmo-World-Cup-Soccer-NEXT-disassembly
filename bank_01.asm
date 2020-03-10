@@ -10,7 +10,6 @@
 .import _HideAllSprites_b03
 .import _SelectInitialPlayerDataAddress_b03
 .import _SelectPlayerSubroutine_b03
-.import _ReadBytes_0380_AfterJSR_b03
 .import _loc_03_F9A5
 .import _WriteSoundID_b03
 
@@ -453,8 +452,7 @@ _loc_01_8341_minus1 = _loc_01_8341 - 1
 	LDA #$21
 _loc_01_8343:
 	PHA
-	JSR _ReadBytes_0380_AfterJSR_b03
-.word pal_buffer
+	INC $0300
 	LDA #$04
 	JSR _FrameDelay_b03
 	PLA
