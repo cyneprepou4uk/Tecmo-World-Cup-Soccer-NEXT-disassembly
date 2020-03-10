@@ -198,7 +198,7 @@ _NMI_VECTOR:
 	STA $8000
 	LDA prg_bank
 	STA $8001		; банксвич 06
-	JSR RandomGenerator
+	JSR _RandomGenerator
 	PLA
 	TAX
 	TXS
@@ -351,7 +351,7 @@ BankswitchCHR:		; C2A2
 	BNE @sprites_bankswitch_loop
 	RTS
 
-RandomGenerator:		; C2CE
+_RandomGenerator:		; C2CE
 	LDX frame_cnt
 	LDA $0300,X
 	ADC $0700,X
@@ -428,7 +428,7 @@ _GoToLogoScreen:		; C2F8 переход сюда после завершения
 	STA game_mode_flags
 	LDA #$FF		; для экрана с паролем, чтобы знать нужно ли вводить пароль если FF
 	STA team_id
-ContinueWalkthrough_03_C36E:		; переход сюда если играть против компа и победить/проиграть
+_ContinueWalkthrough:		; C36E переход сюда если играть против компа и победить/проиграть
 	LDA #SOUND_OFF
 	JSR _WriteSoundID_b03
 	LDA game_mode_flags
@@ -536,7 +536,7 @@ _loc_03_C425:
 	BNE @continue_vs_cpu
 	JMP @all_teams_defeated
 @continue_vs_cpu:
-	JMP ContinueWalkthrough_03_C36E
+	JMP _ContinueWalkthrough
 @draw:
 	RTS
 @all_teams_defeated:
@@ -671,7 +671,7 @@ _PauseCheck_03_C55B:
 	LDA #BTN_START
 	AND btn_press
 	BEQ @skip_pause
-	JSR SetPauseInGame
+	JSR _SetPauseInGame
 @skip_pause:
 	LDX #$01
 loop_03_C56E:
@@ -696,7 +696,7 @@ _LoopFrameDelay:		; сюда есть 2 JMP
 	STA $23
 	JMP _PauseCheck_03_C55B
 
-SetPauseInGame:		; C58E
+_SetPauseInGame:		; C58E
 	LDA #$05	; pause текст
 	JSR _WriteMessageOnScreenWithSprites
 	PHA
@@ -707,8 +707,7 @@ SetPauseInGame:		; C58E
 	JSR _BankswitchPRG
 	PLA
 	JSR _loc_02_8033
-@infinite_loop:
-; ожидание выхода из паузы
+@infinite_loop:		; ожидание выхода из паузы
 	LDA $23
 	BPL @infinite_loop
 	AND #$7F
@@ -852,27 +851,15 @@ _ClearPlayerAnimationCounterLow:		; C677
 	STA (plr_data),Y
 	RTS
 
-_loc_03_C67E:
-	LDY #plr_init_spd_fr
-	LDA (plr_data),Y
-	STA $2A
-	INY
-	LDA (plr_data),Y	; plr_init_spd_lo
-	ASL $2A
-	ASL
-	ASL $2A
-	ASL
-	ASL $2A
-	ASL
-	ASL $2A
-	ASL
-	ASL $2A
-	ASL
+_IncreasePlayerRunningAnimation:		; C67E
+; анимация увеличивается во время обычного бега, лишний код был удален в 017
+; тут нужно сделать нормальную таблицу с байтами увеличения дробной части анимации в зависимости от скорости
 	LDY #plr_anim_cnt_fr
+	LDA #$20
 	CLC
 	ADC (plr_data),Y
 	STA (plr_data),Y
-	BCC bra_03_C6B8
+	BCC @rts
 	DEY
 	LDA (plr_data),Y	; plr_anim_cnt_lo
 	CLC
@@ -887,7 +874,7 @@ _loc_03_C67E:
 	LDA #$03
 @player_is_gk:
 	JSR _loc_01_878F
-bra_03_C6B8:
+@rts:
 	RTS
 
 _loc_03_C6B9:
@@ -5137,7 +5124,7 @@ bra_03_E4A7:
 	RTS
 
 _loc_03_E4A9:
-	LDY #$02
+	LDY #plr_cur_spd_x_fr
 	JSR _loc_03_E4B0
 	LDY #plr_cur_spd_y_fr
 _loc_03_E4B0:
@@ -5691,7 +5678,7 @@ bra_03_E84B:
 	STA (plr_data),Y
 	LDY #$02
 	JSR _loc_03_E4B0
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	RTS
 
 bra_03_E864:
@@ -5711,7 +5698,7 @@ bra_03_E878:
 	LDA #$01
 	JSR _SavePlayerSubroutine
 	JSR _SetUnknownPlayerFlag
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JSR _loc_03_E4A9
 	BIT plr_w_ball
 	BMI bra_03_E89B
@@ -5805,7 +5792,7 @@ bra_03_E934:
 	LDA $03D3
 	ORA #$40
 	STA $03D3
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JMP _loc_03_E95E
 @buttons_not_pressed:
 	LDA $03D3
@@ -6006,7 +5993,7 @@ bra_03_EACF:
 bra_03_EAE0:
 	JSR _loc_03_E467
 	BCS bra_03_EAEE
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JSR _loc_03_E4A9
 	JMP _loc_03_EB00
 bra_03_EAEE:
@@ -6102,7 +6089,7 @@ bra_03_EBA0:
 	BEQ bra_03_EBB0
 	JSR CompareWithCurrentDirection_03_E070
 	JSR _loc_03_EC19
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JMP _loc_03_EBB8
 bra_03_EBB0:
 	JSR _ClearPlayerAnimationCounterLow
@@ -6764,7 +6751,7 @@ _loc_03_F0B0:
 	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_F0CA:
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JSR _loc_03_E4A9
 	JMP _loc_03_F0B0
 
@@ -6784,7 +6771,7 @@ _loc_03_F0DB:
 	JSR _loc_01_878F
 	JMP _loc_03_F0DB
 bra_03_F0F3:
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JSR _loc_03_E4A9
 	JMP _loc_03_F0DB
 
@@ -6812,7 +6799,7 @@ bra_03_F124:
 	LDA #$01
 	JSR _SavePlayerSubroutine
 	JSR _SetUnknownPlayerFlag
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JSR _loc_03_E4A9
 	LDA plr_cur_id
 	CMP #$0B
@@ -7016,7 +7003,7 @@ _loc_03_F2A4:
 	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_F2C6:
-	JSR _loc_03_C67E
+	JSR _IncreasePlayerRunningAnimation
 	JSR _loc_03_E4A9
 	JMP _loc_03_F2A4
 
