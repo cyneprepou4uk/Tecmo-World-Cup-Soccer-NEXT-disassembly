@@ -545,7 +545,7 @@ bra_01_835E:
 _loc_01_8361:
 	JSR _jmp_HideAllSprites_b03
 	LDA #$00
-	STA $5B
+	STA spr_cnt_index
 	LDX #$00
 	JSR _loc_01_8373
 	LDX #$01
@@ -593,7 +593,7 @@ bra_01_83AC:
 	PHA
 	JSR _jmp_HideAllSprites_b03
 	LDA #$00
-	STA $5B
+	STA spr_cnt_index
 	PLA
 	PHA
 	CLC
@@ -663,7 +663,7 @@ _loc_01_841B:
 bra_01_8421:
 	ROL $2D
 	BCC bra_01_844A
-	LDY $5B
+	LDY spr_cnt_index
 	LDA #$3C
 	STA oam_t,Y
 	LDA #$01
@@ -683,7 +683,7 @@ bra_01_8421:
 	INY
 	INY
 	INY
-	STY $5B
+	STY spr_cnt_index
 bra_01_844A:
 	DEC $2E
 	BNE bra_01_8421
@@ -787,7 +787,7 @@ _loc_01_8500:
 	CLC
 	ADC #$03
 _loc_01_8504:
-	LDX $5B
+	LDX spr_cnt_index
 	STA oam_t,X
 	LDA #$01
 	STA oam_a,X
@@ -996,7 +996,7 @@ _loc_01_8696:		; сравнение координат игроков с поз�
 	LDA (plr_data),Y
 	AND #F_VISIBLE_CLEAR
 	STA (plr_data),Y
-	BIT ram_unk_5D
+	BIT spr_cnt_ovf
 	BMI @rts
 	LDY #plr_pos_y_lo
 	LDA (plr_data),Y
@@ -1096,7 +1096,7 @@ bra_01_8739:
 	CLC
 	ADC #$F8
 bra_01_8748:
-	LDX $5B
+	LDX spr_cnt_index
 	CLC
 	ADC $34
 	STA oam_x,X

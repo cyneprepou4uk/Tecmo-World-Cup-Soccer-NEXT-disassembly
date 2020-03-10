@@ -113,7 +113,7 @@ _jmp_SelectPlayerSubroutine_b03:
 	JMP _loc_03_C6E1		; еще не использовался
 .export _jmp_ClearNametable_b03
 _jmp_ClearNametable_b03:
-	JMP ClearNametable
+	JMP _ClearNametable
 .export _jmp_ReadBytes_0380_AfterJSR_b03
 _jmp_ReadBytes_0380_AfterJSR_b03:
 	JMP ReadBytes_0380_AfterJSR
@@ -166,29 +166,23 @@ ResetHandler:		; C081
 @loop:
 	STA $2006
 	STA $2006
-	EOR #$00		; нахера здесь EOR
 	DEX
 	BNE @loop
-	JSR ClearNametable
+	JSR _ClearNametable
 	JSR HideAllSprites
 	LDX #$E0
 	TXS
-	LDA #$00		; тут можно удалить лишние LDA 00
+	LDA #$00
 	STA $01
 	STA $02
-	LDA #$00
 	STA $05
 	STA $06
-	LDA #$00
 	STA $09
 	STA $0A
-	LDA #$00
 	STA $0D
 	STA $0E
-	LDA #$00
 	STA $11
 	STA $12
-	LDA #$00
 	STA $15
 	STA $16
 	LDA #$28
@@ -672,13 +666,13 @@ _loc_03_C476:
 	LDA #SOUND_TIME_UP
 	JSR WriteSoundID
 	LDA #$01	; time up текст
-	JSR WriteMessageOnScreenWithSprites
+	JSR _WriteMessageOnScreenWithSprites
 	LDA #$A0
 	JSR FrameDelay
 	RTS
 
 _loc_03_C4B8:
-	JSR ClearNametable
+	JSR _ClearNametable
 	JSR HideAllSprites
 	LDA byte_for_2000
 	AND #$FC
@@ -719,7 +713,7 @@ bra_03_C4E7:
 	RTS
 
 _loc_03_C507:
-	JSR ClearNametable
+	JSR _ClearNametable
 	JSR HideAllSprites
 	JSR ClearRamBeforeMatch_03_C8EC
 	JSR _loc_03_CF97
@@ -790,7 +784,7 @@ FrameDelay_loop:		; сюда есть 2 JMP
 
 SetPauseInGame:		; C58E
 	LDA #$05	; pause текст
-	JSR WriteMessageOnScreenWithSprites
+	JSR _WriteMessageOnScreenWithSprites
 	PHA
 	LDA #$04
 	STA prg_bank
@@ -1509,7 +1503,7 @@ bra_03_C995:
 	LDA $2D
 	RTS
 
-_loc_03_C998:
+_loc_03_C998:		; похожий код в CA17, можно добавить bit temp
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SEC
@@ -1517,18 +1511,18 @@ _loc_03_C998:
 	TAX
 	INY
 	INY
-	LDA (plr_data),Y
+	LDA (plr_data),Y	; plr_pos_x_hi
 	SBC ball_pos_x_hi
 	TAY
-	BCS bra_03_C9AE
+	BCS @skip
 	JSR EOR_16bit
-bra_03_C9AE:
+@skip:
 	SEC
 	TXA
 	SBC $2B
 	TYA
 	SBC $2C
-	BCS bra_03_C9D8
+	BCS @clc
 	LDY #plr_pos_y_lo
 	LDA (plr_data),Y
 	SEC
@@ -1536,22 +1530,21 @@ bra_03_C9AE:
 	TAX
 	INY
 	INY
-	LDA (plr_data),Y
+	LDA (plr_data),Y	; plr_pos_y_hi
 	SBC ball_pos_y_hi
 	TAY
-	BCS bra_03_C9CD
+	BCS @skip2
 	JSR EOR_16bit
-bra_03_C9CD:
+@skip2:
 	SEC
 	TXA
 	SBC $2B
 	TYA
 	SBC $2C
-	BCS bra_03_C9D8
+	BCS @clc
 	SEC
 	RTS
-
-bra_03_C9D8:
+@clc:
 	CLC
 	RTS
 
@@ -1592,7 +1585,7 @@ bra_03_CA14:
 	LDA $2D
 	RTS
 
-_loc_03_CA17:
+_loc_03_CA17:		; похожий код в C998, можно добавить bit temp
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SEC
@@ -1600,18 +1593,18 @@ _loc_03_CA17:
 	TAX
 	INY
 	INY
-	LDA (plr_data),Y
+	LDA (plr_data),Y	; plr_pos_x_hi
 	SBC ball_land_pos_x_hi
 	TAY
-	BCS bra_03_CA2D
+	BCS @skip
 	JSR EOR_16bit
-bra_03_CA2D:
+@skip:
 	SEC
 	TXA
 	SBC $2B
 	TYA
 	SBC $2C
-	BCS bra_03_CA57
+	BCS @clc
 	LDY #plr_pos_y_lo
 	LDA (plr_data),Y
 	SEC
@@ -1619,26 +1612,25 @@ bra_03_CA2D:
 	TAX
 	INY
 	INY
-	LDA (plr_data),Y
+	LDA (plr_data),Y	; plr_pos_y_hi
 	SBC ball_land_pos_y_hi
 	TAY
-	BCS bra_03_CA4C
+	BCS @skip2
 	JSR EOR_16bit
-bra_03_CA4C:
+@skip2:
 	SEC
 	TXA
 	SBC $2B
 	TYA
 	SBC $2C
-	BCS bra_03_CA57
+	BCS @clc
 	SEC
 	RTS
-
-bra_03_CA57:
+@clc:
 	CLC
 	RTS
 
-ClearNametable:		; CA59
+_ClearNametable:		; CA59
 	LDA byte_for_2000
 	AND #$7F
 	STA byte_for_2000
@@ -2024,7 +2016,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	LDA game_mode_flags
 	AND #$FB
 	STA game_mode_flags
-	JSR ClearNametable
+	JSR _ClearNametable
 	JSR HideAllSprites
 	LDX #$00
 	LDA #$02
@@ -2512,7 +2504,7 @@ table_03_CE6B_D07A:
 	STA $09
 	STA $0A
 	LDA #$02	; throw in текст
-	JSR WriteAndSkipMessageOnScreen
+	JSR _WriteAndSkipMessageOnScreen
 	JSR _loc_03_D49F
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
@@ -2646,7 +2638,7 @@ table_03_CE6B_D173:
 	LDA #$01
 	STA $03E4
 	LDA #$03	; goal kick текст
-	JSR WriteAndSkipMessageOnScreen
+	JSR _WriteAndSkipMessageOnScreen
 	JSR _loc_03_D49F
 	LDA $0428
 	EOR #$0B
@@ -2758,7 +2750,7 @@ table_03_CE6B_D257:
 	LDA #$01
 	STA $03E4
 	LDA #$04	; corner kick текст
-	JSR WriteAndSkipMessageOnScreen
+	JSR _WriteAndSkipMessageOnScreen
 	JSR _loc_03_D49F
 	LDA $0428
 	EOR #$0B
@@ -4415,10 +4407,10 @@ _loc_03_DE96:
 	STA prg_bank + 1
 	JSR BankswitchPRG
 	LDA #$00
-	STA $5B
-	STA ram_unk_5D
+	STA spr_cnt_index
+	STA spr_cnt_ovf
 	LDA #$FF
-	STA $5C
+	STA spr_limit
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_8024
 	LDA plr_w_ball
@@ -4435,10 +4427,10 @@ _loc_03_DE96:
 	JSR _SelectInitialShadowDataAddress
 	JSR _loc_01_801B
 	JSR _loc_01_8018
-	LDA $5C
+	LDA spr_limit
 	PHA
-	LDA $5B
-	STA $60
+	LDA spr_cnt_index
+	STA spr_cnt_index_copy
 	TAX
 	LDA game_mode_flags
 	AND #FLAG_GM_UNKNOWN_10
@@ -4447,13 +4439,13 @@ _loc_03_DE96:
 	SBC $5E
 	ASL
 	ASL
-	CMP $5B
+	CMP spr_cnt_index
 	BCS bra_03_DEE6
-	LDA $5B
+	LDA spr_cnt_index
 bra_03_DEE6:
 	TAX
 bra_03_DEE7:
-	STX $5B
+	STX spr_cnt_index
 	LDA #$00
 bra_03_DEEB:
 	PHA
@@ -4468,23 +4460,23 @@ bra_03_DEF7:
 	ADC #$01
 	CMP #$16
 	BNE bra_03_DEEB
-	BIT ram_unk_5D
+	BIT spr_cnt_ovf
 	BMI @skip_hiding
-	LDY $5C
-	LDX $5B
+	LDY spr_limit
+	LDX spr_cnt_index
 	LDA #$F8
 @hide_unused_sprites:
 	STA oam_y,X
 	INX
 	BNE @try_to_quit_loop
-	LDX $60
+	LDX spr_cnt_index_copy
 @try_to_quit_loop:
 	DEY
 	BNE @hide_unused_sprites
 @skip_hiding:
 	PLA
 	SEC
-	SBC $5C
+	SBC spr_limit
 	STA $2A
 	LDA $5F
 	CLC
@@ -8028,23 +8020,23 @@ _loc_03_F98D:
 bra_03_F9A4:
 	RTS
 
-_loc_03_F9A5:
+_loc_03_F9A5:		; увеличить индекс для следующего спрайта
 	INX
-	BNE bra_03_F9AD
-	LDX $60
-bra_03_F9AD:
-	STX $5B
-	DEC $5C
+	BNE @still_have_some_sprites_left
+	LDX spr_cnt_index_copy
+@still_have_some_sprites_left:
+	STX spr_cnt_index
+	DEC spr_limit
 	BNE @rts
 	LDA #$80			; код еще не выполнялся
-	STA ram_unk_5D		; код еще не выполнялся
+	STA spr_cnt_ovf		; код еще не выполнялся
 @rts:
 	RTS
 
-WriteAndSkipMessageOnScreen:		; F9B8
+_WriteAndSkipMessageOnScreen:		; F9B8
 ; попытка досрочно прервать надпись про мяч вне игры
 ; если надпись нельзя прерывать кнопками, код прыгает напрямую на F9DA
-	JSR WriteMessageOnScreenWithSprites
+	JSR _WriteMessageOnScreenWithSprites
 	LDA #$70		; базовая длительность кадров сообщения
 @wait:
 	PHA
@@ -8065,7 +8057,7 @@ WriteAndSkipMessageOnScreen:		; F9B8
 	PLA
 	RTS
 
-WriteMessageOnScreenWithSprites:		; F9DA
+_WriteMessageOnScreenWithSprites:		; F9DA
 .scope
 table 	= $2A
 counter = $2C

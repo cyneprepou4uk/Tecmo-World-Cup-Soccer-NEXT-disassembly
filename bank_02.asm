@@ -2721,7 +2721,7 @@ bra_02_A1AA:
 	DEX
 	BPL bra_02_A1AA
 	LDA #$00
-	STA $5B
+	STA spr_cnt_index
 	JSR _loc_02_A2EA
 	LDA #$08
 bra_02_A1BC:
@@ -2735,13 +2735,13 @@ bra_02_A1BC:
 	INX
 bra_02_A1CB:
 	LDA #$40
-	STA $5B
+	STA spr_cnt_index
 	TXA
 	JSR _loc_02_A2EA
 	LDA #$06
 	JSR _jmp_FrameDelay_b03
 	LDA #$40
-	STA $5B
+	STA spr_cnt_index
 	LDA #$04
 	JSR _loc_02_A2EA
 	LDA #$06
@@ -2766,7 +2766,7 @@ bra_02_A1F8:
 	DEX
 	BPL bra_02_A1F8
 	LDA #$00
-	STA $5B
+	STA spr_cnt_index
 	JSR _loc_02_A232
 	LDX #$00
 	JSR _loc_02_A245
@@ -2810,7 +2810,7 @@ _loc_02_A245:
 	STA $2B
 	LDA #$03
 	STA $2C
-	LDX $5B
+	LDX spr_cnt_index
 bra_02_A25A:
 	LDA $2A
 	ASL
@@ -2835,7 +2835,7 @@ bra_02_A25A:
 	INX
 	DEC $2C
 	BNE bra_02_A25A
-	STX $5B
+	STX spr_cnt_index
 	RTS
 
 _loc_02_A286:
@@ -2863,7 +2863,7 @@ bra_02_A29A:
 	ROL $2B
 	DEX
 	BPL bra_02_A29A
-	LDX $5B
+	LDX spr_cnt_index
 bra_02_A2A9:
 	LDA $2D
 	SEC
@@ -2915,7 +2915,7 @@ _loc_02_A2EA:
 	LDA ($2A),Y
 	STA $2D
 	INY
-	LDX $5B
+	LDX spr_cnt_index
 _loc_02_A304:
 	LDA ($2A),Y
 	BEQ bra_02_A32D
@@ -2937,7 +2937,7 @@ bra_02_A322:
 	INY
 	JMP _loc_02_A304
 bra_02_A32D:
-	STX $5B
+	STX spr_cnt_index
 	RTS
 
 _loc_02_A330:
@@ -3593,7 +3593,7 @@ bra_02_B023:
 	LDA a: $DC
 	STA nmt_buf_ppu_hi
 	LDA #$00
-	STA nmt_buf_cnt + $24
+	STA nmt_buf_cnt + $23
 	LDA #$80
 	STA $037D
 	LDA a: $DB
