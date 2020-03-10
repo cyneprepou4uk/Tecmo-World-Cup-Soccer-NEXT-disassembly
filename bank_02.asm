@@ -4,7 +4,7 @@
 
 .import _SetSubReturnAddressForLater_b03
 .import _FrameDelay_b03
-.import _loc_03_C00C
+.import _loc_03_C5F1
 .import _LoadScreenPalette_b03
 .import _PrepareBytesForNametable_b03
 .import _EOR_16bit_plus2_b03
@@ -12,10 +12,10 @@
 .import _EOR_16bit_b03
 .import _HideAllSprites_b03
 .import _SelectInitialPlayerDataAddress_b03
-.import _jmp_SelectPlayerSubroutine_b03
+.import _SelectPlayerSubroutine_b03
 .import _ClearNametable_b03
-.import _jmp_ReadBytes_0380_AfterJSR_b03
-.import _jmp_WriteSoundID_b03
+.import _ReadBytes_0380_AfterJSR_b03
+.import _WriteSoundID_b03
 
 	JMP _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
 .export _loc_02_8003
@@ -157,7 +157,7 @@ _loc_02_80D1:
 	LDX #$00
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$24
 	STA chr_bank
@@ -194,10 +194,10 @@ bra_02_8115:
 	LDX #$00
 	LDA #$06
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03	
+	JSR _ReadBytes_0380_AfterJSR_b03	
 .word pal_buffer
 	LDA #MUSIC_FINAL
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$FE
 	JSR _FrameDelay_b03
 	LDA #$0F
@@ -216,7 +216,7 @@ bra_02_8115:
 	LDX #$00
 	LDA #$06
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$1E
 	STA chr_bank + 1
@@ -372,35 +372,35 @@ bra_02_8274:
 	LDX #$10
 	LDA #$0D
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0E
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0F
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$08
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$10
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 _loc_02_82D1:
 	LDA #$01
@@ -412,30 +412,30 @@ _loc_02_82D9_minus1 = _loc_02_82D9 - 1
 	LDX #$10
 	LDA #$0A
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0B
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0C
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$04
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
-	JMP _loc_03_C00C
+	JMP _loc_03_C5F1
 
 table_02_831B:		; таблица с байтами, которые читаются исходя из скроллинга камеры
 					; на экране с титрами
@@ -473,7 +473,7 @@ _loc_02_83C9:
 	BIT game_mode_flags
 	BMI bra_02_8409
 	LDA #MUSIC_GAME_NUMBER
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	JSR _loc_02_840A
 	LDA #$C8
 bra_02_83D8:
@@ -495,7 +495,7 @@ bra_02_83EB:
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA byte_for_2000
 	ORA #$20
@@ -514,7 +514,7 @@ _loc_02_840A:
 	LDX #$10
 	LDA #$04
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDX #$03
 bra_02_8425:
@@ -656,7 +656,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	LDX #$00
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$02
 	JSR _FrameDelay_b03
@@ -680,7 +680,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	LDX #$10
 	LDA #$03
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	JMP _loc_02_8560
 
@@ -689,7 +689,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 
 _loc_02_8560:
 	LDA #MUSIC_TEAM_SELECT
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$01
 	STA timer_opt
 	LDX #$05
@@ -772,7 +772,7 @@ bra_02_860C:
 	STA $05
 	STA $06
 	LDA #SOUND_FANS
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$3C
 	JSR _FrameDelay_b03
 	LDA #$0F
@@ -926,7 +926,7 @@ bra_02_872C:
 	STA $05
 	STA $06
 	LDA #SOUND_FANS
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$46
 	JSR _FrameDelay_b03
 	RTS
@@ -944,7 +944,7 @@ bra_02_8756:
 	STX timer_opt
 	JSR GameTimeOptionSprites
 	LDA #SOUND_SELECT
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 bra_02_8761:
 	RTS
 
@@ -1050,7 +1050,7 @@ table_02_8805:
 _loc_02_8809:
 	LDA #$16
 	STA $0393,X
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	RTS
 
@@ -1109,7 +1109,7 @@ bra_02_8854:
 	STA $03B4,X
 	JSR _loc_02_8640
 	LDA #SOUND_SELECT
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	RTS
 
 _loc_02_887E:
@@ -1165,7 +1165,7 @@ _SpectatorsPaletteAndFlagsOnTeamSelectScreen_minus1 = _SpectatorsPaletteAndFlags
 	LDA #$21
 @skip_color_number_reset:
 	PHA
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	JSR _TeamSelectFlagAnimation
 	LDA #$04
@@ -1397,7 +1397,7 @@ bra_02_8A57:
 bra_02_8A61:
 	DEX
 	BPL bra_02_8A57
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$18
 	JSR _loc_02_8AB6
@@ -1434,7 +1434,7 @@ _loc_02_8A8F:
 	LDX #$00
 bra_02_8AAB:
 	STX soccer_text_color_cnt
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	JMP _loc_02_8A8F
 _loc_02_8AB6:
@@ -1477,7 +1477,7 @@ bra_02_8AE8:
 	INX
 	CPX #$20
 	BNE bra_02_8ACF
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	RTS
 
@@ -1496,7 +1496,7 @@ _loc_02_8AF6:
 	BPL @write_loop
 	LDA #$30
 	STA $0392
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDX #<table_02_8C76
 	LDY #>table_02_8C76
@@ -1543,7 +1543,7 @@ _MainMenuScreenFunction_b03:		; 8B20
 	AND btn_press
 	BEQ @cursor_loop
 	LDA #SOUND_OFF
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$00
 	STA $05
 	STA $06
@@ -1551,7 +1551,7 @@ _MainMenuScreenFunction_b03:		; 8B20
 	LDA #$02
 	JSR _FrameDelay_b03
 	LDA #SOUND_OPTION_SELECT
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDX game_mode_opt		; чтение опции с режимом игры
 	LDA FlagsForGameMode_table,X
 	STA game_mode_flags
@@ -2082,7 +2082,7 @@ bra_02_977E:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	LDA team_w_ball
 	LDX $2C
 	CPX #$0B
@@ -2226,7 +2226,7 @@ bra_02_985C:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	LDA team_w_ball
 	LDX $2C
 	CPX #$0B
@@ -2521,7 +2521,7 @@ _loc_02_A02A:
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	JSR _ClearNametable_b03
 	JSR _HideAllSprites_b03
@@ -2612,7 +2612,7 @@ bra_02_A0DC:
 	LDX #$00
 	LDA #$09
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	RTS
 
@@ -2639,7 +2639,7 @@ bra_02_A10E:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_UNKNOWN_19
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_anim_id
 	LDA #$00
 	STA (plr_data),Y
@@ -2654,14 +2654,14 @@ bra_02_A10E:
 	STA plr_w_ball
 	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #STATE_UNKNOWN_17
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	LDX #$00
 	JSR _loc_02_A174
 	LDA team_w_ball
 	EOR #$0B
 	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #STATE_UNKNOWN_18
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	LDX #$04
 	JSR _loc_02_A174
 	LDA #$FF
@@ -2675,7 +2675,7 @@ bra_02_A10E:
 	LDA #$09
 	STA $03E4
 	LDA #SOUND_WHISTLE
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	RTS
 
 _loc_02_A174:
@@ -2778,7 +2778,7 @@ bra_02_A1F8:
 	LDX #$00
 	LDA #$09
 	JSR _LoadScreenPalette_b03
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	RTS
 
@@ -2959,7 +2959,7 @@ bra_02_A34F:
 	INX
 	CPX #$08
 	BNE bra_02_A33D
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	PLA
 	CLC
@@ -3220,14 +3220,14 @@ _loc_02_A76F:
 
 PasswordInputScreenFunction:		; A777
 	LDA #SOUND_WHISTLE_FANS
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$60
 	STA $3B
 	LDA #$00		; серый
 	STA pal_buffer + $09
 	LDA #$30		; белый
 	STA pal_buffer + $0A
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDX #<table_02_A9AC
 	LDY #>table_02_A9AC
@@ -3260,7 +3260,7 @@ ContinuePasswordInput:		; A7A9, 2 прыжка
 @button_is_pressed:
 	PHA
 	LDA #SOUND_SELECT
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	PLA
 	TAX
 	AND #$0C
@@ -3309,12 +3309,12 @@ _loc_02_A80C:
 	JSR CheckForCorrectPassword
 	BEQ @correct
 	LDA #SOUND_WRONG
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	JMP ContinuePasswordInput
 @correct:
 	JSR _HideAllSprites_b03
 	LDA #$20
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$00
 bra_02_A82D:
 	PHA
@@ -3332,7 +3332,7 @@ bra_02_A82D:
 	LDA #$00
 	STA $3B
 	LDA #SOUND_FANS
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 	LDA #$00
 bra_02_A84C:
 	PHA
@@ -3370,7 +3370,7 @@ bra_02_A886:
 	INX
 	CPX #$20
 	BNE bra_02_A865
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA $2A
 	CLC
@@ -3992,7 +3992,7 @@ _loc_02_B488:
 bra_02_B49C:
 	LDA $E8
 	STA $0390
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	STA $E6

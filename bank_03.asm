@@ -43,28 +43,6 @@
 .import _loc_02_8030
 .import _loc_02_B000
 
-.export _loc_03_C00C
-_loc_03_C00C:
-	JMP _loc_03_C5F1
-.export _jmp_ReadBytesAfterJSR_b03
-_jmp_ReadBytesAfterJSR_b03:
-	JMP _ReadBytesAfterJSR
-.export _loc_03_C048
-_loc_03_C048:
-	JMP _loc_03_C89D
-.export _jmp_SelectPlayerSubroutine_b03
-_jmp_SelectPlayerSubroutine_b03:
-	JMP _SelectPlayerSubroutine
-.export _jmp_ReadBytes_0380_AfterJSR_b03
-_jmp_ReadBytes_0380_AfterJSR_b03:
-	JMP _ReadBytes_0380_AfterJSR
-.export _loc_03_C07B
-_loc_03_C07B:
-	JMP _loc_03_F9A5
-.export _jmp_WriteSoundID_b03
-_jmp_WriteSoundID_b03:
-	JMP _WriteSoundID
-
 _RESET_VECTOR:		; C081
 	LDA #$00
 	STA $8000
@@ -144,7 +122,7 @@ _RESET_VECTOR:		; C081
 	LDX #$10
 	LDA #$01
 	JSR _LoadScreenPalette_b03
-	JSR _ReadBytes_0380_AfterJSR
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDX #$01
 	LDA #$1E
@@ -406,7 +384,7 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	LDA #$00
 	STA $03D2
 	LDA #MUSIC_LOGO
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$05
@@ -458,7 +436,7 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	STA team_id
 ContinueWalkthrough_03_C36E:		; переход сюда если играть против компа и победить/проиграть
 	LDA #SOUND_OFF
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA game_mode_flags
 	AND #$FB
 	STA game_mode_flags
@@ -607,7 +585,7 @@ _loc_03_C476:
 	STA $1D
 	STA $1E
 	LDA #SOUND_TIME_UP
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$01	; time up текст
 	JSR _WriteMessageOnScreenWithSprites
 	LDA #$A0
@@ -629,7 +607,7 @@ _loc_03_C4B8:
 	LDX #$10
 	LDA #$08
 	JSR _LoadScreenPalette_b03
-	JSR _ReadBytes_0380_AfterJSR
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$1C
 	STA chr_bank
@@ -644,7 +622,7 @@ bra_03_C4E7:
 	DEX
 	BPL bra_03_C4E7
 	LDA #MUSIC_HALF_TIME
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	PHA
 	LDA #$04
 	STA prg_bank
@@ -797,6 +775,7 @@ _SetSubReturnAddressForLater_b03:		; C5E1
 	STA $00,X
 	RTS
 
+.export _loc_03_C5F1
 _loc_03_C5F1:
 	LDA #$00
 	LDX $00
@@ -830,7 +809,8 @@ _FrameDelay_b03:		; C609
 ; C627 (еще не считывались, неизвестно откуда читается, вероятно мусор)
 .byte $20,$40,$18,$18,$18,$18,$18,$18
 
-_SelectPlayerSubroutine:		; C62F
+.export _SelectPlayerSubroutine_b03
+_SelectPlayerSubroutine_b03:		; C62F
 ; на вход подается A с номером нужной подпрограммы из таблицы
 	TAX
 	LDY #plr_flags
@@ -946,7 +926,7 @@ _loc_03_C6E1:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 bra_03_C6F6:
 	JSR _loc_03_C71D
 	BCS bra_03_C703
@@ -961,7 +941,7 @@ bra_03_C703:
 	AND #F_CONTROL
 	BNE bra_03_C717
 	LDA #STATE_WITHOUT_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	RTS
 
 ; код еще не выполнялся
@@ -1236,6 +1216,7 @@ bra_03_C887:
 bra_03_C89C:
 	RTS
 
+.export _loc_03_C89D
 _loc_03_C89D:
 	LDX #$00
 bra_03_C89F:
@@ -1325,7 +1306,8 @@ ram_hi = $2B
 	RTS
 .endscope
 
-_WriteSoundID:		; C910
+.export _WriteSoundID_b03
+_WriteSoundID_b03:		; C910
 	LDY sound_cnt
 	CPY #$04
 	BCS @skip
@@ -1608,7 +1590,8 @@ _HideAllSprites_b03:		; CAAF
 	BNE @loop
 	RTS
 
-_ReadBytesAfterJSR:		; CABD здесь считываются байты, которые находятся после JSR
+.export _ReadBytesAfterJSR_b03
+_ReadBytesAfterJSR_b03:		; CABD здесь считываются байты, которые находятся после JSR
 	ASL
 	TAY
 	PLA
@@ -1673,7 +1656,8 @@ bra_03_CB09:
 	STA pal_buf_cnt
 	RTS
 
-_ReadBytes_0380_AfterJSR:		; CB18
+.export _ReadBytes_0380_AfterJSR_b03
+_ReadBytes_0380_AfterJSR_b03:		; CB18
 	TSX
 	LDA $0101,X
 	STA $3F
@@ -1952,10 +1936,10 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	JSR _ReadBytes_0380_AfterJSR
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #MUSIC_FIELD
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$00
 	STA $03D3
 	JSR _loc_03_D5AD
@@ -1998,7 +1982,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	STA plr_w_ball
 	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #STATE_UNKNOWN_13
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -2113,7 +2097,7 @@ bra_03_CE17:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 bra_03_CE36:
 	LDA #$08
 bra_03_CE38:
@@ -2142,7 +2126,7 @@ bra_03_CE38:
 	PLA
 	STA team_w_ball
 	PLA
-	JSR _ReadBytesAfterJSR
+	JSR _ReadBytesAfterJSR_b03
 
 table_03_CE6B:		; таблица читается после JSR
 					; используется сразу после забитого гола
@@ -2196,7 +2180,7 @@ bra_03_CEB0:
 	STA $21
 	STA $2000
 	LDA #MUSIC_PENALTY
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 _loc_03_CECB:
 	LDA #$00
 	STA $8A
@@ -2271,7 +2255,7 @@ bra_03_CF32:
 	JMP _loc_03_CECB
 bra_03_CF4A:
 	LDA #MUSIC_HALF_TIME
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$00
 bra_03_CF51:
 	PHA
@@ -2328,7 +2312,7 @@ _loc_03_CF97:
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
 	JSR _TeamsPalette_and_BallPalette_b01
-	JSR _ReadBytes_0380_AfterJSR
+	JSR _ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	RTS
 
@@ -2371,7 +2355,7 @@ bra_03_CFF4:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 bra_03_D019:
 	LDA team_w_ball
 	EOR #$0B
@@ -2412,7 +2396,7 @@ bra_03_D051:
 	AND #F_CONTROL
 	BNE bra_03_D074
 	LDA #STATE_WITHOUT_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -2499,7 +2483,7 @@ bra_03_D0D7:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_THROW_IN
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -2625,7 +2609,7 @@ bra_03_D1D3:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_GOAL_KICK
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -2757,7 +2741,7 @@ bra_03_D2BC:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_CORNER_KICK
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -2810,9 +2794,9 @@ table_03_D35F:		; какие-то параметры игрока
 
 table_03_CE6B_D37F:
 	LDA #MUSIC_GOAL
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #SOUND_FANS
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$00
 bra_03_D38B:
 	PHA
@@ -2822,7 +2806,7 @@ bra_03_D38B:
 	AND #F_ALL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_FREEZE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	PLA
 	CLC
 	ADC #$01
@@ -2971,7 +2955,7 @@ bra_03_D4A7:
 	AND #F_ALL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 bra_03_D4BF:
 	PLA
 	CLC
@@ -3008,7 +2992,7 @@ bra_03_D4F3:
 	SBC #$00
 	BCS bra_03_D509
 	LDA #SOUND_WHISTLE
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDX #$00
 	SEC
 	RTS
@@ -3055,7 +3039,7 @@ bra_03_D530:
 	BEQ bra_03_D58E
 bra_03_D558:
 	LDA #SOUND_WHISTLE
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA $03D3
 	ORA #$10
 	STA $03D3
@@ -3081,7 +3065,7 @@ bra_03_D581:
 	INX
 bra_03_D587:
 	LDA #SOUND_WHISTLE
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	SEC
 	RTS
 bra_03_D58E:
@@ -3203,7 +3187,7 @@ bra_03_D64D:
 bra_03_D663:
 	INC goals_pk,X
 	LDA #SOUND_FANS
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDX #$0D
 	LDA #$78
 	STA $01,X
@@ -3218,7 +3202,7 @@ bra_03_D663:
 _loc_03_D680:
 _loc_03_D680_minus1 = _loc_03_D680 - 1
 	LDA #SOUND_CATCH
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$00
 	STA $03DB
 	LDA #$FB
@@ -3645,7 +3629,7 @@ bra_03_D964:
 	JSR _loc_03_DB5E
 	JSR _loc_03_DF5E
 	LDA #SOUND_GOALSPOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	RTS
 
 table_03_D98F:		; чтение из 2х мест
@@ -3717,7 +3701,7 @@ bra_03_D9EB:
 	JSR _loc_03_DB5E
 	JSR _loc_03_DF5E
 	LDA #SOUND_GOALSPOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 _loc_03_DA15:
 bra_03_DA15:
 	RTS
@@ -4079,7 +4063,7 @@ _loc_03_DCBD:
 	LDA #$00
 	JSR _loc_03_C95B
 	LDA #STATE_UNKNOWN_01
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -4088,7 +4072,7 @@ _loc_03_DCBD:
 	LDA #$0B
 	JSR _loc_03_C95B
 	LDA #STATE_UNKNOWN_01
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -4462,7 +4446,7 @@ bra_03_DF67:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 bra_03_DF80:
 	PLA
 	CLC
@@ -4472,7 +4456,7 @@ bra_03_DF80:
 	LDA team_w_ball
 	JSR _loc_03_C9DA
 	LDA #STATE_FOLLOW_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -4482,7 +4466,7 @@ bra_03_DF80:
 	EOR #$0B
 	JSR _loc_03_C9DA
 	LDA #STATE_FOLLOW_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -4777,7 +4761,7 @@ bra_03_E185:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA #SOUND_TACKLE
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$08
 	JSR _loc_01_801E
@@ -4843,7 +4827,7 @@ _loc_03_E209:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_FOLLOW_ENEMY
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 _loc_03_E223:
 	LDY #plr_cur_spd_x_fr
@@ -4908,7 +4892,7 @@ bra_03_E26F:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_DODGE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP _loc_03_E342
 bra_03_E28C:
 	LDY #plr_dir
@@ -4990,7 +4974,7 @@ bra_03_E28C:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_DEAD
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5028,7 +5012,7 @@ _loc_03_E36E:
 	JSR _loc_03_C6B9
 	JSR _loc_03_E3E1
 	LDA #SOUND_RECEIVE
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5066,7 +5050,7 @@ bra_03_E3C7:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITH_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5124,7 +5108,7 @@ bra_03_E421:
 	BNE bra_03_E421
 bra_03_E435:
 	TYA
-	JSR _ReadBytesAfterJSR
+	JSR _ReadBytesAfterJSR_b03
 
 table_03_E439:		; таблица читается после JSR
 .word table_03_E439_E43F
@@ -5133,17 +5117,17 @@ table_03_E439:		; таблица читается после JSR
 
 table_03_E439_E43F:
 	LDA #STATE_UNKNOWN_07
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP _loc_03_E454
 
 table_03_E439_E447:
 	LDA #STATE_UNKNOWN_08
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP _loc_03_E454
 
 table_03_E439_E44F:
 	LDA #STATE_UNKNOWN_0A
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 _loc_03_E454:
 	LDY #plr_flags
 	LDA (plr_data),Y
@@ -5282,7 +5266,7 @@ bra_03_E521:
 _loc_03_E527:
 	LDY #plr_state
 	LDA (plr_data),Y
-	JSR _ReadBytesAfterJSR
+	JSR _ReadBytesAfterJSR_b03
 
 table_03_E52E:		; таблица читается после JSR
 .word table_03_E52E_E57D		; 00
@@ -5631,7 +5615,7 @@ bra_03_E75A:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITH_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5644,7 +5628,7 @@ bra_03_E75A:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_DEAD
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5655,7 +5639,7 @@ bra_03_E75A:
 	JMP SelectNextIndexForPlayers
 bra_03_E79F:
 	LDA #STATE_DEAD
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5695,7 +5679,7 @@ bra_03_E7BD:
 	LDA #$04	; небольшой таймер для игрока, прежде чем тот упадет на землю после удара об мяч
 	JSR _SavePlayerSubroutine
 	LDA #STATE_DEAD
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5785,7 +5769,7 @@ bra_03_E878:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_E89B:
 	LDA #$16
@@ -5802,7 +5786,7 @@ bra_03_E89B:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 
 bra_03_E8B9:
 	LDA plr_cur_id
@@ -5812,7 +5796,7 @@ bra_03_E8B9:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITH_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5928,7 +5912,7 @@ table_03_E9B7:
 
 _loc_03_E9BF:
 	LDA #SOUND_SHOOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$05
 	JSR _loc_01_801E
@@ -5967,7 +5951,7 @@ _loc_03_E9BF:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 
 BotShootingOrPassing_03_EA25:
@@ -6091,7 +6075,7 @@ _loc_03_EB00:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_EB15:
 	LDA #$16
@@ -6141,7 +6125,7 @@ bra_03_EB5E:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_FOLLOW_ENEMY
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 _loc_03_EB79:
 bra_03_EB79:
@@ -6155,7 +6139,7 @@ bra_03_EB79:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_EB95:
 	LDA btn_hold
@@ -6186,7 +6170,7 @@ _loc_03_EBB8:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_DEAD
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -6200,7 +6184,7 @@ _loc_03_EBB8:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITH_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -6290,7 +6274,7 @@ bra_03_EC75:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDA #$80
 	STA plr_wo_ball
 	JMP SelectNextIndexForPlayers
@@ -6521,7 +6505,7 @@ bra_03_EE24:
 	LDA #$80
 	STA gk_has_ball
 	LDA #SOUND_MISS_CATCH
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	JMP _loc_03_EE6F
 bra_03_EE4A:
 	LDA plr_w_ball
@@ -6532,12 +6516,12 @@ bra_03_EE4A:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 bra_03_EE5F:
 	LDA plr_cur_id
 	JSR _loc_03_C6B9
 	LDA #SOUND_CATCH
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$00
 	STA $09
 	STA $0A
@@ -6576,7 +6560,7 @@ _loc_03_EEA3:
 	CMP #$02
 	BCC bra_03_EEE1
 	LDA #SOUND_MISS_CATCH
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA random
 	CMP #$A0
 	BCC bra_03_EEC1
@@ -6606,7 +6590,7 @@ bra_03_EEE1:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDA plr_cur_id
 	JSR _loc_03_C6B9
 	LDA #$00
@@ -6620,7 +6604,7 @@ _loc_03_EEFD:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_GK_GET_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -6746,7 +6730,7 @@ table_03_EFE6:
 
 _PlayerStateDead:		; F016
 	LDA #SOUND_DEAD
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -6768,7 +6752,7 @@ _PlayerStateDead:		; F016
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDA plr_cur_id
 	PHA
 	LDA #$02
@@ -6803,7 +6787,7 @@ _PlayerStateDodge:		; F067
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITH_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -6826,7 +6810,7 @@ _loc_03_F0B0:
 	CMP (plr_data),Y
 	BNE bra_03_F0CA
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_F0CA:
 	JSR _loc_03_C67E
@@ -6892,7 +6876,7 @@ bra_03_F13C:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_F151:
 	LDA plr_w_ball
@@ -6929,7 +6913,7 @@ bra_03_F178:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_DEAD
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -6945,7 +6929,7 @@ bra_03_F1AC:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITH_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -6958,7 +6942,7 @@ bra_03_F1CB:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_DEAD
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -7034,13 +7018,13 @@ bra_03_F258:
 	BEQ bra_03_F234
 bra_03_F25F:
 	LDA #SOUND_WHISTLE
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITH_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -7053,7 +7037,7 @@ bra_03_F25F:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_WITHOUT_BALL
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDA plr_w_ball
 	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #$80
@@ -7078,7 +7062,7 @@ _loc_03_F2A4:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 bra_03_F2C6:
 	JSR _loc_03_C67E
@@ -7096,7 +7080,7 @@ _PlayerStateUnknown07:		; F2D2
 	STA (plr_data),Y
 	JSR CheckButtonsWhenShooting_03_DFBA
 	LDA #SOUND_SHOOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0B
 ; бряк сработал при удержании кнопки для удара в одно касание
@@ -7117,7 +7101,7 @@ _PlayerStateUnknown07:		; F2D2
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 
 _PlayerStateUnknown08:		;F319
@@ -7128,7 +7112,7 @@ _PlayerStateUnknown08:		;F319
 	STA (plr_data),Y
 	JSR CheckButtonsWhenShooting_03_DFBA
 	LDA #SOUND_SHOOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0C
 ; бряк сработал при ударе в одно касание с характерным звуком
@@ -7159,7 +7143,7 @@ _PlayerStateUnknown08:		;F319
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 
 _PlayerStateUnknown09:		;F37A, скорее всего вообще не используется, и предыдущий JMP выглядит так же
@@ -7173,7 +7157,7 @@ _PlayerStateUnknown0A:		;F37D
 	STA (plr_data),Y
 	JSR CheckButtonsWhenShooting_03_DFBA
 	LDA #SOUND_SHOOT_FAST
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDY #plr_dir
 	LDA ball_dir
 	SEC
@@ -7205,7 +7189,7 @@ bra_03_F3A4:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 
 _PlayerStateUnknown0B:		;F3D9, скорее всего вообще не используется
@@ -7239,7 +7223,7 @@ _loc_03_F3D9:				; а этот прыжок был использован
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 _loc_03_F428:
 	LDY #plr_dir
@@ -7356,7 +7340,7 @@ bra_03_F4FB:
 	LDA #$03
 	JSR _BallRelativePosition
 	LDA #SOUND_THROW
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$00
 	STA $041D
 	LDA #$02
@@ -7388,7 +7372,7 @@ bra_03_F4FB:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	LDA #$80
 	ORA $042C
 	STA $042C
@@ -7488,7 +7472,7 @@ _loc_03_F600:
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	LDA #SOUND_SHOOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$00
 	STA $041D
 	LDA #$02
@@ -7529,7 +7513,7 @@ _loc_03_F600:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 
 _PlayerStateCornerKick:		;F685
@@ -7653,7 +7637,7 @@ bra_03_F72A:
 	LDY #<_loc_03_D6FA_minus1
 	JSR _SetSubReturnAddressForLater_b03
 	LDA #SOUND_SHOOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	LDA #$02
 	JSR _SavePlayerSubroutine
 	JSR _loc_03_DF5E
@@ -7668,7 +7652,7 @@ bra_03_F72A:
 	AND #F_CONTROL_CLEAR
 	STA (plr_data),Y
 	LDA #STATE_IDLE
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 _loc_03_F79C:
 	TAY
@@ -7747,12 +7731,12 @@ _loc_03_F7FF:
 	LDA #$80
 	STA $8A
 	LDA #SOUND_SHOOT
-	JSR _WriteSoundID
+	JSR _WriteSoundID_b03
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$15
 	JSR _loc_01_801E
 	LDA #STATE_UNKNOWN_19
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
 
 _PlayerStateUnknown18:		;F83E
@@ -7872,7 +7856,7 @@ bra_03_F915:
 ; бряк срабатывает когда в пенальти кипер отбивает мяч либо он залетает в ворота
 	JSR _loc_01_801E
 	LDA #STATE_UNKNOWN_19
-	JSR _SelectPlayerSubroutine
+	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers	
 ; F925 (код еще не выполннялся, но байты ниже читались)
 _loc_03_F925:
@@ -7945,6 +7929,7 @@ _loc_03_F98D:
 bra_03_F9A4:
 	RTS
 
+.export _loc_03_F9A5
 _loc_03_F9A5:		; увеличить индекс для следующего спрайта
 	INX
 	BNE @still_have_some_sprites_left

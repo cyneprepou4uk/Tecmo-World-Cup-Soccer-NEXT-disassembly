@@ -3,16 +3,16 @@
 .include "val.inc"
 
 .import _FrameDelay_b03
-.import _jmp_ReadBytesAfterJSR_b03
+.import _ReadBytesAfterJSR_b03
 .import _EOR_16bit_plus2_b03
 .import _EOR_16bit_b03
-.import _loc_03_C048
+.import _loc_03_C89D
 .import _HideAllSprites_b03
 .import _SelectInitialPlayerDataAddress_b03
-.import _jmp_SelectPlayerSubroutine_b03
-.import _jmp_ReadBytes_0380_AfterJSR_b03
-.import _loc_03_C07B
-.import _jmp_WriteSoundID_b03
+.import _SelectPlayerSubroutine_b03
+.import _ReadBytes_0380_AfterJSR_b03
+.import _loc_03_F9A5
+.import _WriteSoundID_b03
 
 .export _loc_01_8000
 _loc_01_8000:
@@ -520,7 +520,7 @@ _loc_01_8341:
 	LDA #$21
 _loc_01_8343:
 	PHA
-	JSR _jmp_ReadBytes_0380_AfterJSR_b03
+	JSR _ReadBytes_0380_AfterJSR_b03
 
 .word pal_buffer
  
@@ -758,7 +758,7 @@ bra_01_84E4:
 	TAX
 	BNE bra_01_84EC
 	LDA #SOUND_TIME_LOW
-	JSR _jmp_WriteSoundID_b03
+	JSR _WriteSoundID_b03
 bra_01_84EC:
 	RTS
 
@@ -792,7 +792,7 @@ _loc_01_8504:
 	SEC
 	SBC #$08
 	STA $2A
-	JSR _loc_03_C07B
+	JSR _loc_03_F9A5
 	RTS
 
 .export _TeamsPalette_and_BallPalette_b01
@@ -1107,7 +1107,7 @@ bra_01_8748:
 	AND #$FE
 	ORA $38
 	STA oam_t,X
-	JSR _loc_03_C07B
+	JSR _loc_03_F9A5
 	INC $2C
 	DEC $2D
 	BNE bra_01_8739
@@ -1405,7 +1405,7 @@ _loc_01_88E0:
 	LSR
 	LSR
 	LSR
-	JSR _jmp_ReadBytesAfterJSR_b03
+	JSR _ReadBytesAfterJSR_b03
 
 table_01_8933:		; байты привязаны к JSR, используются для непрямого прыжка в CAD1
 .word table_01_8933_8941
@@ -1418,7 +1418,7 @@ table_01_8933:		; байты привязаны к JSR, используются
 
 table_01_8933_8941:
 	LDA #STATE_IDLE
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	RTS
 
 table_01_8933_8947:
@@ -1439,9 +1439,9 @@ bra_01_895A:
 	PLA
 	LDY #$06
 	STA (plr_data),Y
-	JSR _loc_03_C048
+	JSR _loc_03_C89D
 	LDA #STATE_RUN_AREA
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	RTS
 
 table_01_8933_8968:
@@ -1468,7 +1468,7 @@ table_01_8933_8968:
 	LDY #$06
 	STA (plr_data),Y
 	LDA #STATE_UNKNOWN_10
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	RTS
 
 _loc_01_8996:
@@ -1492,7 +1492,7 @@ bra_01_89AF:
 
 _BeginFollowEnemy:		; 89B0, обычный прыжок и из таблицы
 	LDA #STATE_FOLLOW_ENEMY
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -1517,7 +1517,7 @@ bra_01_89CC:
 bra_01_89D7:
 	JSR _loc_01_894B
 	LDA #STATE_UNKNOWN_14
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -1528,7 +1528,7 @@ bra_01_89D7:
 table_01_8933_89EA:
 	JSR _loc_01_8947
 	LDA #STATE_RUN_BASE
-	JSR _jmp_SelectPlayerSubroutine_b03
+	JSR _SelectPlayerSubroutine_b03
 	RTS
 
 _loc_01_89F3:
