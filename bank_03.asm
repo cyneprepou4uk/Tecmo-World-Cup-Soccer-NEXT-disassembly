@@ -122,7 +122,7 @@ _RESET_VECTOR:		; C081
 	LDX #$10
 	LDA #$01
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDX #$01
 	LDA #$1E
 	STA $01,X
@@ -217,10 +217,10 @@ _NMI_VECTOR:
 	RTI			; возврат из NMI
 
 _WriteToPPU_Palette_and_Background:		; C1EB
-	LDA $0300
+	LDA bg_or_pal_write_flag
 	BEQ _WriteToPPU_Background
 ; запись палитры
-	DEC $0300
+	DEC bg_or_pal_write_flag
 	LDA #<pal_buffer
 	STA $3D
 	LDA #>pal_buffer
@@ -371,7 +371,7 @@ _loc_03_C2F2_minus1 = _loc_03_C2F2 - 1
 	LDA byte_for_2001
 	ORA #$1E
 	STA byte_for_2001
-GoToLogoScreen_03_C2F8:		; переход сюда после завершения матча в режиме 2 players
+_GoToLogoScreen:		; C2F8 переход сюда после завершения матча в режиме 2 players
 	LDA game_mode_flags
 	AND #$FB
 	STA game_mode_flags
@@ -527,7 +527,7 @@ _loc_03_C425:
 	PLA
 	BIT game_mode_flags
 	BPL @one_player_mode
-	JMP GoToLogoScreen_03_C2F8
+	JMP _GoToLogoScreen
 @one_player_mode:
 	TXA
 	BEQ @continue_vs_cpu
@@ -601,7 +601,7 @@ _loc_03_C4B8:
 	LDX #$10
 	LDA #$08
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$1C
 	STA chr_bank
 	LDA #$1A
@@ -1889,7 +1889,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #MUSIC_FIELD
 	JSR _WriteSoundID_b03
 	LDA #$00
@@ -2264,7 +2264,7 @@ _loc_03_CF97:
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
 	JSR _TeamsPalette_and_BallPalette_b01
-	INC $0300
+	INC bg_or_pal_write_flag
 	RTS
 
 table_03_CFBA:		; читаются сразу все 32 байта таблицы

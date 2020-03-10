@@ -120,7 +120,7 @@ _loc_02_80D1_minus1 = _loc_02_80D1 - 1
 	LDX #$00
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$24
 	STA chr_bank
 	LDA #$26
@@ -156,7 +156,7 @@ bra_02_8115:
 	LDX #$00
 	LDA #$06
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #MUSIC_FINAL
 	JSR _WriteSoundID_b03
 	LDA #$FE
@@ -177,7 +177,7 @@ bra_02_8115:
 	LDX #$00
 	LDA #$06
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$1E
 	STA chr_bank + 1
 	LDA #$00
@@ -332,31 +332,31 @@ bra_02_8274:
 	LDX #$10
 	LDA #$0D
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0E
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0F
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$08
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$10
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 _loc_02_82D1:
 	LDA #$01
 	JSR _FrameDelay_b03
@@ -367,25 +367,25 @@ _loc_02_82D9_minus1 = _loc_02_82D9 - 1
 	LDX #$10
 	LDA #$0A
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0B
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0C
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$04
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	JMP _loc_03_C5F1
 
 table_02_831B:		; таблица с байтами, которые читаются исходя из скроллинга камеры
@@ -447,7 +447,7 @@ bra_02_83EB:
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA byte_for_2000
 	ORA #$20
 	STA byte_for_2000
@@ -465,7 +465,7 @@ _loc_02_840A:
 	LDX #$10
 	LDA #$04
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDX #$03
 bra_02_8425:
 	TXA
@@ -606,7 +606,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	LDX #$00
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$02
 	JSR _FrameDelay_b03
 	LDX #<table_02_8DD0
@@ -629,7 +629,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	LDX #$10
 	LDA #$03
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	JMP _loc_02_8560
 
 @SpriteBanks_table:		; 855C
@@ -998,7 +998,7 @@ table_02_8805:
 _loc_02_8809:
 	LDA #$16
 	STA $0393,X
-	INC $0300
+	INC bg_or_pal_write_flag
 	RTS
 
 _loc_02_8814:
@@ -1112,7 +1112,7 @@ _SpectatorsPaletteAndFlagsOnTeamSelectScreen_minus1 = _SpectatorsPaletteAndFlags
 	LDA #$21
 @skip_color_number_reset:
 	PHA
-	INC $0300
+	INC bg_or_pal_write_flag
 	JSR _TeamSelectFlagAnimation
 	LDA #$04
 	JSR _FrameDelay_b03
@@ -1345,7 +1345,7 @@ bra_02_8A57:
 bra_02_8A61:
 	DEX
 	BPL bra_02_8A57
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$18
 	JSR _loc_02_8AB6
 	BCS bra_02_8A85
@@ -1381,7 +1381,7 @@ _loc_02_8A8F:
 	LDX #$00
 bra_02_8AAB:
 	STX soccer_text_color_cnt
-	INC $0300
+	INC bg_or_pal_write_flag
 	JMP _loc_02_8A8F
 _loc_02_8AB6:
 bra_02_8AB6:
@@ -1423,7 +1423,7 @@ bra_02_8AE8:
 	INX
 	CPX #$20
 	BNE bra_02_8ACF
-	INC $0300
+	INC bg_or_pal_write_flag
 	RTS
 
 _loc_02_8AF6:
@@ -1441,7 +1441,7 @@ _loc_02_8AF6:
 	BPL @write_loop
 	LDA #$30
 	STA $0392
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDX #<table_02_8C76
 	LDY #>table_02_8C76
 	JSR _PrepareBytesForNametable_b03
@@ -2468,7 +2468,7 @@ _loc_02_A02A:
 	LDX #$10
 	LDA #$02
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	JSR _ClearNametable_b03
 	JSR _HideAllSprites_b03
 	LDA #<table_02_A3BE
@@ -2558,7 +2558,7 @@ bra_02_A0DC:
 	LDX #$00
 	LDA #$09
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	RTS
 
 .export _loc_02_A0F0
@@ -2725,7 +2725,7 @@ bra_02_A1F8:
 	LDX #$00
 	LDA #$09
 	JSR _LoadScreenPalette_b03
-	INC $0300
+	INC bg_or_pal_write_flag
 	RTS
 
 _loc_02_A232:
@@ -2907,7 +2907,7 @@ bra_02_A34F:
 	INX
 	CPX #$08
 	BNE bra_02_A33D
-	INC $0300
+	INC bg_or_pal_write_flag
 	PLA
 	CLC
 	ADC #$01
@@ -3174,7 +3174,7 @@ PasswordInputScreenFunction:		; A777
 	STA pal_buffer + $09
 	LDA #$30		; белый
 	STA pal_buffer + $0A
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDX #<table_02_A9AC
 	LDY #>table_02_A9AC
 	JSR _PrepareBytesForNametable_b03
@@ -3316,7 +3316,7 @@ bra_02_A886:
 	INX
 	CPX #$20
 	BNE bra_02_A865
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA $2A
 	CLC
 	ADC #$10
@@ -3937,7 +3937,7 @@ _loc_02_B488:
 bra_02_B49C:
 	LDA $E8
 	STA $0390
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	STA $E6
 bra_02_B4AC:

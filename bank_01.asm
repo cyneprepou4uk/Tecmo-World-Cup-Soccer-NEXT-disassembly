@@ -452,7 +452,7 @@ _loc_01_8341_minus1 = _loc_01_8341 - 1
 	LDA #$21
 _loc_01_8343:
 	PHA
-	INC $0300
+	INC bg_or_pal_write_flag
 	LDA #$04
 	JSR _FrameDelay_b03
 	PLA
