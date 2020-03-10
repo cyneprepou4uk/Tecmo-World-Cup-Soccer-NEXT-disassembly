@@ -10,10 +10,10 @@
 .import _EOR_16bit_plus2_b03
 .import _EOR_16bit_plus4_b03
 .import _EOR_16bit_b03
-.import _jmp_HideAllSprites_b03
-.import _jmp_SelectInitialPlayerDataAddress_b03
+.import _HideAllSprites_b03
+.import _SelectInitialPlayerDataAddress_b03
 .import _jmp_SelectPlayerSubroutine_b03
-.import _jmp_ClearNametable_b03
+.import _ClearNametable_b03
 .import _jmp_ReadBytes_0380_AfterJSR_b03
 .import _jmp_WriteSoundID_b03
 
@@ -152,8 +152,8 @@ _loc_02_80B9:
 	RTS
 
 _loc_02_80D1:
-	JSR _jmp_ClearNametable_b03
-	JSR _jmp_HideAllSprites_b03
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDX #$00
 	LDA #$02
 	JSR _LoadScreenPalette_b03
@@ -506,8 +506,8 @@ bra_02_8409:
 	RTS
 
 _loc_02_840A:
-	JSR _jmp_ClearNametable_b03
-	JSR _jmp_HideAllSprites_b03
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDX #$00
 	LDA #$05
 	JSR _LoadScreenPalette_b03
@@ -561,7 +561,7 @@ bra_02_845F:
 	RTS
 
 _loc_02_8478:
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	LDA #<table_02_9144
 	STA $2A
 	LDA #>table_02_9144
@@ -635,8 +635,8 @@ bra_02_84E5:
 
 .export _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
 _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
-	JSR _jmp_ClearNametable_b03
-	JSR _jmp_HideAllSprites_b03
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDA byte_for_2000
 	ORA #$20
 	STA byte_for_2000
@@ -1482,8 +1482,8 @@ bra_02_8AE8:
 	RTS
 
 _loc_02_8AF6:
-	JSR _jmp_ClearNametable_b03
-	JSR _jmp_HideAllSprites_b03
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDA #$1C
 	STA chr_bank
 	LDA #$1E
@@ -2076,7 +2076,7 @@ _loc_02_9774:
 	BNE bra_02_977E
 	JMP _loc_02_9838
 bra_02_977E:
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -2220,7 +2220,7 @@ _loc_02_9852:
 	BNE bra_02_985C
 	JMP _loc_02_9916
 bra_02_985C:
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -2523,8 +2523,8 @@ _loc_02_A02A:
 	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
-	JSR _jmp_ClearNametable_b03
-	JSR _jmp_HideAllSprites_b03
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDA #<table_02_A3BE
 	STA $8A
 	LDA #>table_02_A3BE
@@ -2618,7 +2618,7 @@ bra_02_A0DC:
 
 _loc_02_A0F0:
 	JSR _loc_02_A19F
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	LDA byte_for_2000
 	ORA #$20
 	STA byte_for_2000
@@ -2633,7 +2633,7 @@ _loc_02_A0F0:
 	LDA #$00
 bra_02_A10E:
 	PHA
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -2652,14 +2652,14 @@ bra_02_A10E:
 	CLC
 	ADC #$09
 	STA plr_w_ball
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #STATE_UNKNOWN_17
 	JSR _jmp_SelectPlayerSubroutine_b03
 	LDX #$00
 	JSR _loc_02_A174
 	LDA team_w_ball
 	EOR #$0B
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #STATE_UNKNOWN_18
 	JSR _jmp_SelectPlayerSubroutine_b03
 	LDX #$04
@@ -2703,7 +2703,7 @@ table_02_A197:
 .byte $FF,$00,$6F,$00
 
 _loc_02_A19F:
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	LDA byte_for_2000
 	AND #$DF
 	STA byte_for_2000
@@ -2748,7 +2748,7 @@ bra_02_A1CB:
 	RTS
 
 _loc_02_A1ED:
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	LDA byte_for_2000
 	AND #$DF
 	STA byte_for_2000
@@ -3312,7 +3312,7 @@ _loc_02_A80C:
 	JSR _jmp_WriteSoundID_b03
 	JMP ContinuePasswordInput
 @correct:
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	LDA #$20
 	JSR _jmp_WriteSoundID_b03
 	LDA #$00

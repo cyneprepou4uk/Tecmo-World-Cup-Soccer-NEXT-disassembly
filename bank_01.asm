@@ -7,8 +7,8 @@
 .import _EOR_16bit_plus2_b03
 .import _EOR_16bit_b03
 .import _loc_03_C048
-.import _jmp_HideAllSprites_b03
-.import _jmp_SelectInitialPlayerDataAddress_b03
+.import _HideAllSprites_b03
+.import _SelectInitialPlayerDataAddress_b03
 .import _jmp_SelectPlayerSubroutine_b03
 .import _jmp_ReadBytes_0380_AfterJSR_b03
 .import _loc_03_C07B
@@ -95,7 +95,7 @@ _loc_01_804E:
 	BPL bra_01_8059
 	LDA #$16
 bra_01_8059:
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	SEC
 	LDY #$05
 	LDA (plr_data),Y
@@ -308,7 +308,7 @@ _loc_01_81D9:
 	BPL bra_01_81E0
 	LDA #$16
 bra_01_81E0:
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_pos_y_lo
 	LDA (plr_data),Y
 	SEC
@@ -537,7 +537,7 @@ _loc_01_8343:
 bra_01_835E:
 	JMP _loc_01_8343
 _loc_01_8361:
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	LDA #$00
 	STA spr_cnt_index
 	LDX #$00
@@ -585,7 +585,7 @@ _loc_01_83AA:
 	LDA #$00
 bra_01_83AC:
 	PHA
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	LDA #$00
 	STA spr_cnt_index
 	PLA
@@ -603,7 +603,7 @@ bra_01_83AC:
 	PLA
 	CMP #$38
 	BNE bra_01_83AC
-	JSR _jmp_HideAllSprites_b03
+	JSR _HideAllSprites_b03
 	RTS
 
 _loc_01_83D1:
@@ -957,7 +957,7 @@ _loc_01_865D:
 	CMP #$0B
 	BCS bra_01_8695
 bra_01_8668:
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_spr_a
 	LDA (plr_data),Y
 	PHA
@@ -1225,7 +1225,7 @@ bra_01_8808:
 	BEQ @skip_loop
 	CMP #$0B
 	BEQ @skip_loop
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_state
 	LDA (plr_data),Y
 	CMP #STATE_RUN_BASE
@@ -1331,7 +1331,7 @@ bra_01_887D:
 
 _loc_01_88B2:
 	PHA
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	PLA
 	CMP #$0B
 	BCC bra_01_88BD
@@ -1679,7 +1679,7 @@ bra_01_8ACE:
 	STY counter
 bra_01_8AD2:
 	PHA
-	JSR _jmp_SelectInitialPlayerDataAddress_b03
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDX counter
 	LDA table_01_8B19,X
 	CLC

@@ -49,33 +49,12 @@ _loc_03_C00C:
 .export _jmp_ReadBytesAfterJSR_b03
 _jmp_ReadBytesAfterJSR_b03:
 	JMP _ReadBytesAfterJSR
-	JMP _BankswitchPRG	; еще не использовался
 .export _loc_03_C048
 _loc_03_C048:
 	JMP _loc_03_C89D
-	JMP _loc_03_C843		; еще не использовался
-	JMP _loc_03_C67E		; еще не использовался
-.export _jmp_HideAllSprites_b03
-_jmp_HideAllSprites_b03:
-	JMP _HideAllSprites
-	JMP _loc_03_CC23		; еще не использовался
-.export _jmp_SelectInitialPlayerDataAddress_b03
-_jmp_SelectInitialPlayerDataAddress_b03:
-	JMP _SelectInitialPlayerDataAddress
 .export _jmp_SelectPlayerSubroutine_b03
 _jmp_SelectPlayerSubroutine_b03:
 	JMP _SelectPlayerSubroutine
-	JMP _SavePlayerSubroutine		; еще не использовался
-	JMP _loc_03_C661		; еще не использовался
-	JMP _loc_03_C666		; еще не использовался
-	JMP _SetUnknownPlayerFlag		; еще не использовался
-	JMP _IncreasePlayerAnimationCounterLow		; еще не использовался
-	JMP _ClearPlayerAnimationCounterLow		; еще не использовался
-	JMP _ClearUnknownPlayerFlag		; еще не использовался
-	JMP _loc_03_C6E1		; еще не использовался
-.export _jmp_ClearNametable_b03
-_jmp_ClearNametable_b03:
-	JMP _ClearNametable
 .export _jmp_ReadBytes_0380_AfterJSR_b03
 _jmp_ReadBytes_0380_AfterJSR_b03:
 	JMP _ReadBytes_0380_AfterJSR
@@ -132,8 +111,8 @@ _RESET_VECTOR:		; C081
 	STA $2006
 	DEX
 	BNE @loop
-	JSR _ClearNametable
-	JSR _HideAllSprites
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDX #$E0
 	TXS
 	LDA #$00
@@ -636,8 +615,8 @@ _loc_03_C476:
 	RTS
 
 _loc_03_C4B8:
-	JSR _ClearNametable
-	JSR _HideAllSprites
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDA byte_for_2000
 	AND #$FC
 	STA byte_for_2000
@@ -677,8 +656,8 @@ bra_03_C4E7:
 	RTS
 
 _loc_03_C507:
-	JSR _ClearNametable
-	JSR _HideAllSprites
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	JSR ClearRamBeforeMatch_03_C8EC
 	JSR _loc_03_CF97
 	LDA #$04
@@ -886,19 +865,6 @@ _SavePlayerSubroutine:		; C652
 	STA (plr_data),Y	; plr_sub_hi
 	JMP SelectNextIndexForPlayers
 
-_loc_03_C661:
-; код еще не выполнялся, и судя по отсутствию прыжков не выполнится
-; вероятно сделан для некой страховки что таймер каким-то образом по пизде пойдет
-	; возможно на случай если почему-то код откажется записывать 01 после 00
-	LDA #$FF
-	JMP _SavePlayerSubroutine
-
-_loc_03_C666:
-	LDY #plr_sub1_timer
-	LDA #$01
-	STA (plr_data),Y
-	RTS
-
 _IncreasePlayerAnimationCounterLow:		; C66D
 	LDY #plr_anim_cnt_lo
 	LDA (plr_data),Y
@@ -968,13 +934,13 @@ bra_03_C6C4:
 	JSR _loc_03_C6E1
 bra_03_C6DA:
 	LDA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	RTS
 
 _loc_03_C6E1:
 	LDA plr_wo_ball
 	BMI bra_03_C6F6
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -989,7 +955,7 @@ bra_03_C6F6:
 	JSR _loc_03_C95B
 bra_03_C703:
 	STA plr_wo_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL
@@ -1434,7 +1400,7 @@ bra_03_C967:
 	STA $2E
 bra_03_C96F:
 	LDA $2D
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL
@@ -1519,7 +1485,7 @@ bra_03_C9E6:
 	STA $2E
 bra_03_C9EE:
 	LDA $2D
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL
@@ -1586,7 +1552,8 @@ _loc_03_CA17:		; похожий код в C998, можно добавить bit 
 	CLC
 	RTS
 
-_ClearNametable:		; CA59
+.export _ClearNametable_b03
+_ClearNametable_b03:		; CA59
 	LDA byte_for_2000
 	AND #$7F
 	STA byte_for_2000
@@ -1631,7 +1598,8 @@ ClearNMT_Loop:		; CA80 на вход подается 20 или 24 для очи
 	STA $2005
 	RTS
 
-_HideAllSprites:		; CAAF
+.export _HideAllSprites_b03
+_HideAllSprites_b03:		; CAAF
 	LDY #$00
 	LDA #$F8
 @loop:
@@ -1838,7 +1806,8 @@ bra_03_CBD7:
 	TAX
 	RTS
 
-_SelectInitialPlayerDataAddress:		; CBE3
+.export _SelectInitialPlayerDataAddress_b03
+_SelectInitialPlayerDataAddress_b03:		; CBE3
 _SelectInitialBallDataAddress:			; если на вход подается 16
 _SelectInitialShadowDataAddress:		; если на вход подается 17
 	ASL
@@ -1975,8 +1944,8 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	LDA game_mode_flags
 	AND #$FB
 	STA game_mode_flags
-	JSR _ClearNametable
-	JSR _HideAllSprites
+	JSR _ClearNametable_b03
+	JSR _HideAllSprites_b03
 	LDX #$00
 	LDA #$02
 	JSR _LoadScreenPalette_b03
@@ -2027,7 +1996,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	CLC
 	ADC #$06
 	STA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #STATE_UNKNOWN_13
 	JSR _SelectPlayerSubroutine
 	LDY #plr_flags
@@ -2138,7 +2107,7 @@ bra_03_CE17:
 	PHA
 	LDA plr_w_ball
 	BMI bra_03_CE36
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -2388,7 +2357,7 @@ bra_03_CFE7:
 bra_03_CFF4:
 	LDA plr_wo_ball
 	BMI bra_03_D019
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_state
 	LDA (plr_data),Y
 	CMP #STATE_WITHOUT_BALL
@@ -2414,7 +2383,7 @@ bra_03_D019:
 	STA $2C
 bra_03_D02A:
 	LDA $2A
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	TAX
@@ -2437,7 +2406,7 @@ bra_03_D051:
 	CMP plr_wo_ball
 	BEQ bra_03_D073
 	STA plr_wo_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL
@@ -2498,7 +2467,7 @@ bra_03_D0C0:
 	CLC
 	ADC team_w_ball
 	STA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDX #$00
 	LDA ball_pos_x_hi
 	BEQ bra_03_D0D7
@@ -2603,7 +2572,7 @@ table_03_CE6B_D173:
 	EOR #$0B
 	STA team_w_ball
 	STA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDX #$B8
 	LDY #$00
 	LDA ball_pos_x_hi
@@ -2650,7 +2619,7 @@ bra_03_D1D3:
 ; бряк сработал когда закончилась надпись out of play goal kick
 	JSR _loc_02_801E
 	LDA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -2735,7 +2704,7 @@ bra_03_D294:
 	TXA
 	ADC team_w_ball
 	STA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #$34
 	LDX #$00
 	LDA ball_pos_x_hi
@@ -2847,7 +2816,7 @@ table_03_CE6B_D37F:
 	LDA #$00
 bra_03_D38B:
 	PHA
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_ALL_CLEAR
@@ -2968,7 +2937,7 @@ bra_03_D464:
 	JSR _loc_01_802A
 	LDA #$6E
 	JSR _FrameDelay_b03
-	JSR _HideAllSprites
+	JSR _HideAllSprites_b03
 	LDA byte_for_2000
 	ORA #$20
 	STA byte_for_2000
@@ -2996,7 +2965,7 @@ bra_03_D4A7:
 	BEQ bra_03_D4BF
 	CMP #$0B
 	BEQ bra_03_D4BF
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_ALL_CLEAR
@@ -3161,7 +3130,7 @@ _loc_03_D5AD:
 	STA $2A
 bra_03_D5D0:
 	LDA $2A
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #$00
 	LDX $2A
 	CPX #$0B
@@ -3421,7 +3390,7 @@ bra_03_D7B0:
 	STA $03E2
 bra_03_D7D1:
 	LDA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDX $03E2
 	LDA table_03_D842,X
 	EOR #$FF
@@ -4371,7 +4340,7 @@ _loc_03_DE96:
 	JSR _loc_01_8024
 	LDA plr_w_ball
 	BMI @skip
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_801B
 @skip:
@@ -4407,7 +4376,7 @@ bra_03_DEEB:
 	PHA
 	CMP plr_w_ball
 	BEQ bra_03_DEF7
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_801B
 bra_03_DEF7:
@@ -4450,7 +4419,7 @@ bra_03_DF28:
 	STA plr_cur_id
 bra_03_DF35:
 	LDA plr_cur_id
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_sub1_timer
 	LDA (plr_data),Y
 	BEQ bra_03_DF55
@@ -4483,7 +4452,7 @@ _loc_03_DF5E:
 	LDA #$00
 bra_03_DF67:
 	PHA
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_state
 	LDA (plr_data),Y
 	CMP #STATE_FOLLOW_BALL
@@ -4520,7 +4489,7 @@ bra_03_DF80:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA plr_cur_id
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 bra_03_DFB9:
 	RTS
 
@@ -4933,7 +4902,7 @@ bra_03_E26F:
 	JSR _ComparePlayerWithBallCoordinates1
 	BCC bra_03_E28C
 	LDA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -5015,7 +4984,7 @@ bra_03_E28C:
 	JSR _SetSubReturnAddressForLater_b03
 	LDA plr_w_ball
 	BMI bra_03_E342
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -5034,7 +5003,7 @@ bra_03_E28C:
 _loc_03_E342:
 bra_03_E342:
 	LDA plr_cur_id
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_act_timer2
 	LDA #$80
 	STA (plr_data),Y
@@ -5275,7 +5244,7 @@ _loc_03_E4DE:
 	LDA #$01
 	JSR _FrameDelay_b03
 	LDA plr_frame_id
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	JSR _loc_03_C843
 	LDY #plr_unknown_19
 	STA (plr_data),Y
@@ -5460,7 +5429,7 @@ _loc_03_E604:
 	LDA #$01
 	JSR _FrameDelay_b03
 	LDA plr_frame_id
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	RTS
 
 _loc_03_E613:
@@ -5669,7 +5638,7 @@ bra_03_E75A:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -5734,7 +5703,7 @@ bra_03_E7BD:
 	STA (plr_data),Y
 	JSR _loc_03_DF5E
 	LDA plr_cur_id
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDA plr_cur_id
 	JSR _loc_03_C92B
 	JMP SelectNextIndexForPlayers
@@ -5827,7 +5796,7 @@ bra_03_E89B:
 	BMI bra_03_E8B9
 
 ; код еще не выполнялся
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -6047,7 +6016,7 @@ BotDirection_table_03_EA79:			; читаются с пмощью рандома,
 .byte $E0,$00,$20,$00
 	
 _loc_03_EA7D:
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	STA ball_pass_pos_x_lo
@@ -6063,7 +6032,7 @@ _loc_03_EA7D:
 	LDA (plr_data),Y	; plr_pos_y_hi
 	STA ball_pass_pos_y_hi
 	LDA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	JSR CalculateBallDirectionForPass_03_DD6B
 	STA ball_dir
 	LDY #plr_dir
@@ -6211,7 +6180,7 @@ _loc_03_EBB8:
 	BCC @is_far_from_the_ball
 	LDA plr_w_ball
 	BMI @nobody_owns_the_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -6557,7 +6526,7 @@ bra_03_EE24:
 bra_03_EE4A:
 	LDA plr_w_ball
 	BMI bra_03_EE5F
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -6631,7 +6600,7 @@ bra_03_EECB:
 	RTS
 
 bra_03_EEE1:
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -6954,7 +6923,7 @@ bra_03_F178:
 	LDX random
 	CPX #$40
 	BCC bra_03_F1CB
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -6967,7 +6936,7 @@ bra_03_F178:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA plr_cur_id
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 bra_03_F1AC:
 	LDA plr_cur_id
 	JSR _loc_03_C6B9
@@ -7078,7 +7047,7 @@ bra_03_F25F:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA plr_wo_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -7086,7 +7055,7 @@ bra_03_F25F:
 	LDA #STATE_WITHOUT_BALL
 	JSR _SelectPlayerSubroutine
 	LDA plr_w_ball
-	JSR _SelectInitialPlayerDataAddress
+	JSR _SelectInitialPlayerDataAddress_b03
 	LDA #$80
 	STA $042C
 	LDA game_mode_flags
