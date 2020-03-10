@@ -6,10 +6,10 @@
 .import _FrameDelay_b03
 .import _loc_03_C00C
 .import _LoadScreenPalette_b03
-.import _jmp_PrepareBytesForNametable_b03
-.import _jmp_EOR_16bit_plus2_b03
+.import _PrepareBytesForNametable_b03
+.import _EOR_16bit_plus2_b03
 .import _EOR_16bit_plus4_b03
-.import _jmp_EOR_16bit_b03
+.import _EOR_16bit_b03
 .import _jmp_HideAllSprites_b03
 .import _jmp_SelectInitialPlayerDataAddress_b03
 .import _jmp_SelectPlayerSubroutine_b03
@@ -32,9 +32,6 @@ _loc_02_800C_minus1 = _loc_02_800C - 1
 _loc_02_8015:
 _loc_02_8015_minus1 = _loc_02_8015 - 1
 	JMP _loc_02_80D1
-.export _jmp_MainMenuScreenFunction_b02
-_jmp_MainMenuScreenFunction_b02:
-	JMP MainMenuScreenFunction
 	JMP _loc_02_B000
 .export _loc_02_801E
 _loc_02_801E:
@@ -168,7 +165,7 @@ _loc_02_80D1:
 	STA chr_bank + 1
 	LDX #<table_02_95BF
 	LDY #>table_02_95BF
-	JSR _jmp_PrepareBytesForNametable_b03
+	JSR _PrepareBytesForNametable_b03
 	LDA #$20
 	JSR _loc_02_894C
 	LDA #$21
@@ -665,12 +662,12 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	JSR _FrameDelay_b03
 	LDX #<table_02_8DD0
 	LDY #>table_02_8DD0
-	JSR _jmp_PrepareBytesForNametable_b03
+	JSR _PrepareBytesForNametable_b03
 	BIT game_mode_flags
 	BPL @password_screen
 	LDX #<table_02_9137
 	LDY #>table_02_9137
-	JSR _jmp_PrepareBytesForNametable_b03
+	JSR _PrepareBytesForNametable_b03
 	JMP @skip
 @password_screen:
 	JSR PasswordScreenFunction
@@ -1503,16 +1500,17 @@ _loc_02_8AF6:
 .word pal_buffer
 	LDX #<table_02_8C76
 	LDY #>table_02_8C76
-	JSR _jmp_PrepareBytesForNametable_b03
+	JSR _PrepareBytesForNametable_b03
 	RTS
 
-MainMenuScreenFunction:		; 8B20
+.export _MainMenuScreenFunction_b03
+_MainMenuScreenFunction_b03:		; 8B20
 ; изменение позиции курсора и попытка дальнейшей игры, затем моргание текста
 	LDA #$1D
 	STA $6C
 	LDA #$00
 	STA game_mode_opt
-	JSR MainMenuCursorSpritePosition
+	JSR _MainMenuCursorSpritePosition
 @cursor_loop:
 	LDA #$01
 	JSR _FrameDelay_b03
@@ -1539,7 +1537,7 @@ MainMenuScreenFunction:		; 8B20
 	LDA #$00
 @write_position:
 	STA game_mode_opt
-	JSR MainMenuCursorSpritePosition
+	JSR _MainMenuCursorSpritePosition
 @skip:
 	LDA #(BTN_A | BTN_START)
 	AND btn_press
@@ -1608,7 +1606,7 @@ MainMenuScreenFunction:		; 8B20
 	BNE @text_blink_loop
 	RTS
 
-MainMenuCursorSpritePosition:		; 8BE0
+_MainMenuCursorSpritePosition:		; 8BE0
 	LDA game_mode_opt		; позиция курсора
 	ASL
 	ASL
@@ -2128,7 +2126,7 @@ bra_02_97C8:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_97D2
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 bra_02_97D2:
 	CLC
 	TXA
@@ -2142,7 +2140,7 @@ bra_02_97E0:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_97E9
-	JSR _jmp_EOR_16bit_plus2_b03
+	JSR _EOR_16bit_plus2_b03
 _loc_02_97E9:
 bra_02_97E9:
 	TYA
@@ -2174,7 +2172,7 @@ bra_02_980D:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_9817
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 bra_02_9817:
 	CLC
 	TXA
@@ -2272,7 +2270,7 @@ bra_02_98A6:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_98B0
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 bra_02_98B0:
 	CLC
 	TXA
@@ -2286,7 +2284,7 @@ bra_02_98BE:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_98C7
-	JSR _jmp_EOR_16bit_plus2_b03
+	JSR _EOR_16bit_plus2_b03
 _loc_02_98C7:
 bra_02_98C7:
 	TYA
@@ -2318,7 +2316,7 @@ bra_02_98EB:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_98F5
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 bra_02_98F5:
 	CLC
 	TXA
@@ -3158,7 +3156,7 @@ bra_02_A6D7:
 	BNE bra_02_A6D7
 	LDX #<table_02_A9AC
 	LDY #>table_02_A9AC
-	JSR _jmp_PrepareBytesForNametable_b03
+	JSR _PrepareBytesForNametable_b03
 	JSR _loc_02_A71A
 	RTS
 
@@ -3233,7 +3231,7 @@ PasswordInputScreenFunction:		; A777
 .word pal_buffer
 	LDX #<table_02_A9AC
 	LDY #>table_02_A9AC
-	JSR _jmp_PrepareBytesForNametable_b03
+	JSR _PrepareBytesForNametable_b03
 	LDX #$09
 	LDA #$00
 @clear_characters_loop:

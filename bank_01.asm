@@ -4,8 +4,8 @@
 
 .import _FrameDelay_b03
 .import _jmp_ReadBytesAfterJSR_b03
-.import _jmp_EOR_16bit_plus2_b03
-.import _jmp_EOR_16bit_b03
+.import _EOR_16bit_plus2_b03
+.import _EOR_16bit_b03
 .import _loc_03_C048
 .import _jmp_HideAllSprites_b03
 .import _jmp_SelectInitialPlayerDataAddress_b03
@@ -162,7 +162,7 @@ _loc_01_80A3:
 	TAY
 	BPL bra_01_80C2
 	DEC $2C
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 bra_01_80C2:
 	TYA
 	BNE bra_01_80CC
@@ -174,7 +174,7 @@ bra_01_80CC:
 	LDY #$00
 	BIT $2C
 	BPL bra_01_80D7
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 bra_01_80D7:
 	TXA
 	CLC
@@ -351,7 +351,7 @@ bra_01_820E:
 	TAY
 	PHP
 	BPL bra_01_822D
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 bra_01_822D:
 	LDA #$00
 	STA $03C2
@@ -1753,7 +1753,7 @@ _loc_01_8B3F:
 	LDX ball_pos_x_lo
 	LDY $03DA
 	BEQ @skip
-	JSR _jmp_EOR_16bit_plus2_b03
+	JSR _EOR_16bit_plus2_b03
 @skip:
 	TXA
 	SEC
@@ -1830,7 +1830,7 @@ _loc_01_8BC3:
 	TAY
 	PHP
 	BPL @skip
-	JSR _jmp_EOR_16bit_b03
+	JSR _EOR_16bit_b03
 @skip:
 	TYA
 	BNE @continue
@@ -1932,7 +1932,7 @@ _loc_01_8C65:
 	LDY $03DA
 	BEQ bra_01_8C76
 	INC $2A
-	JSR _jmp_EOR_16bit_plus2_b03
+	JSR _EOR_16bit_plus2_b03
 bra_01_8C76:
 	SEC
 	TXA

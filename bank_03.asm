@@ -33,7 +33,7 @@
 .import _loc_02_800C_minus1
 .import _LoadLogoPalette_b02
 .import _loc_02_8015_minus1
-.import _jmp_MainMenuScreenFunction_b02
+.import _MainMenuScreenFunction_b03
 .import _loc_02_801E
 .import _loc_02_8021
 .import _loc_02_8024
@@ -49,15 +49,6 @@ _loc_03_C00C:
 .export _jmp_ReadBytesAfterJSR_b03
 _jmp_ReadBytesAfterJSR_b03:
 	JMP _ReadBytesAfterJSR
-.export _jmp_PrepareBytesForNametable_b03
-_jmp_PrepareBytesForNametable_b03:
-	JMP PrepareBytesForNametable
-.export _jmp_EOR_16bit_plus2_b03
-_jmp_EOR_16bit_plus2_b03:
-	JMP _EOR_16bit_plus2
-.export _jmp_EOR_16bit_b03
-_jmp_EOR_16bit_b03:
-	JMP EOR_16bit
 	JMP _BankswitchPRG	; еще не использовался
 .export _loc_03_C048
 _loc_03_C048:
@@ -93,7 +84,7 @@ _loc_03_C07B:
 	JMP _loc_03_F9A5
 .export _jmp_WriteSoundID_b03
 _jmp_WriteSoundID_b03:
-	JMP WriteSoundID
+	JMP _WriteSoundID
 
 _RESET_VECTOR:		; C081
 	LDA #$00
@@ -436,7 +427,7 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	LDA #$00
 	STA $03D2
 	LDA #MUSIC_LOGO
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$05
@@ -480,7 +471,7 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _jmp_MainMenuScreenFunction_b02
+	JSR _MainMenuScreenFunction_b03
 	LDA game_mode_flags
 	ORA #FLAG_GM_UNKNOWN_08
 	STA game_mode_flags
@@ -488,7 +479,7 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	STA team_id
 ContinueWalkthrough_03_C36E:		; переход сюда если играть против компа и победить/проиграть
 	LDA #SOUND_OFF
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA game_mode_flags
 	AND #$FB
 	STA game_mode_flags
@@ -637,7 +628,7 @@ _loc_03_C476:
 	STA $1D
 	STA $1E
 	LDA #SOUND_TIME_UP
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$01	; time up текст
 	JSR _WriteMessageOnScreenWithSprites
 	LDA #$A0
@@ -674,7 +665,7 @@ bra_03_C4E7:
 	DEX
 	BPL bra_03_C4E7
 	LDA #MUSIC_HALF_TIME
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	PHA
 	LDA #$04
 	STA prg_bank
@@ -1049,7 +1040,8 @@ bra_03_C750:
 	SEC
 	RTS
 
-PrepareBytesForNametable:	; C752
+.export _PrepareBytesForNametable_b03
+_PrepareBytesForNametable_b03:	; C752
 ; X - младший байт для $43
 ; Y - старший байт для $44
 .scope
@@ -1367,7 +1359,7 @@ ram_hi = $2B
 	RTS
 .endscope
 
-WriteSoundID:		; C910
+_WriteSoundID:		; C910
 	LDY sound_cnt
 	CPY #$04
 	BCS @skip
@@ -1376,7 +1368,8 @@ WriteSoundID:		; C910
 @skip:
 	RTS
 
-EOR_16bit:		; C91E
+.export _EOR_16bit_b03
+_EOR_16bit_b03:		; C91E
 	TXA
 	EOR #$FF
 	TAX
@@ -1478,7 +1471,7 @@ _loc_03_C998:		; похожий код в CA17, можно добавить bit 
 	SBC ball_pos_x_hi
 	TAY
 	BCS @skip
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 @skip:
 	SEC
 	TXA
@@ -1497,7 +1490,7 @@ _loc_03_C998:		; похожий код в CA17, можно добавить bit 
 	SBC ball_pos_y_hi
 	TAY
 	BCS @skip2
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 @skip2:
 	SEC
 	TXA
@@ -1560,7 +1553,7 @@ _loc_03_CA17:		; похожий код в C998, можно добавить bit 
 	SBC ball_land_pos_x_hi
 	TAY
 	BCS @skip
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 @skip:
 	SEC
 	TXA
@@ -1579,7 +1572,7 @@ _loc_03_CA17:		; похожий код в C998, можно добавить bit 
 	SBC ball_land_pos_y_hi
 	TAY
 	BCS @skip2
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 @skip2:
 	SEC
 	TXA
@@ -1742,15 +1735,16 @@ _ReadBytes_0380_AfterJSR:		; CB18
 	TAY					; вернуть Y
 	RTS
 
-_EOR_16bit_plus2:		; CB4A
-	JSR EOR_16bit
+.export _EOR_16bit_plus2_b03
+_EOR_16bit_plus2_b03:		; CB4A
+	JSR _EOR_16bit_b03
 	INY
 	INY
 	RTS
 
 .export _EOR_16bit_plus4_b03
 _EOR_16bit_plus4_b03:		; CB50
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 	INY
 	INY
 	INY
@@ -1992,7 +1986,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	LDA #MUSIC_FIELD
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$00
 	STA $03D3
 	JSR _loc_03_D5AD
@@ -2233,7 +2227,7 @@ bra_03_CEB0:
 	STA $21
 	STA $2000
 	LDA #MUSIC_PENALTY
-	JSR WriteSoundID
+	JSR _WriteSoundID
 _loc_03_CECB:
 	LDA #$00
 	STA $8A
@@ -2308,7 +2302,7 @@ bra_03_CF32:
 	JMP _loc_03_CECB
 bra_03_CF4A:
 	LDA #MUSIC_HALF_TIME
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$00
 bra_03_CF51:
 	PHA
@@ -2477,7 +2471,7 @@ table_03_CE6B_D07A:
 	EOR #$0B
 	STA team_w_ball
 	BEQ bra_03_D09B
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_D09B:
 	STX $2A
 	STY $2B
@@ -2614,7 +2608,7 @@ table_03_CE6B_D173:
 	LDY #$00
 	LDA ball_pos_x_hi
 	BEQ bra_03_D1A8
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_D1A8:
 	TYA
 	LDY #plr_pos_x_hi
@@ -2724,7 +2718,7 @@ table_03_CE6B_D257:
 	LDY ball_pos_x_hi
 	LDA team_w_ball
 	BEQ bra_03_D288
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_D288:
 	TYA
 	PHP
@@ -2847,9 +2841,9 @@ table_03_D35F:		; какие-то параметры игрока
 
 table_03_CE6B_D37F:
 	LDA #MUSIC_GOAL
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #SOUND_FANS
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$00
 bra_03_D38B:
 	PHA
@@ -2879,7 +2873,7 @@ _loc_03_D3B1:
 	LDY #$00
 	LDA $03CA
 	BNE bra_03_D3C2
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_D3C2:
 	TXA
 	CLC
@@ -3034,7 +3028,7 @@ _loc_03_D4E8:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
 	BEQ bra_03_D4F3
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_D4F3:
 	STX $2A
 	STY $2B
@@ -3045,7 +3039,7 @@ bra_03_D4F3:
 	SBC #$00
 	BCS bra_03_D509
 	LDA #SOUND_WHISTLE
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDX #$00
 	SEC
 	RTS
@@ -3092,7 +3086,7 @@ bra_03_D530:
 	BEQ bra_03_D58E
 bra_03_D558:
 	LDA #SOUND_WHISTLE
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA $03D3
 	ORA #$10
 	STA $03D3
@@ -3118,7 +3112,7 @@ bra_03_D581:
 	INX
 bra_03_D587:
 	LDA #SOUND_WHISTLE
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	SEC
 	RTS
 bra_03_D58E:
@@ -3212,7 +3206,7 @@ _loc_03_D605_minus1 = _loc_03_D605 - 1
 	LDY #$03
 	CMP #$40
 	BEQ bra_03_D62D
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_D62D:
 	STX $03D5
 	STY $03D7
@@ -3240,7 +3234,7 @@ bra_03_D64D:
 bra_03_D663:
 	INC goals_pk,X
 	LDA #SOUND_FANS
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDX #$0D
 	LDA #$78
 	STA $01,X
@@ -3255,7 +3249,7 @@ bra_03_D663:
 _loc_03_D680:
 _loc_03_D680_minus1 = _loc_03_D680 - 1
 	LDA #SOUND_CATCH
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$00
 	STA $03DB
 	LDA #$FB
@@ -3502,7 +3496,7 @@ _loc_03_D859:
 	LDY $2B
 	AND #$80
 	BEQ bra_03_D868
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 _loc_03_D868:
 bra_03_D868:
 	TYA
@@ -3535,7 +3529,7 @@ _loc_03_D88A:
 	LDY $2B
 	AND #$40
 	BEQ bra_03_D899
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 _loc_03_D899:
 bra_03_D899:
 	TYA
@@ -3616,7 +3610,7 @@ bra_03_D8EB:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
 	BEQ bra_03_D918
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 	SEC
 bra_03_D918:
 	ROL $2C
@@ -3630,7 +3624,7 @@ bra_03_D918:
 	SBC table_03_D98F + 3,Y
 	TAY
 	BCS bra_03_D92E
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_D92E:
 	TYA
 	BNE bra_03_D938
@@ -3653,7 +3647,7 @@ _loc_03_D93E:
 	TAY
 	LSR $2C
 	BCC bra_03_D94E
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_D94E:
 	STX ball_pass_pos_x_lo
 	STY ball_pass_pos_x_hi
@@ -3682,7 +3676,7 @@ bra_03_D964:
 	JSR _loc_03_DB5E
 	JSR _loc_03_DF5E
 	LDA #SOUND_GOALSPOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	RTS
 
 table_03_D98F:		; чтение из 2х мест
@@ -3733,7 +3727,7 @@ bra_03_D9C7:
 	LDY ball_pos_x_hi
 	BEQ bra_03_D9EB
 ; прыжок еще не выполнялся
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_D9EB:
 	SEC
 	TXA
@@ -3754,7 +3748,7 @@ bra_03_D9EB:
 	JSR _loc_03_DB5E
 	JSR _loc_03_DF5E
 	LDA #SOUND_GOALSPOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 _loc_03_DA15:
 bra_03_DA15:
 	RTS
@@ -3816,7 +3810,7 @@ bra_03_DA70:
 	BEQ bra_03_DA7F
 	INC $2E
 	INC $2E
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_DA7F:
 	SEC
 	TXA
@@ -3970,7 +3964,7 @@ _loc_03_DB9B:
 	TYA
 	PHP
 	BPL bra_03_DBA2
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_DBA2:
 	STX $4A
 	STY $4B
@@ -3983,7 +3977,7 @@ bra_03_DBA2:
 	LDY $50
 	PLP
 	BPL bra_03_DBBD
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_DBBD:
 	RTS
 
@@ -4046,7 +4040,7 @@ bra_03_DC1D:
 	JSR _loc_03_DB5E
 	LDX $0421
 	LDY $0423
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 	TXA
 	STY $2B
 	LSR $2B
@@ -4211,7 +4205,7 @@ CalculateBallDirectionForPass_03_DD6B:
 	SBC ball_pos_x_hi
 	TAY
 	BCS bra_03_DD83
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_DD83:
 	ROL $2A
 	STX $53
@@ -4226,7 +4220,7 @@ bra_03_DD83:
 	SBC ball_pos_y_hi
 	TAY
 	BCS bra_03_DDA1
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_DDA1:
 	ROL $2A
 	STX $54
@@ -4301,7 +4295,7 @@ bra_03_DE14:
 bra_03_DE1E:
 	TYA
 	BPL bra_03_DE24
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_DE24:
 	STX $54
 	STY $57
@@ -4345,7 +4339,7 @@ _loc_03_DE73:
 	TYA
 	PHP
 	BPL bra_03_DE7A
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_DE7A:
 	STX $4A
 	STY $4B
@@ -4358,7 +4352,7 @@ bra_03_DE7A:
 	LDY $50
 	PLP
 	BPL bra_03_DE95
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_DE95:
 	RTS
 
@@ -4601,11 +4595,11 @@ _loc_03_E01D:
 	LDX #$28
 	CMP #$A0
 	BNE bra_03_E02E
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_E02E:
 	LDA team_w_ball
 	BEQ bra_03_E036
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_E036:
 	TYA
 	LDY #plr_aim_x_hi
@@ -4691,7 +4685,7 @@ bra_03_E0B1:			; ограничение кипера на зоне
 	LDA (plr_data),Y
 	TAY
 	BEQ bra_03_E0C9
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 	INC $2A
 bra_03_E0C9:
 	SEC
@@ -4706,7 +4700,7 @@ bra_03_E0C9:
 	TAX
 	LSR $2A
 	BCC bra_03_E0E4
-	JSR _EOR_16bit_plus2
+	JSR _EOR_16bit_plus2_b03
 bra_03_E0E4:
 	TYA
 	LDY #plr_pos_x_hi
@@ -4814,7 +4808,7 @@ bra_03_E185:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA #SOUND_TACKLE
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$08
 	JSR _loc_01_801E
@@ -4899,7 +4893,7 @@ _loc_03_E22E:
 	TAY
 	PHP
 	BPL bra_03_E23E
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E23E:
 	TYA
 	LSR
@@ -4909,7 +4903,7 @@ bra_03_E23E:
 	TAX
 	PLP
 	BPL bra_03_E24A
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E24A:
 	TYA
 	LDY $2A
@@ -5065,7 +5059,7 @@ _loc_03_E36E:
 	JSR _loc_03_C6B9
 	JSR _loc_03_E3E1
 	LDA #SOUND_RECEIVE
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -5206,7 +5200,7 @@ _loc_03_E467:
 	SBC (plr_data),Y
 	TAY
 	BCS bra_03_E47F
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E47F:
 	TYA
 	BNE bra_03_E4A5
@@ -5224,7 +5218,7 @@ bra_03_E47F:
 	SBC (plr_data),Y
 	TAY
 	BCS bra_03_E49E
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E49E:
 	TYA
 	BNE bra_03_E4A5
@@ -5484,7 +5478,7 @@ _loc_03_E613:
 	SBC (plr_data),Y
 	TAY
 	BCS bra_03_E62F
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E62F:
 	ROL $2A
 	STX $53
@@ -5503,7 +5497,7 @@ bra_03_E62F:
 	SBC (plr_data),Y
 	TAY
 	BCS bra_03_E651
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E651:
 	ROL $2A
 	STX $54
@@ -5558,7 +5552,7 @@ _loc_03_E69E:
 	TYA
 	PHP
 	BPL bra_03_E6A5
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E6A5:
 	STX $4A
 	STY $4B
@@ -5573,7 +5567,7 @@ bra_03_E6A5:
 	LDY $50
 	PLP
 	BPL bra_03_E6C1
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E6C1:
 	RTS
 
@@ -5761,7 +5755,7 @@ _GoalkeeperReturnsToCenter:		; E81C
 	TAY
 	PHP
 	BCS bra_03_E831
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_E831:
 	TYA
 	BNE bra_03_E838
@@ -5777,7 +5771,7 @@ bra_03_E838:
 	LDA #$40
 	PLP
 	BCC bra_03_E84B
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 	LDA #$C0
 bra_03_E84B:
 	PHA
@@ -5965,7 +5959,7 @@ table_03_E9B7:
 
 _loc_03_E9BF:
 	LDA #SOUND_SHOOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$05
 	JSR _loc_01_801E
@@ -6558,7 +6552,7 @@ bra_03_EE24:
 	LDA #$80
 	STA gk_has_ball
 	LDA #SOUND_MISS_CATCH
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	JMP _loc_03_EE6F
 bra_03_EE4A:
 	LDA plr_w_ball
@@ -6574,7 +6568,7 @@ bra_03_EE5F:
 	LDA plr_cur_id
 	JSR _loc_03_C6B9
 	LDA #SOUND_CATCH
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$00
 	STA $09
 	STA $0A
@@ -6613,7 +6607,7 @@ _loc_03_EEA3:
 	CMP #$02
 	BCC bra_03_EEE1
 	LDA #SOUND_MISS_CATCH
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA random
 	CMP #$A0
 	BCC bra_03_EEC1
@@ -6783,7 +6777,7 @@ table_03_EFE6:
 
 _PlayerStateDead:		; F016
 	LDA #SOUND_DEAD
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDY #plr_flags
 	LDA (plr_data),Y
 	ORA #F_CONTROL
@@ -7071,7 +7065,7 @@ bra_03_F258:
 	BEQ bra_03_F234
 bra_03_F25F:
 	LDA #SOUND_WHISTLE
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL_CLEAR
@@ -7133,7 +7127,7 @@ _PlayerStateUnknown07:		; F2D2
 	STA (plr_data),Y
 	JSR CheckButtonsWhenShooting_03_DFBA
 	LDA #SOUND_SHOOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0B
 ; бряк сработал при удержании кнопки для удара в одно касание
@@ -7165,7 +7159,7 @@ _PlayerStateUnknown08:		;F319
 	STA (plr_data),Y
 	JSR CheckButtonsWhenShooting_03_DFBA
 	LDA #SOUND_SHOOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0C
 ; бряк сработал при ударе в одно касание с характерным звуком
@@ -7210,7 +7204,7 @@ _PlayerStateUnknown0A:		;F37D
 	STA (plr_data),Y
 	JSR CheckButtonsWhenShooting_03_DFBA
 	LDA #SOUND_SHOOT_FAST
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDY #plr_dir
 	LDA ball_dir
 	SEC
@@ -7393,7 +7387,7 @@ bra_03_F4FB:
 	LDA #$03
 	JSR _BallRelativePosition
 	LDA #SOUND_THROW
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$00
 	STA $041D
 	LDA #$02
@@ -7525,7 +7519,7 @@ _loc_03_F600:
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	LDA #SOUND_SHOOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$00
 	STA $041D
 	LDA #$02
@@ -7690,7 +7684,7 @@ bra_03_F72A:
 	LDY #<_loc_03_D6FA_minus1
 	JSR _SetSubReturnAddressForLater_b03
 	LDA #SOUND_SHOOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	LDA #$02
 	JSR _SavePlayerSubroutine
 	JSR _loc_03_DF5E
@@ -7784,7 +7778,7 @@ _loc_03_F7FF:
 	LDA #$80
 	STA $8A
 	LDA #SOUND_SHOOT
-	JSR WriteSoundID
+	JSR _WriteSoundID
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$15
 	JSR _loc_01_801E
@@ -7845,7 +7839,7 @@ _loc_03_F888:
 	LDY #$03
 	CMP #$40
 	BEQ bra_03_F8A5
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 bra_03_F8A5:
 	TYA
 	LDY #plr_cur_spd_x_lo
@@ -8126,7 +8120,7 @@ hitbox = $72
 	SBC (ball_data),Y	; ball_pos_x_hi
 	TAY
 	BPL @skip
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 @skip:
 	TYA
 	BNE @no_hit
@@ -8143,7 +8137,7 @@ hitbox = $72
 	SBC (ball_data),Y	; ball_pos_y_hi
 	TAY
 	BPL @skip2
-	JSR EOR_16bit
+	JSR _EOR_16bit_b03
 @skip2:
 	TYA
 	BNE @no_hit
