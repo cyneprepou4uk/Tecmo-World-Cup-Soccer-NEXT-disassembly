@@ -454,9 +454,7 @@ _loc_01_8341_minus1 = _loc_01_8341 - 1
 _loc_01_8343:
 	PHA
 	JSR _ReadBytes_0380_AfterJSR_b03
-
 .word pal_buffer
- 
 	LDA #$04
 	JSR _FrameDelay_b03
 	PLA

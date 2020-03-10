@@ -158,7 +158,7 @@ _NMI_VECTOR:
 	STA $2003
 	LDA #>oam_mem
 	STA $4014
-	JSR WriteToPPU_Palette_and_Background
+	JSR _WriteToPPU_Palette_and_Background
 	BIT $2002
 	LDA #$3F		; хз зачем это
 	STA $2006
@@ -217,7 +217,7 @@ _NMI_VECTOR:
 	PLA
 	RTI			; возврат из NMI
 
-WriteToPPU_Palette_and_Background:		; C1EB
+_WriteToPPU_Palette_and_Background:		; C1EB
 	LDA $0300
 	BEQ _WriteToPPU_Background
 ; запись палитры
@@ -636,7 +636,7 @@ bra_03_C4E7:
 _loc_03_C507:
 	JSR _ClearNametable_b03
 	JSR _HideAllSprites_b03
-	JSR ClearRamBeforeMatch_03_C8EC
+	JSR _ClearRamBeforeMatch
 	JSR _loc_03_CF97
 	LDA #$04
 	STA chr_bank + 2
@@ -1273,7 +1273,7 @@ _loc_03_C8D3:
 	TAY
 	RTS
 
-ClearRamBeforeMatch_03_C8EC:
+_ClearRamBeforeMatch:		; C8EC
 ; очистка 03B4-06B3 и 0769-07FF
 .scope
 ram = $2A
@@ -1297,7 +1297,6 @@ ram_hi = $2B
 	JMP @main_loop
 @clear_the_rest:
 	LDY #$B5
-	BEQ @rts	; хрен знает зачем эта проверка на Z, можно удалить
 @loop:		; очистка 06B5-06FF
 	STA (ram),Y
 	INY
