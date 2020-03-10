@@ -46,34 +46,15 @@
 .export _loc_03_C00C
 _loc_03_C00C:
 	JMP _loc_03_C5F1
-	JMP _loc_03_C5FC		; еще не использовался
-	JMP _BallRelativePosition		; еще не использовался
-	JMP _loc_03_C6B9		; еще не использовался
-.export _jmp_LoadScreenPalette_b03
-_jmp_LoadScreenPalette_b03:
-	JMP _LoadScreenPalette
-	JMP _loc_03_CC20		; еще не использовался
-_loc_03_C01E:
-	JMP _loc_03_C01E		; еще не использовался, прыгает сам на себя
-	JMP _loc_03_CBA4		; еще не использовался
-	JMP _loc_03_C6F6		; еще не использовался
-	JMP _loc_03_C71D		; еще не использовался
 .export _jmp_ReadBytesAfterJSR_b03
 _jmp_ReadBytesAfterJSR_b03:
 	JMP _ReadBytesAfterJSR
-	JMP _loc_03_C92B		; еще не использовался
-	JMP _loc_03_CB75		; еще не использовался
 .export _jmp_PrepareBytesForNametable_b03
 _jmp_PrepareBytesForNametable_b03:
 	JMP PrepareBytesForNametable
 .export _jmp_EOR_16bit_plus2_b03
 _jmp_EOR_16bit_plus2_b03:
 	JMP _EOR_16bit_plus2
-.export _jmp_EOR_16bit_plus4_b03
-_jmp_EOR_16bit_plus4_b03:
-	JMP _EOR_16bit_plus4
-	JMP _loc_03_C95B		; еще не использовался
-	JMP _loc_03_C9DA		; еще не использовался
 .export _jmp_EOR_16bit_b03
 _jmp_EOR_16bit_b03:
 	JMP EOR_16bit
@@ -189,10 +170,10 @@ _RESET_VECTOR:		; C081
 	STA pal_buf_ppu_hi
 	LDX #$00
 	LDA #$00
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$01
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	LDX #$01
@@ -674,10 +655,10 @@ _loc_03_C4B8:
 	STA $3B
 	LDX #$00
 	LDA #$07
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$08
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	LDA #$1C
@@ -853,16 +834,6 @@ _loc_03_C5F1:
 	STA $01,X
 	JMP _LoopFrameDelay
 
-; код еще не использовался
-_loc_03_C5FC:
-	LDA $01,X
-	BEQ @rts
-	LDA $00,X
-	BNE @rts
-	INC $00,X
-@rts:
-	RTS
-
 .export _FrameDelay_b03
 _FrameDelay_b03:		; C609
 ; в A подается количество кадров задержки, при задержке работает в основном лишь NMI
@@ -1019,7 +990,6 @@ _loc_03_C6E1:
 	STA (plr_data),Y
 	LDA #STATE_IDLE
 	JSR _SelectPlayerSubroutine
-_loc_03_C6F6:
 bra_03_C6F6:
 	JSR _loc_03_C71D
 	BCS bra_03_C703
@@ -1694,7 +1664,8 @@ _ReadBytesAfterJSR:		; CABD здесь считываются байты, кот
 	STA $3C
 	JMP ($003C)
 
-_LoadScreenPalette:		; CAD4
+.export _LoadScreenPalette_b03
+_LoadScreenPalette_b03:		; CAD4
 ; выбор палитры из таблицы
 ; параметры входа в подпрограмму
 	; X - 
@@ -1777,7 +1748,8 @@ _EOR_16bit_plus2:		; CB4A
 	INY
 	RTS
 
-_EOR_16bit_plus4:		; CB50
+.export _EOR_16bit_plus4_b03
+_EOR_16bit_plus4_b03:		; CB50
 	JSR EOR_16bit
 	INY
 	INY
@@ -2013,10 +1985,10 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	JSR _HideAllSprites
 	LDX #$00
 	LDA #$02
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$02
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	LDA #MUSIC_FIELD
@@ -2224,10 +2196,10 @@ _loc_03_CE73_minus1 = _loc_03_CE73 - 1
 	STA game_mode_flags
 	LDX #$00
 	LDA #$02
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$02
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	PHA
 	LDA #$04
 	STA prg_bank
@@ -2244,7 +2216,7 @@ _loc_03_CE73_minus1 = _loc_03_CE73 - 1
 	JSR _loc_03_CF97
 	LDX #$00
 	LDA #$09
-	JSR _LoadScreenPalette
+	JSR _LoadScreenPalette_b03
 	LDX #$00
 	LDA #$0F
 bra_03_CEB0:
@@ -2513,7 +2485,7 @@ bra_03_D09B:
 	LDY ball_pos_y_hi
 	LDA team_w_ball
 	BEQ bra_03_D0AD
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_D0AD:
 	STX $2C
 	STY $2D
@@ -2655,7 +2627,7 @@ bra_03_D1A8:
 	LDY #$00
 	LDA team_w_ball
 	BNE bra_03_D1BE
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_D1BE:
 	TYA
 	LDY #plr_pos_y_hi
@@ -3082,7 +3054,7 @@ bra_03_D509:
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_D516
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_D516:
 	STX $2C
 	STY $2D
@@ -3617,7 +3589,7 @@ bra_03_D8CF:
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_D8EB
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 	LDA ball_dir
 	CLC
 	ADC #$80
@@ -3691,7 +3663,7 @@ bra_03_D94E:
 	TAY
 	LSR $2C
 	BCC bra_03_D964
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_D964:
 	STX ball_pass_pos_y_lo
 	STY ball_pass_pos_y_hi
@@ -3741,7 +3713,7 @@ bra_03_D9AB:
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_D9C7
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 	LDA #$80
 bra_03_D9C7:
 	EOR $03DD
@@ -3818,7 +3790,7 @@ bra_03_DA3D:		; сравнение координат мяча с граница
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_DA50
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 	INC $2E
 bra_03_DA50:
 	STX $2A
@@ -4608,7 +4580,7 @@ bra_03_DFF2:
 	TAY
 	LDA team_w_ball
 	BEQ bra_03_E00E
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_E00E:
 	SEC
 	TXA
@@ -4645,7 +4617,7 @@ bra_03_E036:
 	LDY #$00
 	LDA team_w_ball
 	BEQ bra_03_E04B
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_E04B:
 	TYA
 	LDY #plr_aim_y_hi
@@ -4755,7 +4727,7 @@ bra_03_E0EE:
 	TAY
 	CMP #$02
 	BCC bra_03_E105
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 	INC $2A
 bra_03_E105:
 	SEC
@@ -4782,7 +4754,7 @@ bra_03_E11E:
 _loc_03_E12E:
 	LSR $2A
 	BCC bra_03_E135
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_E135:
 	TYA
 	LDY #plr_pos_y_hi
@@ -6298,7 +6270,7 @@ _loc_03_EC19:
 	CMP #$02
 	PHP
 	BCC bra_03_EC2B
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_EC2B:
 	SEC
 	TXA
@@ -6313,7 +6285,7 @@ bra_03_EC2B:
 	PLP
 	PHP
 	BCC bra_03_EC3F
-	JSR _EOR_16bit_plus4
+	JSR _EOR_16bit_plus4_b03
 bra_03_EC3F:
 	TYA
 	LDY #plr_pos_y_hi

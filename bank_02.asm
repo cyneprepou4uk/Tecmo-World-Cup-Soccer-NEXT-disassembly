@@ -5,10 +5,10 @@
 .import _SetSubReturnAddressForLater_b03
 .import _FrameDelay_b03
 .import _loc_03_C00C
-.import _jmp_LoadScreenPalette_b03
+.import _LoadScreenPalette_b03
 .import _jmp_PrepareBytesForNametable_b03
 .import _jmp_EOR_16bit_plus2_b03
-.import _jmp_EOR_16bit_plus4_b03
+.import _EOR_16bit_plus4_b03
 .import _jmp_EOR_16bit_b03
 .import _jmp_HideAllSprites_b03
 .import _jmp_SelectInitialPlayerDataAddress_b03
@@ -159,7 +159,7 @@ _loc_02_80D1:
 	JSR _jmp_HideAllSprites_b03
 	LDX #$00
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$24
@@ -196,7 +196,7 @@ bra_02_8115:
 	JSR _loc_02_894C
 	LDX #$00
 	LDA #$06
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03	
 .word pal_buffer
 	LDA #MUSIC_FINAL
@@ -218,7 +218,7 @@ bra_02_8115:
 	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$06
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$1E
@@ -374,35 +374,35 @@ bra_02_8274:
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0D
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0E
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0F
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$08
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$10
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 _loc_02_82D1:
@@ -414,28 +414,28 @@ _loc_02_82D9:
 _loc_02_82D9_minus1 = _loc_02_82D9 - 1
 	LDX #$10
 	LDA #$0A
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0B
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0C
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
 	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$04
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	JMP _loc_03_C00C
@@ -494,10 +494,10 @@ bra_02_83D8:
 bra_02_83EB:
 	LDX #$00
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA byte_for_2000
@@ -513,10 +513,10 @@ _loc_02_840A:
 	JSR _jmp_HideAllSprites_b03
 	LDX #$00
 	LDA #$05
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$04
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDX #$03
@@ -655,10 +655,10 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	BPL @loop
 	LDX #$10
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	LDX #$00
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$02
@@ -679,10 +679,10 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$05
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$03
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	JMP _loc_02_8560
@@ -2188,7 +2188,7 @@ bra_02_9825:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_982E
-	JSR _jmp_EOR_16bit_plus4_b03
+	JSR _EOR_16bit_plus4_b03
 _loc_02_982E:
 bra_02_982E:
 	TYA
@@ -2332,7 +2332,7 @@ bra_02_9903:
 	LDA $2C
 	CMP #$0B
 	BCC bra_02_990C
-	JSR _jmp_EOR_16bit_plus4_b03
+	JSR _EOR_16bit_plus4_b03
 _loc_02_990C:
 bra_02_990C:
 	TYA
@@ -2519,10 +2519,10 @@ table_02_9922_9FD2:
 _loc_02_A02A:
 	LDX #$00
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$02
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	JSR _jmp_ClearNametable_b03
@@ -2613,7 +2613,7 @@ bra_02_A0DC:
 	STA $8E
 	LDX #$00
 	LDA #$09
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	RTS
@@ -2779,7 +2779,7 @@ bra_02_A1F8:
 	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$09
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	RTS
@@ -3342,10 +3342,10 @@ bra_02_A84C:
 	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$05
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	LDX #$10
 	LDA #$03
-	JSR _jmp_LoadScreenPalette_b03
+	JSR _LoadScreenPalette_b03
 	PLA
 	STA $2A
 	LDX #$00
