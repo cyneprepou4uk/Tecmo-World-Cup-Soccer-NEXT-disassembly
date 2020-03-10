@@ -4,6 +4,10 @@ $0026#btn_press_0#
 $0027#btn_press_1#
 $0028#byte_for_2000#
 $0029#byte_for_2001#
+$005B#spr_cnt_index#
+$005C#spr_limit#
+$005D#spr_cnt_ovf#
+$005E#spr_cnt_index_copy#
 $0061#plr_data#
 $0065#byte_00_for_8000#
 $0067#prg_bank_0#

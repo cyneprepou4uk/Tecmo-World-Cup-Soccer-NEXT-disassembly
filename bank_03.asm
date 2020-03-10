@@ -13,7 +13,7 @@
 .import _loc_01_8018
 .import _loc_01_801B
 .import _loc_01_801E
-.import _jmp_TeamsPalette_and_BallPalette
+.import _TeamsPalette_and_BallPalette_b01
 .import _loc_01_8024
 .import _loc_01_8027
 .import _loc_01_802A
@@ -22,16 +22,16 @@
 .import _loc_01_8033_minus1
 .import _loc_01_8036
 .import _loc_01_8039
-.import _jmp_SetBotTimerThrowIn_b01
+.import _SetBotTimerThrowIn_b01
 .import _loc_01_803F
 .import _loc_01_8042
 .import _loc_01_8045
 .import _loc_01_8048
 .import _loc_01_804B
-.import _jmp_TeamSelecScreentFunction_and_PasswordScreenFunction_b02
+.import _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
 .import _loc_02_8003
 .import _loc_02_800C_minus1
-.import _jmp_LoadLogoPalette_b02
+.import _LoadLogoPalette_b02
 .import _loc_02_8015_minus1
 .import _jmp_MainMenuScreenFunction_b02
 .import _loc_02_801E
@@ -43,16 +43,6 @@
 .import _loc_02_8030
 .import _loc_02_B000
 
-NMI_VECTOR:
-	JMP NMI_handler
-_jmp_ResetHandler:
-	JMP ResetHandler
-.export _jmp_SetSubReturnAddressForLater_b03
-_jmp_SetSubReturnAddressForLater_b03:
-	JMP SetSubReturnAddressForLater
-.export _jmp_FrameDelay_b03
-_jmp_FrameDelay_b03:
-	JMP FrameDelay
 .export _loc_03_C00C
 _loc_03_C00C:
 	JMP _loc_03_C5F1
@@ -61,7 +51,7 @@ _loc_03_C00C:
 	JMP _loc_03_C6B9		; еще не использовался
 .export _jmp_LoadScreenPalette_b03
 _jmp_LoadScreenPalette_b03:
-	JMP LoadScreenPalette
+	JMP _LoadScreenPalette
 	JMP _loc_03_CC20		; еще не использовался
 _loc_03_C01E:
 	JMP _loc_03_C01E		; еще не использовался, прыгает сам на себя
@@ -70,7 +60,7 @@ _loc_03_C01E:
 	JMP _loc_03_C71D		; еще не использовался
 .export _jmp_ReadBytesAfterJSR_b03
 _jmp_ReadBytesAfterJSR_b03:
-	JMP ReadBytesAfterJSR
+	JMP _ReadBytesAfterJSR
 	JMP _loc_03_C92B		; еще не использовался
 	JMP _loc_03_CB75		; еще не использовался
 .export _jmp_PrepareBytesForNametable_b03
@@ -78,16 +68,16 @@ _jmp_PrepareBytesForNametable_b03:
 	JMP PrepareBytesForNametable
 .export _jmp_EOR_16bit_plus2_b03
 _jmp_EOR_16bit_plus2_b03:
-	JMP EOR_16bit_plus2
+	JMP _EOR_16bit_plus2
 .export _jmp_EOR_16bit_plus4_b03
 _jmp_EOR_16bit_plus4_b03:
-	JMP EOR_16bit_plus4
+	JMP _EOR_16bit_plus4
 	JMP _loc_03_C95B		; еще не использовался
 	JMP _loc_03_C9DA		; еще не использовался
 .export _jmp_EOR_16bit_b03
 _jmp_EOR_16bit_b03:
 	JMP EOR_16bit
-	JMP BankswitchPRG	; еще не использовался
+	JMP _BankswitchPRG	; еще не использовался
 .export _loc_03_C048
 _loc_03_C048:
 	JMP _loc_03_C89D
@@ -95,7 +85,7 @@ _loc_03_C048:
 	JMP _loc_03_C67E		; еще не использовался
 .export _jmp_HideAllSprites_b03
 _jmp_HideAllSprites_b03:
-	JMP HideAllSprites
+	JMP _HideAllSprites
 	JMP _loc_03_CC23		; еще не использовался
 .export _jmp_SelectInitialPlayerDataAddress_b03
 _jmp_SelectInitialPlayerDataAddress_b03:
@@ -116,7 +106,7 @@ _jmp_ClearNametable_b03:
 	JMP _ClearNametable
 .export _jmp_ReadBytes_0380_AfterJSR_b03
 _jmp_ReadBytes_0380_AfterJSR_b03:
-	JMP ReadBytes_0380_AfterJSR
+	JMP _ReadBytes_0380_AfterJSR
 .export _loc_03_C07B
 _loc_03_C07B:
 	JMP _loc_03_F9A5
@@ -124,7 +114,9 @@ _loc_03_C07B:
 _jmp_WriteSoundID_b03:
 	JMP WriteSoundID
 
-ResetHandler:		; C081
+_RESET_VECTOR:		; C081
+	LDA #$00
+	STA $8000
 	LDA #$08
 	STA $2000
 	SEI
@@ -169,7 +161,7 @@ ResetHandler:		; C081
 	DEX
 	BNE @loop
 	JSR _ClearNametable
-	JSR HideAllSprites
+	JSR _HideAllSprites
 	LDX #$E0
 	TXS
 	LDA #$00
@@ -197,11 +189,11 @@ ResetHandler:		; C081
 	STA pal_buf_ppu_hi
 	LDX #$00
 	LDA #$00
-	JSR LoadScreenPalette
+	JSR _LoadScreenPalette
 	LDX #$10
 	LDA #$01
-	JSR LoadScreenPalette
-	JSR ReadBytes_0380_AfterJSR
+	JSR _LoadScreenPalette
+	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	LDX #$01
 	LDA #$1E
@@ -210,15 +202,15 @@ ResetHandler:		; C081
 	STA $02,X
 	LDA #>_loc_03_C2F2_minus1
 	LDY #<_loc_03_C2F2_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA byte_for_2000
 	ORA #$80
 	STA byte_for_2000
 	STA $21
 	STA $2000		; enable NMI
-	JMP PauseCheck_03_C55B
+	JMP _PauseCheck_03_C55B
 
-NMI_handler:
+_NMI_VECTOR:
 	PHA
 	TXA
 	PHA
@@ -366,10 +358,10 @@ _WriteToPPU_Background:		; C227
 
 JoystickDriver:		; C258
 	LDX #$00
-	LDA a: btn_hold
+	LDA btn_hold
 	JSR ReadJoyReg
 	INX
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 	JSR ReadJoyReg
 	RTS
 
@@ -401,12 +393,12 @@ counter = $47
 	BNE ReadJoyReg
 	BEQ @rts		; еще не использовался
 @write_pressed_buttons:
-	LDA a: btn_hold,X
+	LDA btn_hold,X
 	EOR temp
 	AND temp
-	STA a: btn_press,X
+	STA btn_press,X
 	LDA temp
-	STA a: btn_hold,X
+	STA btn_hold,X
 @rts:
 	RTS
 .endscope
@@ -437,7 +429,7 @@ BankswitchCHR:		; C2A2
 	RTS
 
 RandomGenerator:		; C2CE
-	LDX a: frame_cnt
+	LDX frame_cnt
 	LDA $0300,X
 	ADC $0700,X
 	ROL random
@@ -446,9 +438,9 @@ RandomGenerator:		; C2CE
 	ADC random
 	STA random
 	SBC $0780,X
-	ADC a: frame_cnt
+	ADC frame_cnt
 	STA random + 1
-	INC a: frame_cnt
+	INC frame_cnt
 	RTS
 
 _loc_03_C2F2:		; C2F2
@@ -465,7 +457,7 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	LDA #MUSIC_LOGO
 	JSR WriteSoundID
 	LDA #$04
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDX #$05
 	LDA #$3C
 	STA $01,X
@@ -473,13 +465,13 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	STA $02,X
 	LDA #>_loc_02_800C_minus1
 	LDY #<_loc_02_800C_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 @delay_loop:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 ; попытка ускорить загрузку начального экрана
 	LDA #BTN_START
-	AND a: btn_press
+	AND btn_press
 	BNE @start_was_pressed
 	BIT $03D2
 	BPL @delay_loop
@@ -496,16 +488,16 @@ GoToLogoScreen_03_C2F8:		; переход сюда после завершени
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
-	JSR _jmp_LoadLogoPalette_b02
+	JSR _LoadLogoPalette_b02
 @skip_palette_load:
 	PHA
 	LDA #$04
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _jmp_MainMenuScreenFunction_b02
 	LDA game_mode_flags
@@ -522,8 +514,8 @@ ContinueWalkthrough_03_C36E:		; переход сюда если играть п
 	LDA #$00
 	STA goals_total
 	STA goals_total + 1
-	STA a: goals_pk
-	STA a: goals_pk + 1
+	STA goals_pk
+	STA goals_pk + 1
 	STA goals_half
 	STA goals_half + 1
 	STA team_w_ball
@@ -533,15 +525,15 @@ ContinueWalkthrough_03_C36E:		; переход сюда если играть п
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
-	JSR _jmp_TeamSelecScreentFunction_and_PasswordScreenFunction_b02
+	JSR _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
 	PHA
 	LDA #$04
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_02_8003
 	PHA
@@ -549,13 +541,13 @@ ContinueWalkthrough_03_C36E:		; переход сюда если играть п
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_01_802D
 	JSR _loc_03_C507
 bra_03_C3C8:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA game_mode_flags
 	AND #F_TIMEUP
 	BEQ bra_03_C3C8
@@ -567,7 +559,7 @@ bra_03_C3C8:
 	STA team_w_ball
 bra_03_C3E5:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA game_mode_flags
 	AND #$01
 	BEQ bra_03_C3E5
@@ -581,13 +573,13 @@ bra_03_C3E5:
 	STA $02,X
 	LDA #>_loc_03_CE73_minus1
 	LDY #<_loc_03_CE73_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA game_mode_flags
 	ORA #FLAG_GM_UNKNOWN_10
 	STA game_mode_flags
 bra_03_C413:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA game_mode_flags
 	AND #FLAG_GM_UNKNOWN_10
 	BNE bra_03_C413
@@ -632,10 +624,10 @@ _loc_03_C425:
 	STA $02,X
 	LDA #>_loc_02_8015_minus1
 	LDY #<_loc_02_8015_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 @wait:		; будет выполняться ежекадрово, выхода из титров не существует
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JMP @wait
 
 _loc_03_C476:
@@ -668,12 +660,12 @@ _loc_03_C476:
 	LDA #$01	; time up текст
 	JSR _WriteMessageOnScreenWithSprites
 	LDA #$A0
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	RTS
 
 _loc_03_C4B8:
 	JSR _ClearNametable
-	JSR HideAllSprites
+	JSR _HideAllSprites
 	LDA byte_for_2000
 	AND #$FC
 	STA byte_for_2000
@@ -682,11 +674,11 @@ _loc_03_C4B8:
 	STA $3B
 	LDX #$00
 	LDA #$07
-	JSR LoadScreenPalette
+	JSR _LoadScreenPalette
 	LDX #$10
 	LDA #$08
-	JSR LoadScreenPalette
-	JSR ReadBytes_0380_AfterJSR
+	JSR _LoadScreenPalette
+	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	LDA #$1C
 	STA chr_bank
@@ -697,7 +689,7 @@ bra_03_C4E7:
 	TXA
 	CLC
 	ADC #$18
-	STA a: chr_bank + 2,X
+	STA chr_bank + 2,X
 	DEX
 	BPL bra_03_C4E7
 	LDA #MUSIC_HALF_TIME
@@ -707,14 +699,14 @@ bra_03_C4E7:
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_02_B000
 	RTS
 
 _loc_03_C507:
 	JSR _ClearNametable
-	JSR HideAllSprites
+	JSR _HideAllSprites
 	JSR ClearRamBeforeMatch_03_C8EC
 	JSR _loc_03_CF97
 	LDA #$04
@@ -740,7 +732,7 @@ _loc_03_C507:
 	STA $02,X
 	LDA #>_loc_03_CCC4_minus1
 	LDY #<_loc_03_CCC4_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA game_mode_flags
 	AND #$DE
 	STA game_mode_flags
@@ -749,13 +741,13 @@ _loc_03_C507:
 Minutes_table_03_C558:		; время тайма
 .byte $0F,$1E,$2D
 
-PauseCheck_03_C55B:
+_PauseCheck_03_C55B:
 ; попытка поставить игру на паузу
 	LDA game_mode_flags		; проверка режима игры
 	AND #FLAG_GM_UNKNOWN_04
 	BEQ @skip_pause
 	LDA #BTN_START
-	AND a: btn_press
+	AND btn_press
 	BEQ @skip_pause
 	JSR SetPauseInGame
 @skip_pause:
@@ -764,11 +756,11 @@ loop_03_C56E:
 	LDA $00,X
 	BEQ @next_check
 	CMP #$FF
-	BEQ BankswitchPRG_03_C5CE
+	BEQ _BankswitchPRG_03_C5CE
 	DEC $00,X		; уменьшение задержки на 01
-	BEQ BankswitchPRG_03_C5B3
+	BEQ _BankswitchPRG_03_C5B3
 @next_check:
-FrameDelay_loop:		; сюда есть 2 JMP
+_LoopFrameDelay:		; сюда есть 2 JMP
 	TXA
 	CLC
 	ADC #$04		; X + 4
@@ -780,7 +772,7 @@ FrameDelay_loop:		; сюда есть 2 JMP
 	BPL @infinite_loop
 	AND #$7F
 	STA $23
-	JMP PauseCheck_03_C55B
+	JMP _PauseCheck_03_C55B
 
 SetPauseInGame:		; C58E
 	LDA #$05	; pause текст
@@ -790,7 +782,7 @@ SetPauseInGame:		; C58E
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_02_8030
 @infinite_loop:
@@ -800,18 +792,18 @@ SetPauseInGame:		; C58E
 	AND #$7F
 	STA $23
 	LDA #BTN_START
-	AND a: btn_press
+	AND btn_press
 	BEQ @infinite_loop
 	RTS
 
-BankswitchPRG_03_C5B3:		; C5B3
+_BankswitchPRG_03_C5B3:		; C5B3
 	LSR $21
 	STX $00
 	LDA $02,X
 	STA prg_bank
 	LDA $03,X
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	LDA $01,X
 	TAX
 	TXS
@@ -823,20 +815,21 @@ BankswitchPRG_03_C5B3:		; C5B3
 	TAX
 	RTS
 
-BankswitchPRG_03_C5CE:		; C5CE
+_BankswitchPRG_03_C5CE:		; C5CE
 	STX $00
 	LDA $02,X
 	STA prg_bank
 	CLC
 	ADC #$01
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	LDA $01,X
 	TAX
 	TXS
 	RTS
 
-SetSubReturnAddressForLater:		; C5E1
+.export _SetSubReturnAddressForLater_b03
+_SetSubReturnAddressForLater_b03:		; C5E1
 ; возврат впоследствии осуществляется из C5CE
 ; параметры входа в подпрограмму
 	; $01,X - откуда читать стек	(1E 3C 5A 78 96 B4 D2)
@@ -858,7 +851,7 @@ _loc_03_C5F1:
 	LDX $00
 	STA $00,X
 	STA $01,X
-	JMP FrameDelay_loop
+	JMP _LoopFrameDelay
 
 ; код еще не использовался
 _loc_03_C5FC:
@@ -870,8 +863,8 @@ _loc_03_C5FC:
 @rts:
 	RTS
 
-	LDA #$00	; команда ниразу не выполнялась
-FrameDelay:		; C609
+.export _FrameDelay_b03
+_FrameDelay_b03:		; C609
 ; в A подается количество кадров задержки, при задержке работает в основном лишь NMI
 ; что позволяет воспроизвести музыку, опросить джойстик и отрисовать графику
 	STA $49
@@ -891,7 +884,7 @@ FrameDelay:		; C609
 	TSX
 	STX $01,Y
 	LDX $00
-	JMP FrameDelay_loop
+	JMP _LoopFrameDelay
 
 ; C627 (еще не считывались, неизвестно откуда читается, вероятно мусор)
 .byte $20,$40,$18,$18,$18,$18,$18,$18
@@ -1100,7 +1093,7 @@ nmt_data = $43
 	PHA
 @wait:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE @wait
 	LDA #$01
@@ -1675,7 +1668,7 @@ ClearNMT_Loop:		; CA80 на вход подается 20 или 24 для очи
 	STA $2005
 	RTS
 
-HideAllSprites:		; CAAF
+_HideAllSprites:		; CAAF
 	LDY #$00
 	LDA #$F8
 @loop:
@@ -1684,7 +1677,7 @@ HideAllSprites:		; CAAF
 	BNE @loop
 	RTS
 
-ReadBytesAfterJSR:		; CABD здесь считываются байты, которые находятся после JSR
+_ReadBytesAfterJSR:		; CABD здесь считываются байты, которые находятся после JSR
 	ASL
 	TAY
 	PLA
@@ -1701,7 +1694,7 @@ ReadBytesAfterJSR:		; CABD здесь считываются байты, кот�
 	STA $3C
 	JMP ($003C)
 
-LoadScreenPalette:		; CAD4
+_LoadScreenPalette:		; CAD4
 ; выбор палитры из таблицы
 ; параметры входа в подпрограмму
 	; X - 
@@ -1748,7 +1741,7 @@ bra_03_CB09:
 	STA pal_buf_cnt
 	RTS
 
-ReadBytes_0380_AfterJSR:		; CB18
+_ReadBytes_0380_AfterJSR:		; CB18
 	TSX
 	LDA $0101,X
 	STA $3F
@@ -1778,13 +1771,13 @@ ReadBytes_0380_AfterJSR:		; CB18
 	TAY					; вернуть Y
 	RTS
 
-EOR_16bit_plus2:		; CB4A
+_EOR_16bit_plus2:		; CB4A
 	JSR EOR_16bit
 	INY
 	INY
 	RTS
 
-EOR_16bit_plus4:		; CB50
+_EOR_16bit_plus4:		; CB50
 	JSR EOR_16bit
 	INY
 	INY
@@ -1792,7 +1785,7 @@ EOR_16bit_plus4:		; CB50
 	INY
 	RTS
 
-BankswitchPRG:		; CB58
+_BankswitchPRG:		; CB58
 	LDA byte_00_for_8000
 	ORA #$06
 	STA byte_for_8000
@@ -2017,14 +2010,14 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	AND #$FB
 	STA game_mode_flags
 	JSR _ClearNametable
-	JSR HideAllSprites
+	JSR _HideAllSprites
 	LDX #$00
 	LDA #$02
-	JSR LoadScreenPalette
+	JSR _LoadScreenPalette
 	LDX #$10
 	LDA #$02
-	JSR LoadScreenPalette
-	JSR ReadBytes_0380_AfterJSR
+	JSR _LoadScreenPalette
+	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	LDA #MUSIC_FIELD
 	JSR WriteSoundID
@@ -2036,7 +2029,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
 	JSR _loc_01_8039
@@ -2047,7 +2040,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	STA $02,X
 	LDA #>_loc_01_8006_minus1
 	LDY #<_loc_01_8006_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDX #$11
 	LDA #$96
 	STA $01,X
@@ -2055,7 +2048,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	STA $02,X
 	LDA #>_loc_03_E4D9_minus1
 	LDY #<_loc_03_E4D9_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDX #$19
 	LDA #$D2
 	STA $01,X
@@ -2063,7 +2056,7 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	STA $02,X
 	LDA #>_loc_01_8015_minus1
 	LDY #<_loc_01_8015_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA team_w_ball
 	CLC
 	ADC #$06
@@ -2100,13 +2093,13 @@ _loc_03_CCC4_minus1 = _loc_03_CCC4 - 1
 	STA cam_edge_x_hi
 bra_03_CD87:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	PHA
 	LDA #$02
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает после затемнения экрана перед отрисовкой поля
 	JSR _loc_01_8000
@@ -2115,7 +2108,7 @@ bra_03_CD87:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает после затемнения экрана перед отрисовкой поля
 	JSR _loc_01_8009
@@ -2123,20 +2116,20 @@ bra_03_CD87:
 	BMI bra_03_CD87
 	JSR _loc_03_CF97
 	LDA #$02
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA game_mode_flags
 	ORA #FLAG_GM_UNKNOWN_04
 	STA game_mode_flags
 _loc_03_CDC1:
 bra_03_CDC1:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	PHA
 	LDA #$02
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_8000
@@ -2145,7 +2138,7 @@ bra_03_CDC1:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_8009
@@ -2158,7 +2151,7 @@ bra_03_CDC1:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_800F
@@ -2191,14 +2184,14 @@ bra_03_CE36:
 bra_03_CE38:
 	PHA
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_DE96
 	PHA
 	LDA #$02
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал при зателе мяча за линию аута
 	JSR _loc_01_800F
@@ -2214,7 +2207,7 @@ bra_03_CE38:
 	PLA
 	STA team_w_ball
 	PLA
-	JSR ReadBytesAfterJSR
+	JSR _ReadBytesAfterJSR
 
 table_03_CE6B:		; таблица читается после JSR
 					; используется сразу после забитого гола
@@ -2231,16 +2224,16 @@ _loc_03_CE73_minus1 = _loc_03_CE73 - 1
 	STA game_mode_flags
 	LDX #$00
 	LDA #$02
-	JSR LoadScreenPalette
+	JSR _LoadScreenPalette
 	LDX #$10
 	LDA #$02
-	JSR LoadScreenPalette
+	JSR _LoadScreenPalette
 	PHA
 	LDA #$04
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал при переходе в пенальти после экрана со счетом, который еще виднелся
 	JSR _loc_02_8024
@@ -2251,7 +2244,7 @@ _loc_03_CE73_minus1 = _loc_03_CE73 - 1
 	JSR _loc_03_CF97
 	LDX #$00
 	LDA #$09
-	JSR LoadScreenPalette
+	JSR _LoadScreenPalette
 	LDX #$00
 	LDA #$0F
 bra_03_CEB0:
@@ -2279,19 +2272,19 @@ _loc_03_CECB:
 	STA $02,X
 	LDA #>_loc_03_D605_minus1
 	LDY #<_loc_03_D605_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	PHA
 	LDA #$04
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал перед осветлением экрана при переходе в пенальти
 	JSR _loc_02_8027
 bra_03_CEF0:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_DE96
 	LDA $8A
 	AND #$20
@@ -2301,7 +2294,7 @@ bra_03_CEF0:
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает перед отображением счета в пенальти после гола/отбития удара
 	JSR _loc_02_802A
@@ -2348,14 +2341,14 @@ bra_03_CF4A:
 bra_03_CF51:
 	PHA
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	PLA
 	TAX
 	LDA #$D0
-	AND a: btn_press
+	AND btn_press
 	BNE bra_03_CF6B
 	LDA #(BTN_A | BTN_B)
-	AND a: $0027
+	AND $0027
 	BNE bra_03_CF6B
 	INX
 	TXA
@@ -2396,11 +2389,11 @@ _loc_03_CF97:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
-	JSR _jmp_TeamsPalette_and_BallPalette
-	JSR ReadBytes_0380_AfterJSR
+	JSR _TeamsPalette_and_BallPalette_b01
+	JSR _ReadBytes_0380_AfterJSR
 .word pal_buffer
 	RTS
 
@@ -2512,7 +2505,7 @@ table_03_CE6B_D07A:
 	EOR #$0B
 	STA team_w_ball
 	BEQ bra_03_D09B
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_D09B:
 	STX $2A
 	STY $2B
@@ -2520,7 +2513,7 @@ bra_03_D09B:
 	LDY ball_pos_y_hi
 	LDA team_w_ball
 	BEQ bra_03_D0AD
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_D0AD:
 	STX $2C
 	STY $2D
@@ -2599,7 +2592,7 @@ bra_03_D12C:
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончился таймер надписи out of play throw in
 	JSR _loc_02_8021
@@ -2613,12 +2606,12 @@ bra_03_D12C:
 	JSR _loc_03_DCED
 bra_03_D154:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_DE96
 	BIT plr_w_ball
 	BPL bra_03_D154
 	LDA #$02
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JMP _loc_03_D4D5
 
 table_03_D169:
@@ -2649,7 +2642,7 @@ table_03_CE6B_D173:
 	LDY #$00
 	LDA ball_pos_x_hi
 	BEQ bra_03_D1A8
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_D1A8:
 	TYA
 	LDY #plr_pos_x_hi
@@ -2662,7 +2655,7 @@ bra_03_D1A8:
 	LDY #$00
 	LDA team_w_ball
 	BNE bra_03_D1BE
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_D1BE:
 	TYA
 	LDY #plr_pos_y_hi
@@ -2686,7 +2679,7 @@ bra_03_D1D3:
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончилась надпись out of play goal kick
 	JSR _loc_02_801E
@@ -2716,13 +2709,13 @@ bra_03_D1D3:
 	STA plr_wo_ball
 bra_03_D222:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	PHA
 	LDA #$02
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_01_8000
 	PHA
@@ -2730,14 +2723,14 @@ bra_03_D222:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_01_8009
 	JSR _loc_03_DE96
 	BIT plr_w_ball
 	BPL bra_03_D222
 	LDA #$02
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JMP _loc_03_D4D5
 
 table_03_CE6B_D257:
@@ -2759,7 +2752,7 @@ table_03_CE6B_D257:
 	LDY ball_pos_x_hi
 	LDA team_w_ball
 	BEQ bra_03_D288
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_D288:
 	TYA
 	PHP
@@ -2841,7 +2834,7 @@ bra_03_D2BC:
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончилась надпись out of play corner kick
 	JSR _loc_02_801E
@@ -2850,13 +2843,13 @@ bra_03_D2BC:
 	JSR _loc_03_DCED
 bra_03_D32A:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	PHA
 	LDA #$02
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_01_8000
 	PHA
@@ -2864,14 +2857,14 @@ bra_03_D32A:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_01_8009
 	JSR _loc_03_DE96
 	BIT plr_w_ball
 	BPL bra_03_D32A
 	LDA #$02
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JMP _loc_03_D4D5
 
 table_03_D35F:		; какие-то параметры игрока
@@ -2909,7 +2902,7 @@ bra_03_D3AE:
 	STX $03CA
 _loc_03_D3B1:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDX #$01
 	LDY #$00
 	LDA $03CA
@@ -2935,7 +2928,7 @@ bra_03_D3DC:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда был забит гол верхней команде и камера начала скроллиться
 	JSR _loc_01_800C
@@ -2949,7 +2942,7 @@ bra_03_D3F2:
 	STA $02,X
 	LDA #>_loc_01_8033_minus1
 	LDY #<_loc_01_8033_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #$00
 	STA $09
 	STA $0A
@@ -2963,7 +2956,7 @@ bra_03_D3F2:
 	STA $19
 	STA $1A
 	LDA #$14
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA #$02
 	STA chr_bank + 2
 	LDA byte_for_2000
@@ -2974,7 +2967,7 @@ bra_03_D3F2:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал перед появлению надписи GOAL
 	JSR _loc_01_8027
@@ -2983,12 +2976,12 @@ bra_03_D3F2:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончился таймер надписи GOAL
 	JSR _loc_01_802A
 	LDA #$28
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDX $03CA
 	LDA goals_total,X
 	CMP #$63
@@ -3003,13 +2996,13 @@ bra_03_D464:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал перед попыткой игры увеличить счет крупных цифр после гола
 	JSR _loc_01_802A
 	LDA #$6E
-	JSR FrameDelay
-	JSR HideAllSprites
+	JSR _FrameDelay_b03
+	JSR _HideAllSprites
 	LDA byte_for_2000
 	ORA #$20
 	STA byte_for_2000
@@ -3069,7 +3062,7 @@ _loc_03_D4E8:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
 	BEQ bra_03_D4F3
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_D4F3:
 	STX $2A
 	STY $2B
@@ -3084,13 +3077,12 @@ bra_03_D4F3:
 	LDX #$00
 	SEC
 	RTS
-
 bra_03_D509:
 	LDX ball_pos_y_lo
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_D516
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_D516:
 	STX $2C
 	STY $2D
@@ -3135,7 +3127,6 @@ bra_03_D558:
 	LDX #$03
 	SEC
 	RTS
-
 bra_03_D569:
 	SEC
 	LDA $2C
@@ -3158,7 +3149,6 @@ bra_03_D587:
 	JSR WriteSoundID
 	SEC
 	RTS
-
 bra_03_D58E:
 	CLC
 	RTS
@@ -3193,7 +3183,7 @@ _loc_03_D5AD:
 	STA prg_bank
 	LDA #$05
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает перед затемнением экрана перед отрисовкой поля
 	JSR _loc_02_801E
@@ -3234,7 +3224,7 @@ bra_03_D605:
 _loc_03_D605:
 _loc_03_D605_minus1 = _loc_03_D605 - 1
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	BIT $8A
 	BPL bra_03_D605
 	LDA #$AB
@@ -3258,16 +3248,16 @@ bra_03_D62D:
 	STA ball_z_lo
 bra_03_D638:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_D6B1
 	JSR _loc_03_DC68
 	DEC ball_z_lo
 	BNE bra_03_D638
 	LDA #$08
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 bra_03_D64D:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	INC ball_pos_y_lo
 	LDA ball_pos_y_lo
 	CMP #$80
@@ -3276,7 +3266,7 @@ bra_03_D64D:
 	BEQ bra_03_D663
 	LDX #$01
 bra_03_D663:
-	INC a: goals_pk,X
+	INC goals_pk,X
 	LDA #SOUND_FANS
 	JSR WriteSoundID
 	LDX #$0D
@@ -3286,7 +3276,7 @@ bra_03_D663:
 	STA $02,X
 	LDA #>_loc_02_802D_minus1
 	LDY #<_loc_02_802D_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	SEC
 	JMP _loc_03_D69F
 
@@ -3300,7 +3290,7 @@ _loc_03_D680_minus1 = _loc_03_D680 - 1
 	STA $03DD
 bra_03_D68F:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_DC68
 	LDA ball_pos_y_lo
 	CMP #$10
@@ -3310,7 +3300,7 @@ _loc_03_D69F:
 	ROL $91
 	ROL $92
 	LDA #$14
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA $8A
 	ORA #$20
 	STA $8A
@@ -3349,14 +3339,14 @@ _loc_03_D6FA_minus1 = _loc_03_D6FA - 1		; считывается из неско
 	JSR _loc_03_DDF2
 	JSR _loc_03_DE36
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_DB5E
 	LDA $03D3
 	ORA #$80
 	STA $03D3
 bra_03_D710:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_DBBE
 	JSR _loc_03_DD17
 	JSR _loc_03_DCED
@@ -3451,7 +3441,7 @@ _loc_03_D79D_minus1 = _loc_03_D79D - 1
 _loc_03_D7B0:
 bra_03_D7B0:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	JSR _loc_03_DCED
 	BIT $03D3
 	BVC bra_03_D7B0
@@ -3627,7 +3617,7 @@ bra_03_D8CF:
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_D8EB
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 	LDA ball_dir
 	CLC
 	ADC #$80
@@ -3654,7 +3644,7 @@ bra_03_D8EB:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
 	BEQ bra_03_D918
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 	SEC
 bra_03_D918:
 	ROL $2C
@@ -3691,7 +3681,7 @@ _loc_03_D93E:
 	TAY
 	LSR $2C
 	BCC bra_03_D94E
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_D94E:
 	STX ball_pass_pos_x_lo
 	STY ball_pass_pos_x_hi
@@ -3701,7 +3691,7 @@ bra_03_D94E:
 	TAY
 	LSR $2C
 	BCC bra_03_D964
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_D964:
 	STX ball_pass_pos_y_lo
 	STY ball_pass_pos_y_hi
@@ -3751,7 +3741,7 @@ bra_03_D9AB:
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_D9C7
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 	LDA #$80
 bra_03_D9C7:
 	EOR $03DD
@@ -3771,7 +3761,7 @@ bra_03_D9C7:
 	LDY ball_pos_x_hi
 	BEQ bra_03_D9EB
 ; прыжок еще не выполнялся
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_D9EB:
 	SEC
 	TXA
@@ -3828,7 +3818,7 @@ bra_03_DA3D:		; сравнение координат мяча с граница
 	LDY ball_pos_y_hi
 	CPY #$02
 	BCC bra_03_DA50
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 	INC $2E
 bra_03_DA50:
 	STX $2A
@@ -3854,7 +3844,7 @@ bra_03_DA70:
 	BEQ bra_03_DA7F
 	INC $2E
 	INC $2E
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_DA7F:
 	SEC
 	TXA
@@ -4405,7 +4395,7 @@ _loc_03_DE96:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	LDA #$00
 	STA spr_cnt_index
 	STA spr_cnt_ovf
@@ -4571,10 +4561,10 @@ bra_03_DFB9:
 CheckButtonsWhenShooting_03_DFBA:
 ; проверяются кнопки чтобы вычислить направление
 ; если это CPU, код срабатывает только при ударе по воротам, и то видимо не всегда
-	LDA a: btn_hold
+	LDA btn_hold
 	LDX team_w_ball
 	BEQ @check_buttons
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 	BIT game_mode_flags
 	BMI @check_buttons
 	LDA random		; если второй игрок CPU
@@ -4618,7 +4608,7 @@ bra_03_DFF2:
 	TAY
 	LDA team_w_ball
 	BEQ bra_03_E00E
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_E00E:
 	SEC
 	TXA
@@ -4639,11 +4629,11 @@ _loc_03_E01D:
 	LDX #$28
 	CMP #$A0
 	BNE bra_03_E02E
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_E02E:
 	LDA team_w_ball
 	BEQ bra_03_E036
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_E036:
 	TYA
 	LDY #plr_aim_x_hi
@@ -4655,7 +4645,7 @@ bra_03_E036:
 	LDY #$00
 	LDA team_w_ball
 	BEQ bra_03_E04B
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_E04B:
 	TYA
 	LDY #plr_aim_y_hi
@@ -4667,10 +4657,10 @@ bra_03_E04B:
 	RTS
 
 ; код еще не выполнялся
-	LDA a: btn_hold
+	LDA btn_hold
 	LDX team_w_ball
 	BNE bra_03_E063
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 bra_03_E063:
 	AND #(BTN_UP | BTN_DOWN | BTN_LEFT | BTN_RIGHT)
 	BEQ @rts
@@ -4699,10 +4689,10 @@ Direction_table_03_E083:		; читается из 5 мест, направлен
 .byte $FF,$40,$C0,$FF,$00,$20,$E0,$FF,$80,$60,$A0,$FF,$FF,$FF,$FF,$FF
 
 _loc_03_E093:
-	LDX a: btn_hold
+	LDX btn_hold
 	TAY
 	BEQ bra_03_E0A3
-	LDX a: btn_hold + 1
+	LDX btn_hold + 1
 	BIT game_mode_flags
 	BMI bra_03_E0A3
 	LDX #$00
@@ -4729,7 +4719,7 @@ bra_03_E0B1:			; ограничение кипера на зоне
 	LDA (plr_data),Y
 	TAY
 	BEQ bra_03_E0C9
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 	INC $2A
 bra_03_E0C9:
 	SEC
@@ -4744,7 +4734,7 @@ bra_03_E0C9:
 	TAX
 	LSR $2A
 	BCC bra_03_E0E4
-	JSR EOR_16bit_plus2
+	JSR _EOR_16bit_plus2
 bra_03_E0E4:
 	TYA
 	LDY #plr_pos_x_hi
@@ -4765,7 +4755,7 @@ bra_03_E0EE:
 	TAY
 	CMP #$02
 	BCC bra_03_E105
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 	INC $2A
 bra_03_E105:
 	SEC
@@ -4792,7 +4782,7 @@ bra_03_E11E:
 _loc_03_E12E:
 	LSR $2A
 	BCC bra_03_E135
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_E135:
 	TYA
 	LDY #plr_pos_y_hi
@@ -5056,7 +5046,7 @@ bra_03_E28C:
 	STA $02,X
 	LDA #>_loc_03_D6FA_minus1
 	LDY #<_loc_03_D6FA_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA plr_w_ball
 	BMI bra_03_E342
 	JSR _SelectInitialPlayerDataAddress
@@ -5149,10 +5139,10 @@ bra_03_E3C7:
 	STA (plr_data),Y
 	JMP SelectNextIndexForPlayers
 _loc_03_E3E1:
-	LDA a: btn_hold
+	LDA btn_hold
 	LDX team_w_ball
 	BEQ bra_03_E405
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 	BIT game_mode_flags
 	BMI bra_03_E405
 	PHA
@@ -5160,7 +5150,7 @@ _loc_03_E3E1:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда CPU завладел мячом
 	JSR _loc_01_804B
@@ -5199,7 +5189,7 @@ bra_03_E421:
 	BNE bra_03_E421
 bra_03_E435:
 	TYA
-	JSR ReadBytesAfterJSR
+	JSR _ReadBytesAfterJSR
 
 table_03_E439:		; таблица читается после JSR
 .word table_03_E439_E43F
@@ -5317,7 +5307,7 @@ _loc_03_E4D9_minus1 = _loc_03_E4D9 - 1
 	STA plr_frame_id
 _loc_03_E4DE:
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA plr_frame_id
 	JSR _SelectInitialPlayerDataAddress
 	JSR _loc_03_C843
@@ -5357,7 +5347,7 @@ bra_03_E521:
 _loc_03_E527:
 	LDY #plr_state
 	LDA (plr_data),Y
-	JSR ReadBytesAfterJSR
+	JSR _ReadBytesAfterJSR
 
 table_03_E52E:		; таблица читается после JSR
 .word table_03_E52E_E57D		; 00
@@ -5502,7 +5492,7 @@ _loc_03_E5E4:
 _loc_03_E604:
 	JSR _loc_03_E613
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA plr_frame_id
 	JSR _SelectInitialPlayerDataAddress
 	RTS
@@ -5766,7 +5756,7 @@ bra_03_E7BD:
 	STA $02,X
 	LDA #>_loc_03_D6FA_minus1
 	LDY #<_loc_03_D6FA_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #$04	; небольшой таймер для игрока, прежде чем тот упадет на землю после удара об мяч
 	JSR _SavePlayerSubroutine
 	LDA #STATE_DEAD
@@ -5918,7 +5908,7 @@ _PlayerStateWithBall:		; E8D8
 	STA $02,X
 	LDA #>_loc_03_D79D_minus1
 	LDY #<_loc_03_D79D_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA plr_cur_id
 	LDX #$02
 	JSR _loc_03_E167
@@ -5927,10 +5917,10 @@ _PlayerStateWithBall:		; E8D8
 bra_03_E915:
 	LDA #$01
 	JSR _SavePlayerSubroutine
-	LDA a: btn_hold
+	LDA btn_hold
 	LDX team_w_ball
 	BEQ bra_03_E934
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 	BIT game_mode_flags
 	BMI bra_03_E934
 ; бряк сработал через кадр когда CPU завладел мячом
@@ -5963,13 +5953,13 @@ _loc_03_E95E:
 	LDA team_w_ball
 	BNE bra_03_E972
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press
+	AND btn_press
 	JMP _loc_03_E97C
 bra_03_E972:
 	BIT game_mode_flags
 	BPL bra_03_E915
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press + 1
+	AND btn_press + 1
 _loc_03_E97C:
 	BEQ bra_03_E915
 	LDX #$04
@@ -6026,7 +6016,7 @@ _loc_03_E9BF:
 	STA $02,X
 	LDA #>_loc_03_D6FA_minus1
 	LDY #<_loc_03_D6FA_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	JSR _loc_03_DF5E
@@ -6233,10 +6223,10 @@ bra_03_EB79:
 	JSR _SelectPlayerSubroutine
 	JMP SelectNextIndexForPlayers
 bra_03_EB95:
-	LDA a: btn_hold
+	LDA btn_hold
 	LDX team_w_ball
 	BNE bra_03_EBA0
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 bra_03_EBA0:
 	AND #(BTN_UP | BTN_DOWN | BTN_LEFT | BTN_RIGHT)
 	BEQ bra_03_EBB0
@@ -6286,11 +6276,11 @@ _loc_03_EBB8:
 	LDA team_w_ball
 	BEQ @read_2nd_player
 	LDA #BTN_A
-	AND a: btn_press
+	AND btn_press
 	JMP @check_button
 @read_2nd_player:
 	LDA #BTN_A
-	AND a: btn_press + 1
+	AND btn_press + 1
 @check_button:
 	BNE @tackle
 	JMP _loc_03_EB79
@@ -6308,7 +6298,7 @@ _loc_03_EC19:
 	CMP #$02
 	PHP
 	BCC bra_03_EC2B
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_EC2B:
 	SEC
 	TXA
@@ -6323,7 +6313,7 @@ bra_03_EC2B:
 	PLP
 	PHP
 	BCC bra_03_EC3F
-	JSR EOR_16bit_plus4
+	JSR _EOR_16bit_plus4
 bra_03_EC3F:
 	TYA
 	LDY #plr_pos_y_hi
@@ -6379,7 +6369,7 @@ bra_03_EC8A:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда CPU завладел мячом
 	JSR _loc_01_803F
@@ -6515,7 +6505,7 @@ _loc_03_ED8F:		; таймер анимации кипера при отбива�
 	STA (plr_data),Y
 	LDA table_03_EFBF,X
 	BNE bra_03_EDA9
-	BIT a: gk_has_ball
+	BIT gk_has_ball
 	BMI bra_03_EDA6
 	JMP _loc_03_EEFD
 bra_03_EDA6:
@@ -6523,7 +6513,7 @@ bra_03_EDA6:
 bra_03_EDA9:
 	CPX #$02
 	BNE bra_03_EDB4
-	BIT a: gk_has_ball
+	BIT gk_has_ball
 	BPL bra_03_EDB4
 	LDA #$0C
 bra_03_EDB4:
@@ -6558,7 +6548,7 @@ bra_03_EDB4:
 	JMP _loc_03_ED8F
 _loc_03_EDE9:
 	LDA #$00
-	STA a: gk_has_ball
+	STA gk_has_ball
 	LDA #$00
 	STA ball_z_lo
 	STA ball_z_hi
@@ -6637,7 +6627,7 @@ bra_03_EE7D:
 	JSR _loc_01_801E
 	LDA #$14
 	JSR _SavePlayerSubroutine
-	BIT a: gk_has_ball
+	BIT gk_has_ball
 	BMI bra_03_EEA0
 	JMP _loc_03_EEFD
 bra_03_EEA0:
@@ -6850,7 +6840,7 @@ _PlayerStateDead:		; F016
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 	JSR _loc_01_8045
 	JSR _loc_01_8048
@@ -7105,7 +7095,7 @@ bra_03_F234:
 	BNE bra_03_F234
 bra_03_F258:
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press,X
+	AND btn_press,X
 	BEQ bra_03_F234
 bra_03_F25F:
 	LDA #SOUND_WHISTLE
@@ -7337,7 +7327,7 @@ _loc_03_F428:
 	STA $02,X
 	LDA #>_loc_03_D6FA_minus1
 	LDY #<_loc_03_D6FA_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	RTS
 
 _PlayerStateThrowIn:		;F45A
@@ -7358,9 +7348,9 @@ _PlayerStateThrowIn:		;F45A
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
-	JSR _jmp_SetBotTimerThrowIn_b01
+	JSR _SetBotTimerThrowIn_b01
 _loc_03_F486:
 bra_03_F486:	; сюда есть прыжок снизу
 	LDA #$01
@@ -7369,13 +7359,13 @@ bra_03_F486:	; сюда есть прыжок снизу
 	JSR _BallRelativePosition
 	LDA #$0F
 	JSR _loc_01_801E
-	LDA a: btn_hold
+	LDA btn_hold
 	LDX team_w_ball
 	BEQ bra_03_F4A9
 	LDA #$00
 	BIT game_mode_flags
 	BPL bra_03_F4A9
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 	LDX #$01
 bra_03_F4A9:
 	STX $2B
@@ -7389,7 +7379,7 @@ bra_03_F4A9:
 	INX
 bra_03_F4BA:
 	TXA
-	AND a: $2A
+	AND $2A
 	BNE bra_03_F4D1
 	LDA $2A
 	AND #$0C
@@ -7421,7 +7411,7 @@ bra_03_F4DD:
 	BEQ bra_03_F4FB
 	JMP _loc_03_F486
 bra_03_F4F6:
-	AND a: btn_press,X
+	AND btn_press,X
 	BEQ bra_03_F486
 bra_03_F4FB:
 	JSR _IncreasePlayerAnimationCounterLow
@@ -7450,7 +7440,7 @@ bra_03_F4FB:
 	STA $02,X
 	LDA #>_loc_03_D6FA_minus1
 	LDY #<_loc_03_D6FA_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #$80
 	STA plr_w_ball
 	LDA #$02
@@ -7533,7 +7523,7 @@ _loc_03_F5C0:
 	BEQ bra_03_F5F5
 bra_03_F5E1:
 	LDA #(BTN_A | BTN_B)	; проверка кнопок кипера для удара во время goal kick
-	AND a: btn_press,X
+	AND btn_press,X
 	BEQ bra_03_F58F
 bra_03_F5E8:
 	LDA #$20
@@ -7578,7 +7568,7 @@ _loc_03_F600:
 	STA $02,X
 	LDA #>_loc_03_D6FA_minus1
 	LDY #<_loc_03_D6FA_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #$80
 	STA plr_w_ball
 	LDA $042C
@@ -7633,14 +7623,14 @@ bra_03_F6AD:
 	LDA #$01
 ; бряк сработал после завершения таймера надписи corner kick
 	JSR _loc_01_801E
-	LDA a: btn_hold
+	LDA btn_hold
 	LDX team_w_ball
 	BEQ bra_03_F6CC
 	BIT game_mode_flags
 	BMI bra_03_F6C7
 	JMP _loc_03_F713
 bra_03_F6C7:
-	LDA a: btn_hold + 1
+	LDA btn_hold + 1
 	LDX #$01
 bra_03_F6CC:
 	STX $2B
@@ -7660,14 +7650,14 @@ bra_03_F6DC:
 	LDY #$08
 bra_03_F6E9:
 	TYA
-	AND a: $2A
+	AND $2A
 	BEQ bra_03_F6F6
 	ORA $2C
 	STA $2A
 	JMP _loc_03_F6FF
 bra_03_F6F6:
 	LDA $2C
-	AND a: $2A
+	AND $2A
 	BEQ bra_03_F70A
 	STA $2A
 _loc_03_F6FF:
@@ -7691,7 +7681,7 @@ _loc_03_F713:
 	BEQ bra_03_F72A
 bra_03_F720:
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press,X
+	AND btn_press,X
 	BNE bra_03_F72A
 	JMP _loc_03_F6AD
 bra_03_F72A:
@@ -7726,7 +7716,7 @@ bra_03_F72A:
 	STA $02,X
 	LDA #>_loc_03_D6FA_minus1
 	LDY #<_loc_03_D6FA_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #SOUND_SHOOT
 	JSR WriteSoundID
 	LDA #$02
@@ -7792,16 +7782,16 @@ bra_03_F7CB:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда CPU готовится пробивать пенальти и уже стоит с мячом
 	JSR _loc_01_8042
 	JMP _loc_03_F7FF
 bra_03_F7F5:
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press,X
+	AND btn_press,X
 	BEQ bra_03_F7CB
-	LDA a: btn_hold,X
+	LDA btn_hold,X
 _loc_03_F7FF:
 	AND #(BTN_LEFT | BTN_RIGHT)
 	LDY #plr_act_timer1
@@ -7856,19 +7846,19 @@ bra_03_F846:
 	STA prg_bank
 	LDA #$03
 	STA prg_bank + 1
-	JSR BankswitchPRG
+	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда игрок в пенальти ударил по мячу и тот уже полетел
 	JSR _loc_01_8042
 	JMP _loc_03_F888
 bra_03_F878:
 	LDA #(BTN_UP | BTN_LEFT | BTN_RIGHT)
-	AND a: btn_press,X
+	AND btn_press,X
 	BNE bra_03_F885
 	JSR _loc_03_F949
 	JMP _loc_03_F846
 bra_03_F885:
-	LDA a: btn_hold,X
+	LDA btn_hold,X
 _loc_03_F888:
 	AND #(BTN_UP | BTN_LEFT | BTN_RIGHT)
 	TAX
@@ -7995,7 +7985,7 @@ bra_03_F96D:
 	STA $02,X
 	LDA #>_loc_03_D680_minus1
 	LDY #<_loc_03_D680_minus1
-	JSR SetSubReturnAddressForLater
+	JSR _SetSubReturnAddressForLater_b03
 	LDA $8A
 	ORA #$40
 	STA $8A
@@ -8041,12 +8031,12 @@ _WriteAndSkipMessageOnScreen:		; F9B8
 @wait:
 	PHA
 	LDA #$01
-	JSR FrameDelay
+	JSR _FrameDelay_b03
 	LDA #(BTN_A | BTN_B)	; попытка прервать надпись кнопками
-	AND a: btn_press
+	AND btn_press
 	BNE @button_was_pressed
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press + 1
+	AND btn_press + 1
 	BNE @button_was_pressed
 	PLA
 	SEC
@@ -8417,12 +8407,7 @@ table_03_FBFA:		; угол движения ботов
 .byte $BC,$40
 .byte $FF,$FF	; эти 2 FF были считаны
 
-RESET_VECTOR:
-	LDA #$00
-	STA $8000
-	JMP _jmp_ResetHandler
-
 .segment "VECTORS"
-.word NMI_VECTOR
-.word RESET_VECTOR
+.word _NMI_VECTOR
+.word _RESET_VECTOR
 .word $FFD0		; IRQ/BRK вектор, не используется

@@ -2,8 +2,8 @@
 .include "ram.inc"
 .include "val.inc"
 
-.import _jmp_SetSubReturnAddressForLater_b03
-.import _jmp_FrameDelay_b03
+.import _SetSubReturnAddressForLater_b03
+.import _FrameDelay_b03
 .import _loc_03_C00C
 .import _jmp_LoadScreenPalette_b03
 .import _jmp_PrepareBytesForNametable_b03
@@ -17,9 +17,7 @@
 .import _jmp_ReadBytes_0380_AfterJSR_b03
 .import _jmp_WriteSoundID_b03
 
-.export _jmp_TeamSelecScreentFunction_and_PasswordScreenFunction_b02
-_jmp_TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
-	JMP _TeamSelecScreentFunction_and_PasswordScreenFunction
+	JMP _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
 .export _loc_02_8003
 _loc_02_8003:
 	JMP _loc_02_83C9
@@ -30,9 +28,6 @@ _loc_02_800C:
 _loc_02_800C_minus1 = _loc_02_800C - 1
 	JMP _loc_02_8A1A
 	JMP _loc_02_8AF6
-.export _jmp_LoadLogoPalette_b02
-_jmp_LoadLogoPalette_b02:
-	JMP LoadLogoPalette
 .export _loc_02_8015_minus1
 _loc_02_8015:
 _loc_02_8015_minus1 = _loc_02_8015 - 1
@@ -207,7 +202,7 @@ bra_02_8115:
 	LDA #MUSIC_FINAL
 	JSR _jmp_WriteSoundID_b03
 	LDA #$FE
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$0F
 	STA game_cnt
 	JSR _loc_02_840A
@@ -218,9 +213,9 @@ bra_02_8115:
 	STA $02,X
 	LDA #>_loc_02_81AD_minus1
 	LDY #<_loc_02_81AD_minus1
-	JSR _jmp_SetSubReturnAddressForLater_b03
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #$46
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$06
 	JSR _jmp_LoadScreenPalette_b03
@@ -235,7 +230,7 @@ bra_02_8115:
 	STA $A000
 _loc_02_8178:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	CLC
 	LDA $03BB
 	ADC #$40
@@ -270,7 +265,7 @@ _loc_02_81AD_minus1 = _loc_02_81AD - 1
 _loc_02_81B2:
 bra_02_81B2:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 ; чтение Y камеры на экранах с крупным шрифтом
 	LDA cam_edge_y_lo
 	CLC
@@ -309,7 +304,7 @@ bra_02_81B2:
 	STA $02,X
 	LDA #>_loc_02_82D9_minus1
 	LDY #<_loc_02_82D9_minus1
-	JSR _jmp_SetSubReturnAddressForLater_b03
+	JSR _SetSubReturnAddressForLater_b03
 	LDA #$11
 bra_02_8206:
 	ASL
@@ -340,17 +335,17 @@ bra_02_8214:
 	JMP _loc_02_81B2
 bra_02_823D:
 	LDA #$20
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$00
 	STA $05
 	STA $06
 	LDA #$14
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$00
 bra_02_824F:
 	PHA
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	CLC
 	ADC #$40
@@ -376,35 +371,35 @@ bra_02_8274:
 	CPX #$E5
 	BNE bra_02_824F
 	LDA #$14
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0D
 	JSR _jmp_LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0E
 	JSR _jmp_LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0F
 	JSR _jmp_LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$02
 	JSR _jmp_LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$08
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$10
 	JSR _jmp_LoadScreenPalette_b03
@@ -412,7 +407,7 @@ bra_02_8274:
 .word pal_buffer
 _loc_02_82D1:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	JMP _loc_02_82D1
 
 _loc_02_82D9:
@@ -423,21 +418,21 @@ _loc_02_82D9_minus1 = _loc_02_82D9 - 1
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0B
 	JSR _jmp_LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$0C
 	JSR _jmp_LoadScreenPalette_b03
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$10
 	LDA #$04
 	JSR _jmp_LoadScreenPalette_b03
@@ -487,11 +482,11 @@ _loc_02_83C9:
 bra_02_83D8:
 	PHA
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	TAX
 	LDA #(BTN_A | BTN_B | BTN_START)
-	AND a: btn_press
+	AND btn_press
 	BNE bra_02_83EB
 	DEX
 	TXA
@@ -529,13 +524,13 @@ bra_02_8425:
 	TXA
 	CLC
 	ADC #$18
-	STA a: chr_bank + 2,X
+	STA chr_bank + 2,X
 	DEX
 	BPL bra_02_8425
 	LDA #$24
-	STA a: chr_bank
+	STA chr_bank
 	LDA #$26
-	STA a: chr_bank + 1
+	STA chr_bank + 1
 	LDA #$7F
 	STA cam_edge_x_hi
 	LDA #$F4
@@ -556,7 +551,7 @@ bra_02_8425:
 	JSR _loc_02_894C
 bra_02_845F:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	DEC $03B9
 	JSR _loc_02_8478
 	LDA $3B
@@ -641,7 +636,8 @@ bra_02_84E5:
 ; 84E8, еще не считывались и неизвестно где поинтеры на таблицу
 .byte $D8,$E0,$E8,$F0,$F8,$00,$08,$10,$18
 
-_TeamSelecScreentFunction_and_PasswordScreenFunction:
+.export _TeamSelecScreentFunction_and_PasswordScreenFunction_b02
+_TeamSelecScreentFunction_and_PasswordScreenFunction_b02:
 	JSR _jmp_ClearNametable_b03
 	JSR _jmp_HideAllSprites_b03
 	LDA byte_for_2000
@@ -654,7 +650,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction:
 	LDX #$03
 @loop:
 	LDA @SpriteBanks_table,X
-	STA a: chr_bank + 2,X
+	STA chr_bank + 2,X
 	DEX
 	BPL @loop
 	LDX #$10
@@ -666,7 +662,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction:
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$02
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #<table_02_8DD0
 	LDY #>table_02_8DD0
 	JSR _jmp_PrepareBytesForNametable_b03
@@ -680,7 +676,7 @@ _TeamSelecScreentFunction_and_PasswordScreenFunction:
 	JSR PasswordScreenFunction
 @skip:
 	LDA #$02
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$05
 	JSR _jmp_LoadScreenPalette_b03
@@ -706,7 +702,7 @@ _loc_02_8560:
 	STA $02,X
 	LDA #>_SpectatorsPaletteAndFlagsOnTeamSelectScreen_minus1
 	LDY #<_SpectatorsPaletteAndFlagsOnTeamSelectScreen_minus1
-	JSR _jmp_SetSubReturnAddressForLater_b03
+	JSR _SetSubReturnAddressForLater_b03
 	BIT game_mode_flags
 	BPL bra_02_8599
 	LDA #$00
@@ -766,14 +762,14 @@ bra_02_85FB:
 	JSR _loc_02_8898
 	JSR _loc_02_8640
 	LDA #$14
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	JSR _loc_02_87B4
 _loc_02_860C:
 bra_02_860C:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #(BTN_A | BTN_B | BTN_START)
-	AND a: btn_press
+	AND btn_press
 	BEQ bra_02_860C
 	LDA #$00
 	STA $05
@@ -781,7 +777,7 @@ bra_02_860C:
 	LDA #SOUND_FANS
 	JSR _jmp_WriteSoundID_b03
 	LDA #$3C
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$0F
 	STA $2A
 	LDA #$FE
@@ -865,11 +861,11 @@ table_02_86A8:
 _loc_02_86B0:
 bra_02_86B0:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$00
 	JSR _loc_02_8814
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press
+	AND btn_press
 	BEQ bra_02_86B0
 	RTS
 
@@ -879,14 +875,14 @@ _loc_02_86C2:
 	JSR GameTimeOptionSprites
 bra_02_86CA:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	JSR _loc_02_8640
 	BIT $03B6
 	BMI bra_02_86F0
 	LDX #$00
 	JSR _loc_02_8814
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press
+	AND btn_press
 	BEQ bra_02_86F0
 	LDA $03B6
 	ORA #$80
@@ -899,7 +895,7 @@ bra_02_86F0:
 	LDX #$01
 	JSR _loc_02_8814
 	LDA #(BTN_A | BTN_B)
-	AND a: btn_press + 1
+	AND btn_press + 1
 	BEQ bra_02_870E
 	LDA $03B6
 	ORA #$40
@@ -935,12 +931,12 @@ bra_02_872C:
 	LDA #SOUND_FANS
 	JSR _jmp_WriteSoundID_b03
 	LDA #$46
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	RTS
 
 _loc_02_8745:
 	LDA #BTN_SELECT
-	AND a: btn_press
+	AND btn_press
 	BEQ bra_02_8761
 	LDX timer_opt
 	INX
@@ -1035,7 +1031,7 @@ bra_02_87DD:
 	BCS bra_02_87E8
 	LDA table_02_8805,X
 bra_02_87E8:
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$01
 	STX $2A
 	STX $2B
@@ -1048,7 +1044,7 @@ bra_02_87FA:
 	LDX #$0B
 	JSR _loc_02_8809
 	LDA #$14
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	RTS
 
 table_02_8805:
@@ -1064,9 +1060,9 @@ _loc_02_8809:
 _loc_02_8814:
 	STX $2A
 	LDA #(BTN_UP | BTN_DOWN | BTN_LEFT | BTN_RIGHT)
-	AND a: btn_press,X
+	AND btn_press,X
 	BNE bra_02_882E
-	LDA a: btn_hold,X
+	LDA btn_hold,X
 	AND #$0F
 	BEQ bra_02_884D
 	INC $03B4,X
@@ -1176,7 +1172,7 @@ _SpectatorsPaletteAndFlagsOnTeamSelectScreen_minus1 = _SpectatorsPaletteAndFlags
 .word pal_buffer
 	JSR _TeamSelectFlagAnimation
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	JMP @loop
 
@@ -1186,7 +1182,7 @@ flags_counter = $2A
 	LDA #$00
 	STA flags_counter
 @main_loop:
-	LDA a: flags_counter
+	LDA flags_counter
 	ASL
 	TAY
 	ASL
@@ -1280,7 +1276,7 @@ _loc_02_8972:
 	PHA
 bra_02_897B:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_02_897B
 	LDA #$01
@@ -1379,7 +1375,7 @@ _loc_02_8A1A:
 	BCS bra_02_8A85
 _loc_02_8A34:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	BIT $03D2
 	BMI bra_02_8A85
 	LDX $3B
@@ -1428,7 +1424,7 @@ bra_02_8A85:
 	STA soccer_text_color_cnt
 _loc_02_8A8F:
 	LDA #$02
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX soccer_text_color_cnt
 	LDA SoccerColorLogo_table,X
 	STA pal_buffer + $0D
@@ -1448,7 +1444,7 @@ _loc_02_8AB6:
 bra_02_8AB6:
 	PHA
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	BIT $03D2
 	SEC
@@ -1459,7 +1455,8 @@ bra_02_8AB6:
 bra_02_8AC8:
 	RTS
 
-LoadLogoPalette:		; 8AC9
+.export _LoadLogoPalette_b02
+_LoadLogoPalette_b02:		; 8AC9
 	LDA #$00
 _loc_02_8ACB:
 	STA $2A
@@ -1518,9 +1515,9 @@ MainMenuScreenFunction:		; 8B20
 	JSR MainMenuCursorSpritePosition
 @cursor_loop:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #(BTN_UP | BTN_DOWN | BTN_SELECT)
-	AND a: btn_press
+	AND btn_press
 	BEQ @skip
 	TAX
 	LDY #$01
@@ -1545,16 +1542,16 @@ MainMenuScreenFunction:		; 8B20
 	JSR MainMenuCursorSpritePosition
 @skip:
 	LDA #(BTN_A | BTN_START)
-	AND a: btn_press
+	AND btn_press
 	BEQ @cursor_loop
 	LDA #SOUND_OFF
 	JSR _jmp_WriteSoundID_b03
 	LDA #$00
 	STA $05
 	STA $06
-	JSR LoadLogoPalette		; чтобы надпись Soccer была видна после выбора опции
+	JSR _LoadLogoPalette_b02		; чтобы надпись Soccer была видна после выбора опции
 	LDA #$02
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #SOUND_OPTION_SELECT
 	JSR _jmp_WriteSoundID_b03
 	LDX game_mode_opt		; чтение опции с режимом игры
@@ -1565,7 +1562,7 @@ MainMenuScreenFunction:		; 8B20
 	PHA
 @wait_for_text_disappear:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE @wait_for_text_disappear
 	LDA #$01
@@ -1579,10 +1576,10 @@ MainMenuScreenFunction:		; 8B20
 	CPX #$0A
 	BNE @clear_loop
 	LDA #$08
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 @wait_for_text_appear:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE @wait_for_text_appear
 	LDA #$01
@@ -1603,7 +1600,7 @@ MainMenuScreenFunction:		; 8B20
 	CPY #$09
 	BNE @read_text_loop
 	LDA #$08
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	CLC
 	ADC #$01
@@ -2553,7 +2550,7 @@ _loc_02_A02A:
 _loc_02_A071:
 bra_02_A071:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_02_A071
 	LDA #$01
@@ -2603,7 +2600,7 @@ bra_02_A0BC:
 	BCC bra_02_A0CD
 	INC $8B
 bra_02_A0CD:
-	LDA a: $8C
+	LDA $8C
 	CLC
 	ADC #$20
 	STA $8C
@@ -2739,13 +2736,13 @@ bra_02_A1CB:
 	TXA
 	JSR _loc_02_A2EA
 	LDA #$06
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$40
 	STA spr_cnt_index
 	LDA #$04
 	JSR _loc_02_A2EA
 	LDA #$06
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	SEC
 	SBC #$01
@@ -2774,12 +2771,12 @@ bra_02_A1F8:
 	JSR _loc_02_A245
 	JSR _loc_02_A286
 	LDA #$50
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$00
 	STA $0D
 	STA $0E
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$09
 	JSR _jmp_LoadScreenPalette_b03
@@ -2945,7 +2942,7 @@ _loc_02_A330:
 bra_02_A332:
 	PHA
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	PHA
 	TAY
@@ -3118,7 +3115,7 @@ _loc_02_A69A:
 	LSR
 	LSR
 	TAX
-	LDA a: $2A,X
+	LDA $2A,X
 	STA $31
 	LDA #$08
 	STA $32
@@ -3174,7 +3171,7 @@ table_02_A6F6:			; A6F6, читается из 2х мест
 bra_02_A71A:
 _loc_02_A71A:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_02_A71A		; @wait
 	LDA #$01
@@ -3249,12 +3246,12 @@ PasswordInputScreenFunction:		; A777
 	STA psw_hold_btn_timer
 ContinuePasswordInput:		; A7A9, 2 прыжка
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	JSR PasswordCharacterBlinking
 	LDA #(BTN_UP | BTN_DOWN | BTN_LEFT | BTN_RIGHT)
-	AND a: btn_press
+	AND btn_press
 	BNE @button_is_pressed
-	LDA a: btn_hold
+	LDA btn_hold
 	AND #(BTN_UP | BTN_DOWN | BTN_LEFT | BTN_RIGHT)
 	BEQ bra_02_A808
 	INC psw_hold_btn_timer
@@ -3307,7 +3304,7 @@ bra_02_A808:
 	STA psw_hold_btn_timer
 _loc_02_A80C:
 	LDA #(BTN_A | BTN_START)
-	AND a: btn_press
+	AND btn_press
 	BNE @button_is_pressed
 	JMP ContinuePasswordInput
 @button_is_pressed:
@@ -3324,7 +3321,7 @@ _loc_02_A80C:
 bra_02_A82D:
 	PHA
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	SEC
 	SBC #$80
@@ -3342,7 +3339,7 @@ bra_02_A82D:
 bra_02_A84C:
 	PHA
 	LDA #$0A
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDX #$00
 	LDA #$05
 	JSR _jmp_LoadScreenPalette_b03
@@ -3567,42 +3564,42 @@ _loc_02_B000:
 	RTS
 
 _loc_02_B007:
-	LDA a: byte_for_2000
+	LDA byte_for_2000
 	ORA #$01
-	STA a: byte_for_2000
+	STA byte_for_2000
 	LDA #$40
-	STA a: $DB
+	STA $DB
 	LDA #$20
-	STA a: $DC
+	STA $DC
 	LDA #<table_02_B25F
-	STA a: $D8
+	STA $D8
 	LDA #>table_02_B25F
-	STA a: $D9
+	STA $D9
 _loc_02_B023:
 bra_02_B023:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_02_B023
 	LDA #$01
 	STA $037D
 	LDA #$20
 	STA nmt_buf_cnt
-	LDA a: $DB
+	LDA $DB
 	STA nmt_buf_ppu_lo
-	LDA a: $DC
+	LDA $DC
 	STA nmt_buf_ppu_hi
-	LDA #$00
+	LDA #$00		; закончить чтение буффера здесь
 	STA nmt_buf_cnt + $23
 	LDA #$80
 	STA $037D
-	LDA a: $DB
+	LDA $DB
 	CLC
 	ADC #$20
-	STA a: $DB
-	LDA a: $DC
+	STA $DB
+	LDA $DC
 	ADC #$00
-	STA a: $DC
+	STA $DC
 	LDX #$03
 bra_02_B060:
 	LDY #$00
@@ -3614,41 +3611,41 @@ bra_02_B06C:
 	AND #$80
 	BNE bra_02_B095
 	LDA ($D8),Y
-	STA a: $DD
+	STA $DD
 	INY
 bra_02_B076:
 	LDA ($D8),Y
 	STA nmt_buffer,X
 	INX
-	DEC a: $DD
+	DEC $DD
 	BNE bra_02_B076
-	LDA a: $D8
+	LDA $D8
 	CLC
 	ADC #$02
-	STA a: $D8
-	LDA a: $D9
+	STA $D8
+	LDA $D9
 	ADC #$00
-	STA a: $D9
+	STA $D9
 	JMP _loc_02_B0B9
 bra_02_B095:
 	LDA ($D8),Y
 	AND #$7F
-	STA a: $DD
+	STA $DD
 bra_02_B09C:
 	INY
 	LDA ($D8),Y
 	STA nmt_buffer,X
 	INX
-	DEC a: $DD
+	DEC $DD
 	BNE bra_02_B09C
 	INY
 	TYA
 	CLC
-	ADC a: $D8
-	STA a: $D8
-	LDA a: $D9
+	ADC $D8
+	STA $D8
+	LDA $D9
 	ADC #$00
-	STA a: $D9
+	STA $D9
 _loc_02_B0B9:
 	CPX #$23
 	BNE bra_02_B060
@@ -3656,64 +3653,64 @@ _loc_02_B0B9:
 _loc_02_B0C0:
 	JSR _loc_02_B0CF
 	JSR _loc_02_B151
-	LDA a: byte_for_2000
+	LDA byte_for_2000
 	AND #$FE
-	STA a: byte_for_2000
+	STA byte_for_2000
 	RTS
 
 _loc_02_B0CF:
 	LDA team_id
-	STA a: $DE
+	STA $DE
 	LDA #$6A
-	STA a: $DB
+	STA $DB
 	LDA #$21
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B0F6
 	LDA team_id + 1
-	STA a: $DE
+	STA $DE
 	LDA #$73
-	STA a: $DB
+	STA $DB
 	LDA #$21
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B0F6
 	RTS
 
 _loc_02_B0F6:
 	LDA #<table_02_B3C1
-	STA a: $D8
+	STA $D8
 	LDA #>table_02_B3C1
-	STA a: $D9
+	STA $D9
 bra_02_B100:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_02_B100
 	LDA #$01
 	STA $037D
 	LDA #$03
 	STA nmt_buf_cnt
-	LDA a: $DB
+	LDA $DB
 	STA nmt_buf_ppu_lo
-	LDA a: $DC
+	LDA $DC
 	STA nmt_buf_ppu_hi
 	LDA #$00
 	STA nmt_buffer + 6
 	LDA #$80
 	STA $037D
 	LDA #$00
-	STA a: $DD
+	STA $DD
 	TAY
 	LDX #$03
 bra_02_B132:
-	LDA a: $DE
+	LDA $DE
 	CLC
-	ADC a: $DD
-	STA a: $DD
+	ADC $DD
+	STA $DD
 	DEX
 	BNE bra_02_B132
 	TYA
 	LDX #$00
-	LDY a: $DD
+	LDY $DD
 bra_02_B145:
 	LDA ($D8),Y
 	STA nmt_buffer + 3,X
@@ -3725,87 +3722,87 @@ bra_02_B145:
 
 _loc_02_B151:
 	LDA goals_half
-	STA a: $DD
+	STA $DD
 	LDA #$AA
-	STA a: $DB
+	STA $DB
 	LDA #$21
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B1D1
 	LDA goals_half + 1
-	STA a: $DD
+	STA $DD
 	LDA #$B4
-	STA a: $DB
+	STA $DB
 	LDA #$21
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B1D1
 	LDA half_time_cnt
 	BEQ bra_02_B1AA
 	LDA goals_total
 	SEC
 	SBC goals_half
-	STA a: $DD
+	STA $DD
 	LDA #$EA
-	STA a: $DB
+	STA $DB
 	LDA #$21
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B1D1
 	LDA goals_total + 1
 	SEC
 	SBC goals_half + 1
-	STA a: $DD
+	STA $DD
 	LDA #$F4
-	STA a: $DB
+	STA $DB
 	LDA #$21
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B1D1
 bra_02_B1AA:
 	LDA goals_total
-	STA a: $DD
+	STA $DD
 	LDA #$2A
-	STA a: $DB
+	STA $DB
 	LDA #$22
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B1D1
 	LDA goals_total + 1
-	STA a: $DD
+	STA $DD
 	LDA #$34
-	STA a: $DB
+	STA $DB
 	LDA #$22
-	STA a: $DC
+	STA $DC
 	JSR _loc_02_B1D1
 	RTS
 
 _loc_02_B1D1:
-	LDA a: $DD
-	STA a: $E0
+	LDA $DD
+	STA $E0
 bra_02_B1D7:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_02_B1D7
 	LDA #$01
 	STA $037D
 	LDA #$02
 	STA nmt_buf_cnt
-	LDA a: $DB
+	LDA $DB
 	STA nmt_buf_ppu_lo
-	LDA a: $DC
+	LDA $DC
 	STA nmt_buf_ppu_hi
 	LDA #$00
 	STA nmt_buffer + 5
 	LDA #$80
 	STA $037D
 	LDA #$0A
-	STA a: $E2
+	STA $E2
 	LDX #$01
 bra_02_B208:
 	JSR _loc_02_B233
-	LDA a: $E4
+	LDA $E4
 	ORA #$30
 	STA nmt_buffer + 3,X
 	DEX
-	LDA a: $E0
-	ORA a: $E1
+	LDA $E0
+	ORA $E1
 	BNE bra_02_B208
 	TXA
 	BMI bra_02_B22A
@@ -3817,28 +3814,28 @@ _loc_02_B21F:
 	JMP _loc_02_B21F
 bra_02_B22A:
 	LDA #$00
-	STA a: $E8
-	STA a: $E9
+	STA $E8
+	STA $E9
 	RTS
 
 _loc_02_B233:
 	TXA
 	PHA
 	LDA #$00
-	STA a: $E4
+	STA $E4
 	LDX #$10
-	ROL a: $E0
-	ROL a: $E1
+	ROL $E0
+	ROL $E1
 bra_02_B242:
-	ROL a: $E4
-	LDA a: $E4
-	CMP a: $E2
+	ROL $E4
+	LDA $E4
+	CMP $E2
 	BCC bra_02_B253
-	SBC a: $E2
-	STA a: $E4
+	SBC $E2
+	STA $E4
 bra_02_B253:
-	ROL a: $E0
-	ROL a: $E1
+	ROL $E0
+	ROL $E1
 	DEX
 	BNE bra_02_B242
 	PLA
@@ -3908,49 +3905,49 @@ bra_02_B3F3:
 	CPX #$18
 	BNE bra_02_B3F3
 	LDA #$2C
-	STA a: $E3
+	STA $E3
 	LDA #$01
-	STA a: $E4
+	STA $E4
 	LDA #$04
-	STA a: $E5
-	STA a: $E6
+	STA $E5
+	STA $E6
 	LDA #$01
-	STA a: $E7
+	STA $E7
 	LDA #$21
-	STA a: $E8
+	STA $E8
 	LDA #$00
-	STA a: $E9
+	STA $E9
 bra_02_B41F:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	JSR _loc_02_B458
 	JSR _loc_02_B488
 	LDA #(BTN_A | BTN_START)	; попытка пропуска экрана со счетом
-	AND a: btn_press
+	AND btn_press
 	BNE bra_02_B452
 	LDA #$01
-	STA a: $E9
+	STA $E9
 bra_02_B436:
-	LDA a: $E3
+	LDA $E3
 	SEC
 	SBC #$01
-	STA a: $E3
-	LDA a: $E4
+	STA $E3
+	LDA $E4
 	SBC #$00
-	STA a: $E4
-	LDA a: $E3
-	ORA a: $E4
+	STA $E4
+	LDA $E3
+	ORA $E4
 	BNE bra_02_B41F
 	RTS
 bra_02_B452:
-	LDA a: $E9
+	LDA $E9
 	BEQ bra_02_B436
 	RTS
 
 _loc_02_B458:		; флаги на экране со счетом
-	DEC a: $E5
+	DEC $E5
 	BNE bra_02_B487
-	LDA a: $E7
+	LDA $E7
 	ASL
 	ASL
 	ASL
@@ -3973,34 +3970,34 @@ bra_02_B467:
 	INY
 	CPY #$04
 	BNE bra_02_B467
-	INC a: $E7
-	LDA a: $E7
+	INC $E7
+	LDA $E7
 	CMP #$03
 	BNE bra_02_B482
 	LDA #$00
-	STA a: $E7
+	STA $E7
 bra_02_B482:
 	LDA #$04
-	STA a: $E5
+	STA $E5
 bra_02_B487:
 	RTS
 
 _loc_02_B488:
-	DEC a: $E6
+	DEC $E6
 	BNE bra_02_B4AC
-	INC a: $E8
-	LDA a: $E8
+	INC $E8
+	LDA $E8
 	CMP #$2D
 	BNE bra_02_B49C
 	LDA #$21
-	STA a: $E8
+	STA $E8
 bra_02_B49C:
-	LDA a: $E8
+	LDA $E8
 	STA $0390
 	JSR _jmp_ReadBytes_0380_AfterJSR_b03
 .word pal_buffer
 	LDA #$04
-	STA a: $E6
+	STA $E6
 bra_02_B4AC:
 	RTS
 

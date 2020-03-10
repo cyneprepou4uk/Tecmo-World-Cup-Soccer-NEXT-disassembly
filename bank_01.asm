@@ -2,7 +2,7 @@
 .include "ram.inc"
 .include "val.inc"
 
-.import _jmp_FrameDelay_b03
+.import _FrameDelay_b03
 .import _jmp_ReadBytesAfterJSR_b03
 .import _jmp_EOR_16bit_plus2_b03
 .import _jmp_EOR_16bit_b03
@@ -47,9 +47,6 @@ _loc_01_801B:
 .export _loc_01_801E
 _loc_01_801E:
 	JMP _loc_01_878F
-.export _jmp_TeamsPalette_and_BallPalette
-_jmp_TeamsPalette_and_BallPalette:
-	JMP _TeamsPalette_and_BallPalette
 .export _loc_01_8024
 _loc_01_8024:
 	JMP _loc_01_847D
@@ -75,9 +72,6 @@ _loc_01_8036:
 .export _loc_01_8039
 _loc_01_8039:
 	JMP _loc_01_8D1A
-.export _jmp_SetBotTimerThrowIn_b01
-_jmp_SetBotTimerThrowIn_b01:
-	JMP SetBotTimerThrowIn
 .export _loc_01_803F
 _loc_01_803F:
 	JMP _loc_01_8B6B
@@ -156,7 +150,7 @@ bra_01_809E:
 
 _loc_01_80A3:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$00
 	STA $2C
 	SEC
@@ -233,7 +227,7 @@ bra_01_8107:
 	STA $03C5
 bra_01_8135:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_01_8135
 	LDA #$01
@@ -285,7 +279,7 @@ bra_01_8184:
 _loc_01_819E:
 bra_01_819E:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_01_819E
 	LDA #$01
@@ -531,7 +525,7 @@ _loc_01_8343:
 .word pal_buffer
  
 	LDA #$04
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	STA pal_buffer + $09
 	STA pal_buffer + $0D
@@ -605,7 +599,7 @@ bra_01_83AC:
 	SEC
 	JSR _loc_01_83D1
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	PLA
 	CMP #$38
 	BNE bra_01_83AC
@@ -801,7 +795,8 @@ _loc_01_8504:
 	JSR _loc_03_C07B
 	RTS
 
-_TeamsPalette_and_BallPalette:		; 8521
+.export _TeamsPalette_and_BallPalette_b01
+_TeamsPalette_and_BallPalette_b01:		; 8521
 	LDX #$00
 	LDA team_id
 	JSR _SelectTeamPalette
@@ -853,11 +848,11 @@ _loc_01_8596:
 	BIT $03D2
 	BMI bra_01_85A3
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	JMP _loc_01_8596
 bra_01_85A3:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_01_85A3
 	LDA #$01
@@ -872,10 +867,10 @@ bra_01_85A3:
 	STA $2B
 	JSR _loc_01_860C
 	LDA #$08
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	JSR _loc_01_85E3
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA #$00
 	DEC $03CE
 	BEQ bra_01_85DD
@@ -886,7 +881,7 @@ bra_01_85DD:
 _loc_01_85E3:
 bra_01_85E3:
 	LDA #$01
-	JSR _jmp_FrameDelay_b03
+	JSR _FrameDelay_b03
 	LDA $037D
 	BNE bra_01_85E3
 ; перерисовка ворот при касании сетки мячом после гола
@@ -1384,7 +1379,7 @@ _loc_01_88E0:
 @skip:
 	PLP
 	BEQ @check_defense_chance
-	LDA a: team_atk,X
+	LDA team_atk,X
 	CMP random
 	BCC @do_not_attack
 	JMP _BeginFollowEnemy
@@ -1393,7 +1388,7 @@ _loc_01_88E0:
 @check_defense_chance:
 	CPY #$05
 	BCS @do_not_defense
-	LDA a: team_def,X
+	LDA team_def,X
 	CMP random
 	BCC @do_not_defense
 	JMP _BeginDefenseGates
@@ -1853,7 +1848,8 @@ _loc_01_8BC3:
 @rts:
 	RTS
 
-SetBotTimerThrowIn:		; вычисление таймера для бота, который выбивает из углового
+.export _SetBotTimerThrowIn_b01
+_SetBotTimerThrowIn_b01:		; вычисление таймера для бота, который выбивает из углового
 	LDA random + 1
 	LDY #plr_act_timer2
 	AND #$0F

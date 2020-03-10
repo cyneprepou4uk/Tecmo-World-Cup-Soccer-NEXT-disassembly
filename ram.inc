@@ -56,10 +56,10 @@ gk_has_ball = $98						; используется при анимации кас
 gk_hold_ball_timer = $99				; таймер удержания мяча кипером
 
 oam_mem = $0800
-oam_y = oam_mem + $000						; Y координата спрайта
-oam_t = oam_mem + $100						; тайл спрайта
-oam_a = oam_mem + $200						; палитра и поворот спрайта
-oam_x = oam_mem + $300						; X координата спрайта
+oam_y = oam_mem + $000					; Y координата спрайта
+oam_t = oam_mem + $100					; тайл спрайта
+oam_a = oam_mem + $200					; палитра и поворот спрайта
+oam_x = oam_mem + $300					; X координата спрайта
 
 field_buf_ppu_lo = $03C5				; корректирующий байт для nmt_buf_ppu_lo
 field_buf_ppu_hi = $03C6				; корректирующий байт для nmt_buf_ppu_hi
