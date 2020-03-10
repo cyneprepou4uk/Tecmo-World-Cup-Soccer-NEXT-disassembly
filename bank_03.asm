@@ -1543,9 +1543,9 @@ _ClearNametable_b03:		; CA59
 	LDA #$06
 	STA $2001		; включить рендеринг
 	LDA #$20
-	JSR ClearNMT_Loop
+	JSR _ClearNMT_Loop
 	LDA #$24
-	JSR ClearNMT_Loop
+	JSR _ClearNMT_Loop
 	LDA #$1E
 	STA $2001		; включить рендеринг
 	LDA byte_for_2000
@@ -1554,7 +1554,7 @@ _ClearNametable_b03:		; CA59
 	STA $2000		; включить NMI
 	RTS
 
-ClearNMT_Loop:		; CA80 на вход подается 20 или 24 для очистки страницы nametable
+_ClearNMT_Loop:		; CA80 на вход подается 20 или 24 для очистки страницы nametable
 	BIT $2002
 	STA $2006
 	LDA #$00
@@ -1792,8 +1792,8 @@ bra_03_CBD7:
 
 .export _SelectInitialPlayerDataAddress_b03
 _SelectInitialPlayerDataAddress_b03:		; CBE3
-_SelectInitialBallDataAddress:			; если на вход подается 16
-_SelectInitialShadowDataAddress:		; если на вход подается 17
+_SelectInitialBallDataAddress:				; если на вход подается 16
+_SelectInitialShadowDataAddress:			; если на вход подается 17
 	ASL
 	TAX
 	LDA BasePlayerDataAddress_table,X
