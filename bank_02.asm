@@ -21,18 +21,15 @@
 .export _loc_02_8003
 _loc_02_8003:
 	JMP _loc_02_83C9
-	JMP _loc_02_8478
 	JMP _SpectatorsPaletteAndFlagsOnTeamSelectScreen
 .export _loc_02_800C_minus1
 _loc_02_800C:
 _loc_02_800C_minus1 = _loc_02_800C - 1
 	JMP _loc_02_8A1A
-	JMP _loc_02_8AF6
 .export _loc_02_8015_minus1
 _loc_02_8015:
 _loc_02_8015_minus1 = _loc_02_8015 - 1
 	JMP _loc_02_80D1
-	JMP _loc_02_B000
 .export _loc_02_801E
 _loc_02_801E:
 	JMP _loc_02_9842
@@ -48,11 +45,6 @@ _loc_02_8027:
 .export _loc_02_802A
 _loc_02_802A:
 	JMP _loc_02_A1ED
-.export _loc_02_802D
-.export _loc_02_802D_minus1
-_loc_02_802D:
-_loc_02_802D_minus1 = _loc_02_802D - 1
-	JMP _loc_02_A330
 .export _loc_02_8030
 _loc_02_8030:
 	JMP _loc_02_8033
@@ -2935,7 +2927,9 @@ bra_02_A32D:
 	STX spr_cnt_index
 	RTS
 
+.export _loc_02_A330_minus1
 _loc_02_A330:
+_loc_02_A330_minus1 = _loc_02_A330 - 1
 	LDA #$00
 bra_02_A332:
 	PHA

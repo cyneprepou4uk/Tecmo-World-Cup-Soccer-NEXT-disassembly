@@ -3,21 +3,21 @@
 .include "val.inc"
 
 .import _MusicDriver_b00
-.import _loc_01_8000
+.import _loc_01_804E
 .import _loc_01_8006_minus1
-.import _loc_01_8009
-.import _loc_01_800C
-.import _loc_01_800F
-.import _loc_01_8012
+.import _loc_01_81D9
+.import _loc_01_827E
+.import _loc_01_87ED
+.import _loc_01_88E0
 .import _loc_01_8015_minus1
-.import _loc_01_8018
-.import _loc_01_801B
-.import _loc_01_801E
+.import _loc_01_863C
+.import _loc_01_8696
+.import _loc_01_878F
 .import _TeamsPalette_and_BallPalette_b01
-.import _loc_01_8024
-.import _loc_01_8027
-.import _loc_01_802A
-.import _loc_01_802D
+.import _loc_01_847D
+.import _loc_01_83AA
+.import _loc_01_8361
+.import _loc_01_8A71
 .import _loc_01_8030
 .import _loc_01_8033_minus1
 .import _loc_01_8036
@@ -39,7 +39,7 @@
 .import _loc_02_8024
 .import _loc_02_8027
 .import _loc_02_802A
-.import _loc_02_802D_minus1
+.import _loc_02_A330_minus1
 .import _loc_02_8030
 .import _loc_02_B000
 
@@ -472,7 +472,7 @@ ContinueWalkthrough_03_C36E:		; переход сюда если играть п
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_01_802D
+	JSR _loc_01_8A71
 	JSR _loc_03_C507
 bra_03_C3C8:
 	LDA #$01
@@ -893,7 +893,7 @@ _loc_03_C67E:
 	BEQ @player_is_gk
 	LDA #$03
 @player_is_gk:
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 bra_03_C6B8:
 	RTS
 
@@ -2021,7 +2021,7 @@ bra_03_CD87:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает после затемнения экрана перед отрисовкой поля
-	JSR _loc_01_8000
+	JSR _loc_01_804E
 	PHA
 	LDA #$02
 	STA prg_bank
@@ -2030,7 +2030,7 @@ bra_03_CD87:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает после затемнения экрана перед отрисовкой поля
-	JSR _loc_01_8009
+	JSR _loc_01_81D9
 	BIT $03C2
 	BMI bra_03_CD87
 	JSR _loc_03_CF97
@@ -2051,7 +2051,7 @@ bra_03_CDC1:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
-	JSR _loc_01_8000
+	JSR _loc_01_804E
 	PHA
 	LDA #$02
 	STA prg_bank
@@ -2060,7 +2060,7 @@ bra_03_CDC1:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
-	JSR _loc_01_8009
+	JSR _loc_01_81D9
 	JSR _loc_03_DE96
 	JSR _loc_03_D4E8
 	BCS bra_03_CE17
@@ -2073,7 +2073,7 @@ bra_03_CDC1:
 	JSR _BankswitchPRG
 	PLA
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
-	JSR _loc_01_800F
+	JSR _loc_01_87ED
 	JSR _loc_03_CFDA
 	LDA timer_sec
 	ORA timer_min
@@ -2113,7 +2113,7 @@ bra_03_CE38:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал при зателе мяча за линию аута
-	JSR _loc_01_800F
+	JSR _loc_01_87ED
 	PLA
 	SEC
 	SBC #$01
@@ -2636,7 +2636,7 @@ bra_03_D222:
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_01_8000
+	JSR _loc_01_804E
 	PHA
 	LDA #$02
 	STA prg_bank
@@ -2644,7 +2644,7 @@ bra_03_D222:
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_01_8009
+	JSR _loc_01_81D9
 	JSR _loc_03_DE96
 	BIT plr_w_ball
 	BPL bra_03_D222
@@ -2770,7 +2770,7 @@ bra_03_D32A:
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_01_8000
+	JSR _loc_01_804E
 	PHA
 	LDA #$02
 	STA prg_bank
@@ -2778,7 +2778,7 @@ bra_03_D32A:
 	STA prg_bank + 1
 	JSR _BankswitchPRG
 	PLA
-	JSR _loc_01_8009
+	JSR _loc_01_81D9
 	JSR _loc_03_DE96
 	BIT plr_w_ball
 	BPL bra_03_D32A
@@ -2850,7 +2850,7 @@ bra_03_D3DC:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда был забит гол верхней команде и камера начала скроллиться
-	JSR _loc_01_800C
+	JSR _loc_01_827E
 	JSR _loc_03_DE96
 	JMP _loc_03_D3B1
 bra_03_D3F2:
@@ -2889,7 +2889,7 @@ bra_03_D3F2:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал перед появлению надписи GOAL
-	JSR _loc_01_8027
+	JSR _loc_01_83AA
 	PHA
 	LDA #$02
 	STA prg_bank
@@ -2898,7 +2898,7 @@ bra_03_D3F2:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал когда закончился таймер надписи GOAL
-	JSR _loc_01_802A
+	JSR _loc_01_8361
 	LDA #$28
 	JSR _FrameDelay_b03
 	LDX $03CA
@@ -2918,7 +2918,7 @@ bra_03_D464:
 	JSR _BankswitchPRG
 	PLA
 ; бряк сработал перед попыткой игры увеличить счет крупных цифр после гола
-	JSR _loc_01_802A
+	JSR _loc_01_8361
 	LDA #$6E
 	JSR _FrameDelay_b03
 	JSR _HideAllSprites_b03
@@ -3193,8 +3193,8 @@ bra_03_D663:
 	STA $01,X
 	LDA #$04
 	STA $02,X
-	LDA #>_loc_02_802D_minus1
-	LDY #<_loc_02_802D_minus1
+	LDA #>_loc_02_A330_minus1
+	LDY #<_loc_02_A330_minus1
 	JSR _SetSubReturnAddressForLater_b03
 	SEC
 	JMP _loc_03_D69F
@@ -4321,21 +4321,21 @@ _loc_03_DE96:
 	LDA #$FF
 	STA spr_limit
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
-	JSR _loc_01_8024
+	JSR _loc_01_847D
 	LDA plr_w_ball
 	BMI @skip
 	JSR _SelectInitialPlayerDataAddress_b03
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
-	JSR _loc_01_801B
+	JSR _loc_01_8696
 @skip:
 	LDA #$16
 	JSR _SelectInitialBallDataAddress
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
-	JSR _loc_01_801B
+	JSR _loc_01_8696
 	LDA #$17
 	JSR _SelectInitialShadowDataAddress
-	JSR _loc_01_801B
-	JSR _loc_01_8018
+	JSR _loc_01_8696
+	JSR _loc_01_863C
 	LDA spr_limit
 	PHA
 	LDA spr_cnt_index
@@ -4362,7 +4362,7 @@ bra_03_DEEB:
 	BEQ bra_03_DEF7
 	JSR _SelectInitialPlayerDataAddress_b03
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
-	JSR _loc_01_801B
+	JSR _loc_01_8696
 bra_03_DEF7:
 	PLA
 	CLC
@@ -4764,12 +4764,12 @@ bra_03_E185:
 	JSR _WriteSoundID_b03
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$08
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$08
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDY #plr_init_spd_lo
 	LDA #$02
 	STA (plr_data),Y
@@ -4813,7 +4813,7 @@ bra_03_E1E9:
 	BNE bra_03_E1E9
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$08
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$0A
 	JSR _SavePlayerSubroutine
 _loc_03_E209:
@@ -5034,7 +5034,7 @@ _loc_03_E36E:
 	BPL bra_03_E3C7
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$07
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$01
 	JSR _BallRelativePosition
 bra_03_E3B7:
@@ -5244,7 +5244,7 @@ _loc_03_E4DE:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 ; бряк сработал после разводки мяча
-	JSR _loc_01_8012
+	JSR _loc_01_88E0
 bra_03_E506:
 	LDY #plr_flags
 	LDA (plr_data),Y
@@ -5572,7 +5572,7 @@ bra_03_E701:
 	CPX #$0B
 	BEQ @skip_gk
 	LDA #$01
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 @skip_gk:
 	JMP _loc_03_E701
 @check_gk:
@@ -5747,7 +5747,7 @@ bra_03_E864:
 	PLP
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$02
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	RTS
 
 _PlayerStateUnknown01:		; E86E
@@ -5864,7 +5864,7 @@ bra_03_E934:
 	JSR _BallRelativePosition
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$06
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 _loc_03_E95E:
 	LDY #plr_dir
 	LDA (plr_data),Y
@@ -5915,12 +5915,12 @@ _loc_03_E9BF:
 	JSR _WriteSoundID_b03
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$05
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$02
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$05
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$02
 	JSR _SavePlayerSubroutine
 	LDY #plr_dir
@@ -5943,7 +5943,7 @@ _loc_03_E9BF:
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$05
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$30
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -6066,7 +6066,7 @@ bra_03_EAEE:
 	STA (plr_data),Y
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$01
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 _loc_03_EB00:
 	BIT plr_w_ball
 	BMI bra_03_EB15
@@ -6112,7 +6112,7 @@ _loc_03_EB4E:
 	JSR _SavePlayerSubroutine
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$01
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	JMP _loc_03_EB4E
 bra_03_EB5E:
 	LDA plr_cur_id
@@ -6156,7 +6156,7 @@ bra_03_EBA0:
 bra_03_EBB0:
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$01
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 _loc_03_EBB8:
 	LDX #$08
 	LDA #$16
@@ -6302,12 +6302,12 @@ _loc_03_ECB0:
 	BCC bra_03_ECBD
 	JSR _ClearUnknownPlayerFlag
 	LDA #$04
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	JMP _loc_03_ECC5
 bra_03_ECBD:
 	JSR _SetUnknownPlayerFlag
 	LDA #$02
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 _loc_03_ECC5:
 	LDX #$09
 	LDA #$16
@@ -6537,13 +6537,13 @@ bra_03_EE7D:
 	LDY #plr_act_timer2
 	STA (plr_data),Y
 ; бряк сработал при ловле кипером мяча
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$08
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDY #plr_act_timer2
 	LDA (plr_data),Y
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$14
 	JSR _SavePlayerSubroutine
 	BIT gk_has_ball
@@ -6739,12 +6739,12 @@ _PlayerStateDead:		; F016
 	JSR _ClearUnknownPlayerFlag
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$09
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$40	; таймер состояния трупа
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$09
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$0C	; таймер поднятия после трупа
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -6774,12 +6774,12 @@ _PlayerStateDodge:		; F067
 	JSR _ClearUnknownPlayerFlag
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0A
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$14
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0A
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$06
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -6830,7 +6830,7 @@ _loc_03_F0DB:
 	BCC bra_03_F0F3
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$01
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	JMP _loc_03_F0DB
 bra_03_F0F3:
 	JSR _loc_03_C67E
@@ -6847,7 +6847,7 @@ _loc_03_F0FF:
 	JSR _SavePlayerSubroutine
 	JSR _SetUnknownPlayerFlag
 	LDA #$01
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	JMP _loc_03_F0FF
 bra_03_F116:
 	LDY #plr_flags
@@ -6974,7 +6974,7 @@ bra_03_F1F2:
 	LDA #$01
 bra_03_F20E:
 ; бряк сработал когда был забит гол верхней команде и камера уже успела слегка проскроллиться
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	JMP _loc_03_F1F2
 
 _PlayerStateUnknown13:		;F214
@@ -6998,7 +6998,7 @@ bra_03_F234:
 	LDA #$06
 ; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 ; но игра уже успела прочитать таймер времени
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDX #$00
 	LDA team_w_ball
 	BEQ bra_03_F258
@@ -7084,7 +7084,7 @@ _PlayerStateUnknown07:		; F2D2
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0B
 ; бряк сработал при удержании кнопки для удара в одно касание
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$01
 	JSR _SavePlayerSubroutine
 	JSR _loc_03_F428
@@ -7093,7 +7093,7 @@ _PlayerStateUnknown07:		; F2D2
 	JSR _loc_03_DF5E
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0B
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$30
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -7116,7 +7116,7 @@ _PlayerStateUnknown08:		;F319
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0C
 ; бряк сработал при ударе в одно касание с характерным звуком
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$01
 	JSR _SavePlayerSubroutine
 	JSR _loc_03_F428
@@ -7125,17 +7125,17 @@ _PlayerStateUnknown08:		;F319
 	JSR _loc_03_DF5E
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0C
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$20
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0C
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$18
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0C
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$0C
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -7172,7 +7172,7 @@ bra_03_F39D:
 bra_03_F3A4:
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0D
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$01
 	JSR _SavePlayerSubroutine
 	JSR _loc_03_F428
@@ -7181,7 +7181,7 @@ bra_03_F3A4:
 	JSR _loc_03_DF5E
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0D
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$30
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -7196,12 +7196,12 @@ _PlayerStateUnknown0B:		;F3D9, скорее всего вообще не исп�
 _loc_03_F3D9:				; а этот прыжок был использован
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$0E
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$01
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0E
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$01
 	JSR _SavePlayerSubroutine
 	JSR _loc_03_F428
@@ -7210,12 +7210,12 @@ _loc_03_F3D9:				; а этот прыжок был использован
 	JSR _loc_03_DF5E
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0E
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$20
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0E
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$18
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -7277,7 +7277,7 @@ bra_03_F486:	; сюда есть прыжок снизу
 	LDA #$02
 	JSR _BallRelativePosition
 	LDA #$0F
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA btn_hold
 	LDX team_w_ball
 	BEQ bra_03_F4A9
@@ -7336,7 +7336,7 @@ bra_03_F4FB:
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$0F
 ; бряк сработал когда CPU выбрасывал из аута
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$03
 	JSR _BallRelativePosition
 	LDA #SOUND_THROW
@@ -7417,13 +7417,13 @@ bra_03_F58F:
 	JSR _loc_03_E093
 	BCC bra_03_F5BB
 	LDA #$12
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	JMP _loc_03_F5C0
 _loc_03_F5BB:
 bra_03_F5BB:
 	LDA #$10
 ; бряк сработал когда кипер полностью завладел мячом
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 _loc_03_F5C0:
 	LDA #$04
 	JSR _BallRelativePosition
@@ -7460,7 +7460,7 @@ _loc_03_F600:
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$11
 ; бряк сработал когда кипер начинает выбивать мяч, но анимации еще нету
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$05
 	JSR _BallRelativePosition
 	LDA #$08
@@ -7468,7 +7468,7 @@ _loc_03_F600:
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$11
 ; бряк сработал когда кипер уже почти ударил по мячу
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	LDA #SOUND_SHOOT
@@ -7499,13 +7499,13 @@ _loc_03_F600:
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$11
 ; бряк сработал когда кипер уже ударил по мячу
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$2E
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$11
 ; бряк сработал когда кипер закончил анимацию удара по мячу с вытянутой ногой
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$10
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -7541,7 +7541,7 @@ bra_03_F6AD:
 	JSR _SavePlayerSubroutine
 	LDA #$01
 ; бряк сработал после завершения таймера надписи corner kick
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA btn_hold
 	LDX team_w_ball
 	BEQ bra_03_F6CC
@@ -7606,13 +7606,13 @@ bra_03_F720:
 bra_03_F72A:
 	LDA #$05
 ; бряк сработал когда CPU собирался пробивать угловой
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$08
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$05
 ; бряк сработал когда CPU замахнулся по мячу на угловом
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	LDA #$E0
@@ -7644,7 +7644,7 @@ bra_03_F72A:
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$05
 ; бряк сработал когда CPU ударил по мячу на угловом
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$30
 	JSR _SavePlayerSubroutine
 	LDY #plr_flags
@@ -7679,7 +7679,7 @@ _PlayerStateUnknown17:		;F7B9
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$15
 ; бряк сработал перед свистком в пенальти перед ударом
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA random
 	AND #$0F
 	CLC
@@ -7720,12 +7720,12 @@ _loc_03_F7FF:
 	STA $8D
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$15
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$15
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$04
 	JSR _SavePlayerSubroutine
 	LDA #$80
@@ -7734,7 +7734,7 @@ _loc_03_F7FF:
 	JSR _WriteSoundID_b03
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$15
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #STATE_UNKNOWN_19
 	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers
@@ -7743,7 +7743,7 @@ _PlayerStateUnknown18:		;F83E
 	JSR _ClearPlayerAnimationCounterLow
 	LDA #$16
 ; бряк сработал перед свистком в пенальти перед ударом
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 _loc_03_F846:
 bra_03_F846:
 	LDA #$01
@@ -7804,7 +7804,7 @@ bra_03_F8A5:
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$16
 ; бряк сработал когда игрок в пенальти ударил по мячу и тот уже полетел
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #$EF
 	STA $045E
 	LDA #$87
@@ -7854,7 +7854,7 @@ bra_03_F915:
 	JSR _IncreasePlayerAnimationCounterLow
 	LDA #$16
 ; бряк срабатывает когда в пенальти кипер отбивает мяч либо он залетает в ворота
-	JSR _loc_01_801E
+	JSR _loc_01_878F
 	LDA #STATE_UNKNOWN_19
 	JSR _SelectPlayerSubroutine_b03
 	JMP SelectNextIndexForPlayers	

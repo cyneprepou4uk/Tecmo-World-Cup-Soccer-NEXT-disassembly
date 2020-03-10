@@ -14,51 +14,14 @@
 .import _loc_03_F9A5
 .import _WriteSoundID_b03
 
-.export _loc_01_8000
-_loc_01_8000:
-	JMP _loc_01_804E
-	JMP _loc_01_8087
 .export _loc_01_8006_minus1
 _loc_01_8006:
 _loc_01_8006_minus1 = _loc_01_8006 - 1
 	JMP _loc_01_80A3
-.export _loc_01_8009
-_loc_01_8009:
-	JMP _loc_01_81D9
-.export _loc_01_800C
-_loc_01_800C:
-	JMP _loc_01_827E
-.export _loc_01_800F
-_loc_01_800F:
-	JMP _loc_01_87ED
-.export _loc_01_8012
-_loc_01_8012:
-	JMP _loc_01_88E0
 .export _loc_01_8015_minus1
 _loc_01_8015:
 _loc_01_8015_minus1 = _loc_01_8015 - 1
 	JMP _loc_01_8596
-.export _loc_01_8018
-_loc_01_8018:
-	JMP _loc_01_863C
-.export _loc_01_801B
-_loc_01_801B:
-	JMP _loc_01_8696
-.export _loc_01_801E
-_loc_01_801E:
-	JMP _loc_01_878F
-.export _loc_01_8024
-_loc_01_8024:
-	JMP _loc_01_847D
-.export _loc_01_8027
-_loc_01_8027:
-	JMP _loc_01_83AA
-.export _loc_01_802A
-_loc_01_802A:
-	JMP _loc_01_8361
-.export _loc_01_802D
-_loc_01_802D:
-	JMP _loc_01_8A71
 .export _loc_01_8030
 _loc_01_8030:
 	JMP _loc_01_89F3
@@ -88,6 +51,7 @@ _loc_01_8048:
 _loc_01_804B:
 	JMP _loc_01_8B3F
 
+.export _loc_01_804E
 _loc_01_804E:
 	LDA #$00
 	STA $2A
@@ -303,6 +267,7 @@ bra_01_81D1:
 	STA $037D
 	JMP _loc_01_80A3
 
+.export _loc_01_81D9
 _loc_01_81D9:
 	LDA plr_w_ball
 	BPL bra_01_81E0
@@ -401,6 +366,7 @@ bra_01_8264:
 	ADC cam_edge_y_hi
 	STA cam_edge_y_hi
 	STY $03B9
+.export _loc_01_827E
 _loc_01_827E:
 	LDX cam_edge_y_lo
 	LDY cam_edge_y_hi
@@ -536,6 +502,8 @@ _loc_01_8343:
 	LDA #$21
 bra_01_835E:
 	JMP _loc_01_8343
+
+.export _loc_01_8361
 _loc_01_8361:
 	JSR _HideAllSprites_b03
 	LDA #$00
@@ -581,6 +549,7 @@ table_01_83A6:
 .byte $20,$50
 .byte $A0,$90
 
+.export _loc_01_83AA
 _loc_01_83AA:
 	LDA #$00
 bra_01_83AC:
@@ -702,6 +671,7 @@ table_01_8456:		; байты для спрайтов GOAL и счета посл
 .byte $F9,$F9,$90
 .byte $88,$88,$F0
 
+.export _loc_01_847D
 _loc_01_847D:
 	LDA game_mode_flags
 	AND #FLAG_GM_UNKNOWN_10
@@ -932,6 +902,7 @@ bra_01_8636:
 	STA $037D
 	RTS
 
+.export _loc_01_863C
 _loc_01_863C:
 	LDA game_mode_flags
 	AND #FLAG_GM_UNKNOWN_10
@@ -984,6 +955,7 @@ bra_01_8686:
 bra_01_8695:
 	RTS
 
+.export _loc_01_8696
 _loc_01_8696:		; сравнение координат игроков с позицией камеры
 					; управление может переключиться на другого игрока, если текущий ушел за экран
 					; plr_data здесь может быть и ball_data, так как обрабатываются еще и адреса мяча
@@ -1139,6 +1111,7 @@ _loc_01_877D:
 	STA chr_bank + 2,X
 	RTS
 
+.export _loc_01_878F
 _loc_01_878F:
 ; на вход подается A
 	; 11 - во время удара кипера от ворот
@@ -1201,6 +1174,7 @@ table_01_87DD:	; читается из 3х мест
 .byte $03,$00
 .byte $02,$80
 
+.export _loc_01_87ED
 _loc_01_87ED:
 .scope
 player_counter = $2A
@@ -1359,6 +1333,7 @@ bra_01_88C9:
 	STA (plr_data),Y
 	RTS
 
+.export _loc_01_88E0
 _loc_01_88E0:
 	BIT $042C
 	BVS @do_not_defense
@@ -1614,6 +1589,7 @@ bra_01_8A67:
 	STA $78
 	RTS
 
+.export _loc_01_8A71
 _loc_01_8A71:
 	LDA #$00
 	BIT game_mode_flags
