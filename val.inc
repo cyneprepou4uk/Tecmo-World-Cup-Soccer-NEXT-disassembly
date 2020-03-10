@@ -8,6 +8,14 @@ BTN_SELECT				= $20
 BTN_B					= $40
 BTN_A					= $80
 
+; сообщения на экране
+MSG_KICK_OFF		= $00
+MSG_TIME_UP			= $01
+MSG_THROW_IN		= $02
+MSG_GOAL_KICK		= $03
+MSG_CORNER_KICK		= $04
+MSG_PAUSE			= $05
+
 ; game_mode_flags = $03A4
 F_1_PLAYER				= $00	; противоположность 80
 F_TIMEUP			 	= $01	; время вышло

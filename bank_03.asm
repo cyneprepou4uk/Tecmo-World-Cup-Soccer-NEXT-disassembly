@@ -580,7 +580,7 @@ _loc_03_C476:
 	STA $1E
 	LDA #SOUND_TIME_UP
 	JSR _WriteSoundID_b03
-	LDA #$01	; time up текст
+	LDA #MSG_TIME_UP
 	JSR _WriteMessageOnScreenWithSprites
 	LDA #$A0
 	JSR _FrameDelay_b03
@@ -697,7 +697,7 @@ _LoopFrameDelay:		; сюда есть 2 JMP
 	JMP _PauseCheck_03_C55B
 
 _SetPauseInGame:		; C58E
-	LDA #$05	; pause текст
+	LDA #MSG_PAUSE
 	JSR _WriteMessageOnScreenWithSprites
 	PHA
 	LDA #$04
@@ -2353,7 +2353,7 @@ table_03_CE6B_D07A:
 	LDA #$00
 	STA $09
 	STA $0A
-	LDA #$02	; throw in текст
+	LDA #MSG_THROW_IN
 	JSR _WriteAndSkipMessageOnScreen
 	JSR _loc_03_D49F
 	LDX ball_pos_x_lo
@@ -2459,7 +2459,7 @@ bra_03_D12C:
 	STA ball_z_lo
 	STA ball_z_hi
 	LDA #$01
-	STA $03E4
+	STA ball_anim_id
 	JSR _loc_03_DCED
 bra_03_D154:
 	LDA #$01
@@ -2486,8 +2486,8 @@ table_03_CE6B_D173:
 	STA ball_z_lo
 	STA ball_z_hi
 	LDA #$01
-	STA $03E4
-	LDA #$03	; goal kick текст
+	STA ball_anim_id
+	LDA #MSG_GOAL_KICK
 	JSR _WriteAndSkipMessageOnScreen
 	JSR _loc_03_D49F
 	LDA $0428
@@ -2598,8 +2598,8 @@ table_03_CE6B_D257:
 	STA ball_z_lo
 	STA ball_z_hi
 	LDA #$01
-	STA $03E4
-	LDA #$04	; corner kick текст
+	STA ball_anim_id
+	LDA #MSG_CORNER_KICK
 	JSR _WriteAndSkipMessageOnScreen
 	JSR _loc_03_D49F
 	LDA $0428
@@ -2877,16 +2877,17 @@ bra_03_D496:
 	STA $15
 	STA $16
 	JMP _loc_03_CCC4
+
 _loc_03_D49F:
 	LDA #$00
 	STA ball_z_lo
 	STA ball_z_hi
-bra_03_D4A7:
+@loop:
 	PHA
 	TAX
-	BEQ bra_03_D4BF
+	BEQ @skip_gk
 	CMP #$0B
-	BEQ bra_03_D4BF
+	BEQ @skip_gk
 	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
@@ -2894,14 +2895,14 @@ bra_03_D4A7:
 	STA (plr_data),Y
 	LDA #STATE_IDLE
 	JSR _SelectPlayerSubroutine_b03
-bra_03_D4BF:
+@skip_gk:
 	PLA
 	CLC
 	ADC #$01
 	CMP #$16
-	BNE bra_03_D4A7
+	BNE @loop
 	LDA #$03
-	STA $03E4
+	STA ball_anim_id
 	LDA game_mode_flags
 	ORA #F_OUT_OF_PLAY
 	STA game_mode_flags
@@ -3168,7 +3169,7 @@ _loc_03_D6B1:
 	SBC ball_z_lo
 	TAX
 	LDA table_03_D6D4,X
-	STA $03E4
+	STA ball_anim_id
 ; чтение режима игры из опций
 	LDA game_mode_opt
 	AND #$3F
@@ -3348,8 +3349,8 @@ bra_03_D7FF:
 bra_03_D814:
 	LDA $03E2
 	AND #$01
-	STA $03E4
-	INC $03E4
+	STA ball_anim_id
+	INC ball_anim_id
 	LDX #$00
 	LDA $03E2
 	AND #$02
@@ -4055,7 +4056,7 @@ bra_03_DD2C:
 	LSR
 	CLC
 	ADC #$03
-	STA $03E4
+	STA ball_anim_id
 	BIT $03D3
 	BPL bra_03_DD5C
 	LDA $03E1
@@ -4069,10 +4070,10 @@ bra_03_DD4B:
 	DEC $03E1
 	BIT game_mode_opt
 	BPL bra_03_DD5C
-	LDA $03E4
+	LDA ball_anim_id
 	CLC
 	ADC #$07
-	STA $03E4
+	STA ball_anim_id
 bra_03_DD5C:
 	RTS
 
@@ -6291,7 +6292,7 @@ bra_03_ED12:
 	JMP _loc_03_EC58
 bra_03_ED19:
 	LDA #$03
-	STA $03E4
+	STA ball_anim_id
 	LDA #$00
 	STA ball_z_lo
 	STA ball_z_hi
@@ -6410,7 +6411,7 @@ _loc_03_EDE9:
 	STA ball_z_lo
 	STA ball_z_hi
 	LDA #$03
-	STA $03E4
+	STA ball_anim_id
 	LDA #$06
 	JSR _BallRelativePosition
 	LDA ball_dir
@@ -6922,7 +6923,7 @@ _PlayerStateUnknown13:		;F214
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA #$01
-	STA $03E4
+	STA ball_anim_id
 	JSR _SetUnknownPlayerFlag
 	JSR _ClearPlayerAnimationCounterLow
 	LDA random
@@ -7331,7 +7332,7 @@ _PlayerStateGoalkeeperGetsBall:		;F563
 	LDA #$00
 	STA ball_z_lo
 	LDA #$01
-	STA $03E4
+	STA ball_anim_id
 	LDA plr_cur_id
 	JSR _loc_03_C92B
 	LDA plr_cur_id

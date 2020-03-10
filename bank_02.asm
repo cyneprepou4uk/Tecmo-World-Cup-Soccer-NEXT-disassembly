@@ -2619,7 +2619,7 @@ bra_02_A10E:
 	LDA #$00
 	STA ball_pos_y_hi
 	LDA #$09
-	STA $03E4
+	STA ball_anim_id
 	LDA #SOUND_WHISTLE
 	JSR _WriteSoundID_b03
 	RTS

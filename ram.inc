@@ -145,7 +145,7 @@ ball_pos_x_hi = $03DA
 
 ball_pos_y_lo = $03DE
 ball_pos_y_hi = $03E0
-; $03E4 - вероятно связано с мячом, но не точно
+ball_anim_id = $03E4						; размер мяча, бит3 отвечает за зеркало
 ball_dir = $03E6
 shad_pos_x_lo = $03F8					; позиция тени мяча
 shad_pos_x_hi = $03FA
