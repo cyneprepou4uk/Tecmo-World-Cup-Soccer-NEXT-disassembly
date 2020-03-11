@@ -26,7 +26,7 @@ F_TIMEUP			 	= $01	; время вышло
 FLAG_GM_UNKNOWN_02	 	= $02
 FLAG_GM_UNKNOWN_04	 	= $04
 FLAG_GM_UNKNOWN_08	 	= $08
-FLAG_GM_UNKNOWN_10	 	= $10
+F_GM_PENALTY		 	= $10	; пенальти
 F_OUT_OF_PLAY		 	= $20	; игроки ждут пока стоят на разводке/пока мяч вне игры
 F_CONTINUE	 			= $40	; экран ввода пароля
 F_2_PLAYERS		 		= $80	; режим 2 players если = 1, иначе 1 player

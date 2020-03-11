@@ -491,13 +491,13 @@ bra_03_C3E5:
 	LDY #<_loc_03_CE73_minus1
 	JSR _SetSubReturnAddressForLater_b03
 	LDA game_mode_flags
-	ORA #FLAG_GM_UNKNOWN_10
+	ORA #F_GM_PENALTY
 	STA game_mode_flags
 bra_03_C413:
 	LDA #$01
 	JSR _FrameDelay_b03
 	LDA game_mode_flags
-	AND #FLAG_GM_UNKNOWN_10
+	AND #F_GM_PENALTY
 	BNE bra_03_C413
 	JSR _loc_03_C425
 @infinite_loop:
@@ -4194,19 +4194,16 @@ _loc_03_DE96:
 	LDA #$00
 	STA spr_cnt_index
 	STA spr_cnt_ovf
-	LDA #$FF
+	LDA #$00
 	STA spr_limit
-; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_847D
 	LDA plr_w_ball
 	BMI @skip
 	JSR _SelectInitialPlayerDataAddress_b03
-; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_8696
 @skip:
 	LDA #$16
 	JSR _SelectInitialBallDataAddress
-; бряк срабатывает когда поле уже отрисовано, но игроков еще не видно
 	JSR _loc_01_8696
 	LDA #$17
 	JSR _SelectInitialShadowDataAddress
@@ -4218,7 +4215,7 @@ _loc_03_DE96:
 	STA spr_cnt_index_copy
 	TAX
 	LDA game_mode_flags
-	AND #FLAG_GM_UNKNOWN_10
+	AND #F_GM_PENALTY
 	BNE bra_03_DEE7
 	SEC
 	SBC $5E

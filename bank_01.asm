@@ -637,7 +637,7 @@ table_01_8456:		; байты для спрайтов GOAL и счета посл
 .export _loc_01_847D
 _loc_01_847D:
 	LDA game_mode_flags
-	AND #FLAG_GM_UNKNOWN_10
+	AND #F_GM_PENALTY
 	BNE bra_01_84EC
 	LDA #$8C
 	STA $2A
@@ -869,7 +869,7 @@ bra_01_8636:
 .export _loc_01_863C
 _loc_01_863C:
 	LDA game_mode_flags
-	AND #FLAG_GM_UNKNOWN_10
+	AND #F_GM_PENALTY
 	BNE bra_01_865C
 	LDX $03C9
 	INX
@@ -951,7 +951,6 @@ _loc_01_8696:		; сравнение координат игроков с поз�
 	BEQ @continue
 @rts:
 	RTS
-
 @continue:
 	LDY #plr_flags
 	LDA (plr_data),Y
@@ -990,14 +989,17 @@ _loc_01_8705:
 	AND #$07
 	BEQ bra_01_871E
 	CMP #$01
-	BNE bra_01_8714
-	JMP _loc_01_8773
-bra_01_8714:
+	BNE @do_not_quit
+	PLA
+	PLA
+	RTS
+@do_not_quit:
 	CMP #$02
-	BNE bra_01_871B
-	JMP _loc_01_8776
-bra_01_871B:
-	JMP _loc_01_877D
+	BNE _loc_01_877D
+	LDA #$00
+	STA $38
+	INC $2C
+	RTS
 bra_01_871E:
 	LDA ($2A),Y
 	LSR
@@ -1047,17 +1049,6 @@ bra_01_8748:
 	INC $2C
 	DEC $2D
 	BNE bra_01_8739
-	RTS
-
-_loc_01_8773:
-	PLA
-	PLA
-	RTS
-
-_loc_01_8776:
-	LDA #$00
-	STA $38
-	INC $2C
 	RTS
 
 _loc_01_877D:
