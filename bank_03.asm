@@ -1349,18 +1349,19 @@ _ClearUnknownPlayerFlag:		; C940
 _FindClosestPlayer_ForControl:		; C95B 
 ; поиск ближайшего к мячу в пределах 16 пикселей
 ; в A подается 00 или 0B
+	LDX #$00
+	STX my_temp
+	JMP _BeginSearchForClosestPlayer
+_FindClosestPlayer_ForRecievePass:
+	LDX #$80
+	STX my_temp
+_BeginSearchForClosestPlayer:
 .scope
 base_player_number = $2A	; начальный номер игрока команды
 search_range_lo = $2B
 search_range_hi = $2C
 player_number = $2D			; номер игрока, который станет управляемым
 counter = $2E
-	LDX #$00
-	STX my_temp
-	JMP @skip
-	LDX #$80
-	STX my_temp
-@skip
 	STA base_player_number
 	INC base_player_number		; пропуск киперов
 	LDA #$10
@@ -1379,7 +1380,13 @@ counter = $2E
 	LDA (plr_data),Y
 	AND #F_CONTROL
 	BNE @no_control
+	BIT my_temp
+	BMI @check_pass
 	JSR _CheckIfPlayerIsCloseToBall
+	JMP @skip2
+@check_pass:
+	JSR _CheckIfPlayerIsCloseToPass
+@skip2:
 	BCS @player_is_close
 @no_control:
 	INC player_number
@@ -1444,44 +1451,7 @@ _CheckIfPlayerIsCloseToBall:		; C998
 	CLC
 	RTS
 
-_loc_03_C9DA:
-	STA $2A
-	INC $2A
-	LDA #$10
-	STA $2B
-	LDA #$00
-	STA $2C
-_loc_03_C9E6:
-bra_03_C9E6:
-	LDA $2A
-	STA $2D
-	LDA #$0A
-	STA $2E
-bra_03_C9EE:
-	LDA $2D
-	JSR _SelectInitialPlayerDataAddress_b03
-	LDY #plr_flags
-	LDA (plr_data),Y
-	AND #F_CONTROL
-	BNE bra_03_CA00
-	JSR _CheckPlayerAndBallLandPosition
-	BCS bra_03_CA14
-bra_03_CA00:
-	INC $2D
-	DEC $2E
-	BNE bra_03_C9EE
-	LDA $2B
-	CLC
-	ADC #$10
-	STA $2B
-	BCC bra_03_C9E6
-	INC $2C
-	JMP _loc_03_C9E6
-bra_03_CA14:
-	LDA $2D
-	RTS
-
-_CheckPlayerAndBallLandPosition:		; CA17
+_CheckIfPlayerIsCloseToPass:		; CA17
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SEC
@@ -4406,7 +4376,7 @@ bra_03_DF80:
 	CMP #$16
 	BNE bra_03_DF67
 	LDA team_w_ball
-	JSR _loc_03_C9DA
+	JSR _FindClosestPlayer_ForRecievePass
 	LDA #STATE_FOLLOW_BALL
 	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
@@ -4416,7 +4386,7 @@ bra_03_DF80:
 	STA (plr_data),Y
 	LDA team_w_ball
 	EOR #$0B
-	JSR _loc_03_C9DA
+	JSR _FindClosestPlayer_ForRecievePass
 	LDA #STATE_FOLLOW_BALL
 	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
