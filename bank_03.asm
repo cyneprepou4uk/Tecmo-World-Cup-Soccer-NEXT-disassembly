@@ -2918,7 +2918,7 @@ _loc_03_D4E8:
 	BEQ @skip
 	JSR _EOR_16bit_plus2_b03
 @skip:
-	STX $2A
+	STX $2A		; возможно нет необходимости во временных адресах конкретно здесь, все равно перезапишутся
 	STY $2B
 	SEC
 	TXA
@@ -3007,15 +3007,15 @@ bra_03_D58E:
 	CLC
 	RTS
 
-table_03_D595:
-.byte $D4,$00
-.byte $D3,$00
-.byte $D2,$00
-.byte $D1,$00
-.byte $D0,$00
-.byte $CF,$00
+table_03_D595:		; линия гола
+.byte $CC,$00
+.byte $CB,$00
+.byte $CA,$00
+.byte $C9,$00
+.byte $C8,$00
+.byte $C7,$00
 
-table_03_D5A1:
+table_03_D5A1:		; линия гола
 .byte $A2,$00
 .byte $A1,$00
 .byte $A0,$00
