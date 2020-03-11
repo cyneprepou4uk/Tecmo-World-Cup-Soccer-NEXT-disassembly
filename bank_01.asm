@@ -921,45 +921,48 @@ bra_01_8695:
 
 .export _loc_01_8696
 _loc_01_8696:		; сравнение координат игроков с позицией камеры
-					; управление может переключиться на другого игрока, если текущий ушел за экран
-					; plr_data здесь может быть и ball_data, так как обрабатываются еще и адреса мяча
+.scope
+tbl_addr	= $2E	; для indirect
+relative_x	= $34	; позиция игрока относительно камеры
+relative_y	= $36	; позиция игрока относительно камеры
+add_to_tile	= $38	; корректировка номера тайла добавлением 00 или 01 для режима 8x16
 	LDY #plr_flags
 	LDA (plr_data),Y
-	AND #F_VISIBLE_CLEAR
+	AND #F_VISIBLE_CLEAR	; по умолчанию игрок не находится на экране
 	STA (plr_data),Y
 	BIT spr_cnt_ovf
-	BMI @rts
+	BMI @skip_player
 	LDY #plr_pos_y_lo
-	LDA (plr_data),Y
+	LDA (plr_data),Y		; сравниваются координаты с камерой для выяснения виден ли он на экране
 	SEC
 	SBC cam_edge_y_lo
-	STA $36
+	STA relative_y
 	INY
 	INY
 	LDA (plr_data),Y
 	SBC cam_edge_y_hi
-	BNE @rts
+	BNE @skip_player
 	SEC
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SBC cam_edge_x_lo
-	STA $34
+	STA relative_x
 	INY
 	INY
 	LDA (plr_data),Y	; plr_pos_x_hi
 	SBC cam_edge_x_hi
-	BEQ @continue
-@rts:
+	BEQ @player_is_visible
+@skip_player:
 	RTS
-@continue:
+@player_is_visible:
 	LDY #plr_flags
 	LDA (plr_data),Y
-	ORA #F_VISIBLE
+	ORA #F_VISIBLE		; игрок виден на экране
 	STA (plr_data),Y
 	LDA #$00
-	STA $2F
+	STA tbl_addr + 1
 	LDA #$01
-	STA $38
+	STA add_to_tile
 	LDY #plr_spr_a
 	LDA (plr_data),Y
 	AND #$E2
@@ -967,18 +970,18 @@ _loc_01_8696:		; сравнение координат игроков с поз�
 	LDY #plr_anim_id
 	LDA (plr_data),Y
 	ASL
-	ROL $2F
+	ROL tbl_addr + 1
 	ADC #<table_01_97C6
-	STA $2E
-	LDA $2F
+	STA tbl_addr
+	LDA tbl_addr + 1
 	ADC #>table_01_97C6
-	STA $2F
+	STA tbl_addr + 1
 	LDY #$00
 	STY $2C
-	LDA ($2E),Y
+	LDA (tbl_addr),Y
 	STA $2A
 	INY
-	LDA ($2E),Y
+	LDA (tbl_addr),Y
 	STA $2B
 @repeat:
 	JSR _loc_01_8705
@@ -997,7 +1000,7 @@ _loc_01_8705:
 	CMP #$02
 	BNE _loc_01_877D
 	LDA #$00
-	STA $38
+	STA add_to_tile
 	INC $2C
 	RTS
 bra_01_871E:
@@ -1017,7 +1020,7 @@ bra_01_871E:
 	SBC #$10
 bra_01_8734:
 	CLC
-	ADC $36
+	ADC relative_y
 	STA $2E
 bra_01_8739:
 	LDY $2C
@@ -1031,7 +1034,7 @@ bra_01_8739:
 bra_01_8748:
 	LDX spr_cnt_index
 	CLC
-	ADC $34
+	ADC relative_x
 	STA oam_x,X
 	LDA $2E
 	STA oam_y,X
@@ -1043,14 +1046,13 @@ bra_01_8748:
 	STA oam_a,X
 	PLA
 	AND #$FE
-	ORA $38
+	ORA add_to_tile
 	STA oam_t,X
 	JSR _loc_03_F9A5
 	INC $2C
 	DEC $2D
 	BNE bra_01_8739
 	RTS
-
 _loc_01_877D:
 	LDY $2C
 	INY
@@ -1065,6 +1067,7 @@ _loc_01_877D:
 	LSR
 	STA chr_bank + 2,X
 	RTS
+.endscope
 
 .export _loc_01_878F
 _loc_01_878F:
@@ -2297,7 +2300,7 @@ table_01_9666_97AA:
 table_01_9666_97BA:
 .byte $00,$EC,$EC,$EC,$00,$F0,$ED,$ED,$00,$F0,$EE,$EE
 
-table_01_97C6:				; параметры спрайтов анимаций
+table_01_97C6:				; 256 параметров спрайтов анимаций
 .word table_01_97C6_99C6
 .word table_01_97C6_99C7
 .word table_01_97C6_99CE
