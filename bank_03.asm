@@ -1351,7 +1351,7 @@ _FindClosestPlayer_ForControl:		; C95B
 ; в A подается 00 или 0B
 	LDX #$00
 	STX my_temp
-	JMP _BeginSearchForClosestPlayer
+	BEQ _BeginSearchForClosestPlayer
 _FindClosestPlayer_ForRecievePass:
 	LDX #$80
 	STX my_temp
@@ -1404,9 +1404,13 @@ counter = $2E
 	RTS
 .endscope
 
-_CheckIfPlayerIsCloseToBall:		; C998
+_CheckIfPlayerIsCloseToBall:		; C998, хорошо бы объединить с CA17, можно через LDA,Z
+										; либо выделить 4 temp и скопировать туда нужные данные заранее
 ; на вход подается $2B (lo) и $2C (hi)
 ; на выходе C = 1 если игрок в пределах искомого радиуса
+.scope
+search_range_lo = $2B
+search_range_hi = $2C
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SEC
@@ -1422,9 +1426,9 @@ _CheckIfPlayerIsCloseToBall:		; C998
 @skip:
 	SEC
 	TXA
-	SBC $2B
+	SBC search_range_lo
 	TYA
-	SBC $2C
+	SBC search_range_hi
 	BCS @clc
 	LDY #plr_pos_y_lo
 	LDA (plr_data),Y
@@ -1441,17 +1445,23 @@ _CheckIfPlayerIsCloseToBall:		; C998
 @skip2:
 	SEC
 	TXA
-	SBC $2B
+	SBC search_range_lo
 	TYA
-	SBC $2C
+	SBC search_range_hi
 	BCS @clc
 	SEC
 	RTS
 @clc:
 	CLC
 	RTS
+.endscope
 
-_CheckIfPlayerIsCloseToPass:		; CA17
+_CheckIfPlayerIsCloseToPass:		; CA17, хорошо бы объединить с C998,  можно через LDA,Z
+; на вход подается $2B (lo) и $2C (hi)
+; на выходе C = 1 если игрок в пределах искомого радиуса
+.scope
+search_range_lo = $2B
+search_range_hi = $2C
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SEC
@@ -1467,9 +1477,9 @@ _CheckIfPlayerIsCloseToPass:		; CA17
 @skip:
 	SEC
 	TXA
-	SBC $2B
+	SBC search_range_lo
 	TYA
-	SBC $2C
+	SBC search_range_hi
 	BCS @clc
 	LDY #plr_pos_y_lo
 	LDA (plr_data),Y
@@ -1486,15 +1496,16 @@ _CheckIfPlayerIsCloseToPass:		; CA17
 @skip2:
 	SEC
 	TXA
-	SBC $2B
+	SBC search_range_lo
 	TYA
-	SBC $2C
+	SBC search_range_hi
 	BCS @clc
 	SEC
 	RTS
 @clc:
 	CLC
 	RTS
+.endscope
 
 .export _ClearNametable_b03
 _ClearNametable_b03:		; CA59
@@ -3172,7 +3183,7 @@ table_03_D6D4:		; анимация мяча в пенальти в зависи�
 .byte $06,$06,$06,$06,$05,$05,$05,$05,$05,$04,$04,$04,$04,$04,$04,$04
 
 ; код еще не выполнялся
-	JSR CalculateBallDirectionForPass_03_DD6B
+	JSR _CalculateBallDirectionForPass
 	STA ball_dir
 
 _loc_03_D6FA:
@@ -3431,24 +3442,17 @@ bra_03_D8AC:
 
 _loc_03_D8B3:
 	LDA ball_z_hi
-	BEQ bra_03_D8BB
-
-; прыжок еще не выполнялся
-	JMP _loc_03_D938
-
-bra_03_D8BB:
+	BNE @rts
 	LDA ball_z_lo
-	CMP #$20
-	BCC bra_03_D8C5
-	JMP _loc_03_D938
-bra_03_D8C5:
+	CMP #$20		; высота перекладины
+	BCS @rts
 	LDY #$00
-bra_03_D8C7:
+@loop:
 	CMP table_03_D939,Y
-	BCC bra_03_D8CF
+	BCC @skip
 	INY
-	BNE bra_03_D8C7
-bra_03_D8CF:
+	BNE @loop
+@skip:
 	TYA
 	ASL
 	ASL
@@ -3457,18 +3461,18 @@ bra_03_D8CF:
 	LDX ball_pos_y_lo
 	LDY ball_pos_y_hi
 	CPY #$02
-	BCC bra_03_D8EB
+	BCC @ball_is_upstairs
 	JSR _EOR_16bit_plus4_b03
 	LDA ball_dir
 	CLC
 	ADC #$80
 	SEC
-bra_03_D8EB:
+@ball_is_upstairs:
 	ROL $2C
 	CMP #$30
-	BCC bra_03_D938
+	BCC @rts
 	CMP #$D0
-	BCS bra_03_D938
+	BCS @rts
 	TXA
 	LDX $2B
 	SEC
@@ -3477,17 +3481,17 @@ bra_03_D8EB:
 	TYA
 	LDY $2B
 	SBC table_03_D98F + 1,Y
-	BCC bra_03_D938
-	BNE bra_03_D938
+	BCC @rts
+	BNE @rts
 	CPX #$08
-	BCS bra_03_D938
+	BCS @rts
 	CLC
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
-	BEQ bra_03_D918
+	BEQ @skip2
 	JSR _EOR_16bit_plus2_b03
 	SEC
-bra_03_D918:
+@skip2:
 	ROL $2C
 	SEC
 	TXA
@@ -3498,16 +3502,15 @@ bra_03_D918:
 	LDY $2B
 	SBC table_03_D98F + 3,Y
 	TAY
-	BCS bra_03_D92E
+	BCS @skip3
 	JSR _EOR_16bit_b03
-bra_03_D92E:
+@skip3:
 	TYA
-	BNE bra_03_D938
+	BNE @rts
 	CPX #$08
-	BCS bra_03_D938
+	BCS @rts
 	JSR _loc_03_D93E
-_loc_03_D938:
-bra_03_D938:
+@rts:
 	RTS
 
 table_03_D939:		; байты сравниваются с высотой подлета мяча 0424
@@ -3536,7 +3539,7 @@ bra_03_D94E:
 bra_03_D964:
 	STX ball_pass_pos_y_lo
 	STY ball_pass_pos_y_hi
-	JSR CalculateBallDirectionForPass_03_DD6B
+	JSR _CalculateBallDirectionForPass
 	SEC
 	SBC ball_dir
 	ASL
@@ -4069,7 +4072,7 @@ table_03_DD5D:
 .byte $48,$00
 .byte $FF,$FF
 
-CalculateBallDirectionForPass_03_DD6B:
+_CalculateBallDirectionForPass:		; DD6B
 	LDA #$00
 	STA $2A
 	LDA ball_pass_pos_x_lo
@@ -5910,7 +5913,7 @@ BotShootingOrPassing_03_EA25:
 	INY
 	LDA (plr_data),Y
 	STA ball_pass_pos_y_hi
-	JSR CalculateBallDirectionForPass_03_DD6B
+	JSR _CalculateBallDirectionForPass
 	LDA #$00
 	STA $041D
 	LDA #$04
@@ -5939,7 +5942,7 @@ _loc_03_EA7D:
 	STA ball_pass_pos_y_hi
 	LDA plr_w_ball
 	JSR _SelectInitialPlayerDataAddress_b03
-	JSR CalculateBallDirectionForPass_03_DD6B
+	JSR _CalculateBallDirectionForPass
 	STA ball_dir
 	LDY #plr_dir
 	STA (plr_data),Y
