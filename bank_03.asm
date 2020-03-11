@@ -3583,10 +3583,10 @@ bra_03_D9C7:
 	BEQ bra_03_DA15
 	SEC
 	TXA
-	SBC table_03_DA16
+	SBC #$A6
 	TAX
 	TYA
-	SBC table_03_DA16 + 1
+	SBC #$00
 	BCC bra_03_DA15
 	BNE bra_03_DA15
 	CPX #$04
@@ -3599,9 +3599,9 @@ bra_03_D9C7:
 bra_03_D9EB:
 	SEC
 	TXA
-	SBC table_03_DA16 + 2
+	SBC #$D0
 	TYA
-	SBC table_03_DA16 + 3
+	SBC #$00
 	BCC bra_03_DA15
 
 ; код еще не выполнялся, был лишь переход на RTS через BCC
@@ -3621,12 +3621,9 @@ _loc_03_DA15:
 bra_03_DA15:
 	RTS
 
-table_03_DA16:		; это не совсем таблица, байты читаются через Absolute
-.byte $A6,$00,$D0,$00
-
 _loc_03_DA1A:
 ; сравнение координат мяча с границами экрана
-; для проверки на гол и мяча вне игры, а также касание сетки ворот
+; для проверки на гол и мяча вне игры, а также (возможно) касание сетки ворот
 	LDA game_mode_opt
 	AND #$DF
 	STA game_mode_opt
@@ -3664,11 +3661,11 @@ _loc_03_DA1A:
 @continue3:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
-	BEQ @skip
+	BEQ @skip1
 	INC $2E
 	INC $2E
 	JSR _EOR_16bit_plus2_b03
-@skip:
+@skip1:
 	SEC
 	TXA
 	SBC #$D0
@@ -3717,9 +3714,9 @@ bra_03_DAC8:
 	LDA $2E
 	LSR
 	LDA #$00
-	BCC bra_03_DADE
+	BCC @skip4
 	LDA #$80
-bra_03_DADE:
+@skip4:
 	EOR $03DD
 	AND #$80
 	BEQ bra_03_DB3A
@@ -3764,7 +3761,7 @@ bra_03_DB1D:
 	STA $0423
 	JSR _loc_03_DDDF
 	JSR _loc_03_DB5E
-bra_03_DB3A:
+bra_03_DB3A:	; сюда 2 перехода выше
 	RTS
 
 table_03_DB3B:		; вроде что-то связано с сеткой при ее касании мячом
