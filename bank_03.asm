@@ -134,7 +134,7 @@ _RESET_VECTOR:		; C081
 	LDA byte_for_2000
 	ORA #$80
 	STA byte_for_2000
-	STA $21
+	STA byte_for_2000_nmi
 	STA $2000		; enable NMI
 	JMP _PauseCheck_03_C55B
 
@@ -172,13 +172,11 @@ _NMI_VECTOR:
 	STA $2005
 	LDA $3B
 	STA $2005
-	LDA byte_00_for_8000
-	ORA #$06
+	LDA #$06
 	STA $8000
 	LDA #$00
 	STA $8001		; банксвич 06
-	LDA byte_00_for_8000
-	ORA #$07
+	LDA #$07
 	STA $8000
 	LDA #$01
 	STA $8001		; банксвич 07
@@ -188,16 +186,14 @@ _NMI_VECTOR:
 	LDA $23
 	ORA #$80
 	STA $23
-	LDA byte_00_for_8000
-	ORA #$07
-	STA $8000
-	LDA prg_bank + 1
-	STA $8001		; банксвич 07
-	LDA byte_00_for_8000
-	ORA #$06
+	LDA #$06
 	STA $8000
 	LDA prg_bank
 	STA $8001		; банксвич 06
+	LDA #$07
+	STA $8000
+	LDA prg_bank + 1
+	STA $8001		; банксвич 07
 	JSR _RandomGenerator
 	PLA
 	TAX
@@ -207,7 +203,7 @@ _NMI_VECTOR:
 	LDA byte_for_2000
 	ORA #$80
 	STA byte_for_2000
-	STA $21
+	STA byte_for_2000_nmi
 	STA $2000
 	PLA
 	TAY
@@ -328,21 +324,18 @@ counter = $47
 
 BankswitchCHR:		; C2A2
 ; сначала запись двух банков фона
-	LDA byte_00_for_8000
+	LDA #$00
 	STA $8000
 	LDA chr_bank
 	STA $8001
-	LDA byte_00_for_8000
-	ORA #$01
+	LDA #$01
 	STA $8000
 	LDA chr_bank + 1
 	STA $8001
 	LDX #$00
 	LDY #$02
 @sprites_bankswitch_loop:
-	TYA
-	ORA byte_00_for_8000
-	STA $8000
+	STY $8000
 	LDA chr_bank + 2,X
 	STA $8001
 	INX
@@ -718,7 +711,7 @@ _SetPauseInGame:		; C58E
 	RTS
 
 _BankswitchPRG_03_C5B3:		; C5B3
-	LSR $21
+	LSR byte_for_2000_nmi
 	STX $00
 	LDA $02,X
 	STA prg_bank
@@ -729,7 +722,7 @@ _BankswitchPRG_03_C5B3:		; C5B3
 	TAX
 	TXS
 	SEC
-	ROR $21
+	ROR byte_for_2000_nmi
 	PLA
 	TAY
 	PLA
@@ -1646,14 +1639,12 @@ _EOR_16bit_plus4_b03:		; CB50
 	RTS
 
 _BankswitchPRG:		; CB58
-	LDA byte_00_for_8000
-	ORA #$06
+	LDA #$06
 	STA byte_for_8000
 	STA $8000
 	LDA prg_bank
 	STA $8001
-	LDA byte_00_for_8000
-	ORA #$07
+	LDA #$07
 	STA byte_for_8000
 	STA $8000
 	LDA prg_bank + 1
@@ -2110,7 +2101,7 @@ bra_03_CEB0:
 	LDA byte_for_2000
 	ORA #$80
 	STA byte_for_2000
-	STA $21
+	STA byte_for_2000_nmi
 	STA $2000
 	LDA #MUSIC_PENALTY
 	JSR _WriteSoundID_b03
