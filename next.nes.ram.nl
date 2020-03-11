@@ -65,6 +65,7 @@ $03D8#ball_pos_x_lo#
 $03DA#ball_pos_x_hi#
 $03DE#ball_pos_y_lo#
 $03E0#ball_pos_y_hi#
+$03E2#ball_push_anim_id#
 $03E4#ball_anim_id#
 $03E6#ball_dir#
 $03F8#shad_pos_x_lo#

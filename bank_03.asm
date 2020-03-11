@@ -912,7 +912,7 @@ bra_03_C6F6:
 	BCS bra_03_C703
 	LDA team_w_ball
 	EOR #$0B
-	JSR _loc_03_C95B
+	JSR _FindClosestPlayer_ForControl
 bra_03_C703:
 	STA plr_wo_ball
 	JSR _SelectInitialPlayerDataAddress_b03
@@ -1346,47 +1346,60 @@ _ClearUnknownPlayerFlag:		; C940
 	STA (plr_data),Y
 	RTS
 
-_loc_03_C95B:
-	STA $2A
-	INC $2A
+_FindClosestPlayer_ForControl:		; C95B 
+; поиск ближайшего к мячу в пределах 16 пикселей
+; в A подается 00 или 0B
+.scope
+base_player_number = $2A	; начальный номер игрока команды
+search_range_lo = $2B
+search_range_hi = $2C
+player_number = $2D			; номер игрока, который станет управляемым
+counter = $2E
+	LDX #$00
+	STX my_temp
+	JMP @skip
+	LDX #$80
+	STX my_temp
+@skip
+	STA base_player_number
+	INC base_player_number		; пропуск киперов
 	LDA #$10
-	STA $2B
+	STA search_range_lo
 	LDA #$00
-	STA $2C
-_loc_03_C967:
-bra_03_C967:
-	LDA $2A
-	STA $2D
+	STA search_range_hi
+@main_loop:
+	LDA base_player_number
+	STA player_number
 	LDA #$0A
-	STA $2E
-bra_03_C96F:
-	LDA $2D
+	STA counter
+@search_loop:
+	LDA player_number
 	JSR _SelectInitialPlayerDataAddress_b03
 	LDY #plr_flags
 	LDA (plr_data),Y
 	AND #F_CONTROL
-	BNE bra_03_C981
-	JSR _loc_03_C998
-	BCS bra_03_C995
-bra_03_C981:
-	INC $2D
-	DEC $2E
-	BNE bra_03_C96F
-	LDA $2B
+	BNE @no_control
+	JSR _CheckIfPlayerIsCloseToBall
+	BCS @player_is_close
+@no_control:
+	INC player_number
+	DEC counter
+	BNE @search_loop
+	LDA search_range_lo		; увеличить диапазон поиска
 	CLC
 	ADC #$10
-	STA $2B
-	BCC bra_03_C967
-
-; увеличение и прыжок еще не выполнялись
-	INC $2C
-	JMP _loc_03_C967
-
-bra_03_C995:
-	LDA $2D
+	STA search_range_lo
+	BCC @main_loop
+	INC search_range_hi
+	JMP @main_loop
+@player_is_close:
+	LDA player_number
 	RTS
+.endscope
 
-_loc_03_C998:		; похожий код в CA17, можно добавить bit temp
+_CheckIfPlayerIsCloseToBall:		; C998
+; на вход подается $2B (lo) и $2C (hi)
+; на выходе C = 1 если игрок в пределах искомого радиуса
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SEC
@@ -1451,7 +1464,7 @@ bra_03_C9EE:
 	LDA (plr_data),Y
 	AND #F_CONTROL
 	BNE bra_03_CA00
-	JSR _loc_03_CA17
+	JSR _CheckPlayerAndBallLandPosition
 	BCS bra_03_CA14
 bra_03_CA00:
 	INC $2D
@@ -1468,7 +1481,7 @@ bra_03_CA14:
 	LDA $2D
 	RTS
 
-_loc_03_CA17:		; похожий код в C998, можно добавить bit temp
+_CheckPlayerAndBallLandPosition:		; CA17
 	LDY #plr_pos_x_lo
 	LDA (plr_data),Y
 	SEC
@@ -2323,7 +2336,7 @@ bra_03_D03F:
 	BEQ bra_03_D074
 	LDA team_w_ball
 	EOR #$0B
-	JSR _loc_03_C95B
+	JSR _FindClosestPlayer_ForControl
 bra_03_D051:
 	CMP plr_wo_ball
 	BEQ bra_03_D073
@@ -3310,11 +3323,11 @@ bra_03_D7B0:
 	ORA #$20
 	STA $03D3
 	LDA #$00
-	STA $03E2
+	STA ball_push_anim_id
 bra_03_D7D1:
 	LDA plr_w_ball
 	JSR _SelectInitialPlayerDataAddress_b03
-	LDX $03E2
+	LDX ball_push_anim_id
 	LDA table_03_D842,X
 	EOR #$FF
 	CLC
@@ -3339,20 +3352,20 @@ bra_03_D7FE:
 	INY
 bra_03_D7FF:
 	JSR _loc_03_D839
-	INC $03E2
-	LDA $03E2
+	INC ball_push_anim_id
+	LDA ball_push_anim_id
 	CMP #$0B
 	BNE bra_03_D814
 	LDA $03D3
 	AND #$9F
 	STA $03D3
 bra_03_D814:
-	LDA $03E2
+	LDA ball_push_anim_id
 	AND #$01
 	STA ball_anim_id
 	INC ball_anim_id
 	LDX #$00
-	LDA $03E2
+	LDA ball_push_anim_id
 	AND #$02
 	BEQ bra_03_D82A
 	LDX #$40
@@ -4000,7 +4013,7 @@ _loc_03_DCBD:
 	AND #$10
 	BNE bra_03_DCEC
 	LDA #$00
-	JSR _loc_03_C95B
+	JSR _FindClosestPlayer_ForControl
 	LDA #STATE_UNKNOWN_01
 	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags
@@ -4009,7 +4022,7 @@ _loc_03_DCBD:
 	AND #F_BUSY_CLEAR
 	STA (plr_data),Y
 	LDA #$0B
-	JSR _loc_03_C95B
+	JSR _FindClosestPlayer_ForControl
 	LDA #STATE_UNKNOWN_01
 	JSR _SelectPlayerSubroutine_b03
 	LDY #plr_flags

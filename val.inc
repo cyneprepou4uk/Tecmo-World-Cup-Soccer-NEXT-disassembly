@@ -8,13 +8,17 @@ BTN_SELECT				= $20
 BTN_B					= $40
 BTN_A					= $80
 
-; сообщения на экране
-MSG_KICK_OFF		= $00
-MSG_TIME_UP			= $01
-MSG_THROW_IN		= $02
-MSG_GOAL_KICK		= $03
-MSG_CORNER_KICK		= $04
-MSG_PAUSE			= $05
+
+
+; спрайтовые сообщения на экране
+MSG_KICK_OFF			= $00
+MSG_TIME_UP				= $01
+MSG_THROW_IN			= $02
+MSG_GOAL_KICK			= $03
+MSG_CORNER_KICK			= $04
+MSG_PAUSE				= $05
+
+
 
 ; game_mode_flags = $03A4
 F_1_PLAYER				= $00	; противоположность 80
@@ -28,18 +32,21 @@ F_CONTINUE	 			= $40	; экран ввода пароля
 F_2_PLAYERS		 		= $80	; режим 2 players если = 1, иначе 1 player
 
 
+
 ; plr_flags = $00
-FLAG_PL_UNKNOWN		= $01	; ваще не понятно что это
-F_VISIBLE			= $02	; игрок виден на экране
-F_CONTROL			= $04	; игрок управляемый
-F_BUSY				= $08	; игрок чем-то занят и на него нельзя переключиться
+FLAG_PL_UNKNOWN			= $01	; ваще не понятно что это
+F_VISIBLE				= $02	; игрок виден на экране
+F_CONTROL				= $04	; игрок управляемый
+F_BUSY					= $08	; игрок чем-то занят и на него нельзя переключиться
 									; состояние проверяется лишь в 03_E4D9, и то сразу очищается если стоит
 
 FLAG_PL_UNKNOWN_CLEAR	= $FE
-F_VISIBLE_CLEAR		= $FD
-F_CONTROL_CLEAR		= $FB
-F_BUSY_CLEAR		= $F7
-F_ALL_CLEAR			= $F0
+F_VISIBLE_CLEAR			= $FD
+F_CONTROL_CLEAR			= $FB
+F_BUSY_CLEAR			= $F7
+F_ALL_CLEAR				= $F0
+
+
 
 ; plr_state = $12
 STATE_IDLE				= $00	; стоять в ожидании, поворачиваться к мячу на месте, может убиться об летящий мяч
@@ -68,6 +75,8 @@ STATE_GK_GET_BALL		= $16	; (для киперов) владеет мячом, д
 STATE_UNKNOWN_17		= $17	; ???
 STATE_UNKNOWN_18		= $18	; ???
 STATE_UNKNOWN_19		= $19	; ???
+
+
 
 ; звуки и мелодии
 SOUND_OFF				= $01	; выключить звук
