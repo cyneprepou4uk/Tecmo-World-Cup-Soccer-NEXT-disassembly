@@ -2912,6 +2912,7 @@ _loc_03_D4D5:		; D4D5
 	JMP _loc_03_CDC1
 
 _loc_03_D4E8:
+; сравнение координат мяча с линиями аута
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
 	BEQ @skip
@@ -2930,7 +2931,7 @@ _loc_03_D4E8:
 	LDX #$00
 	SEC
 	RTS
-bra_03_D509:
+bra_03_D509:		; сравнение координат мяча с линиями аута
 	LDX ball_pos_y_lo
 	LDY ball_pos_y_hi
 	CPY #$02
@@ -3553,11 +3554,11 @@ bra_03_D964:
 
 table_03_D98F:		; чтение из 2х мест
 ; y_lo, y_hi, x_lo, x_hi
-.byte $A4,$00,$D1,$00
-.byte $A3,$00,$D0,$00
-.byte $A2,$00,$CF,$00
-.byte $A1,$00,$CE,$00
-.byte $A0,$00,$CD,$00
+.byte $A4,$00,$C9,$00
+.byte $A3,$00,$C8,$00
+.byte $A2,$00,$C7,$00
+.byte $A1,$00,$C6,$00
+.byte $A0,$00,$C5,$00
 
 _loc_03_D9A3:
 	LDA ball_z_hi
@@ -3594,8 +3595,7 @@ bra_03_D9C7:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
 	BEQ bra_03_D9EB
-; прыжок еще не выполнялся
-	JSR _EOR_16bit_plus2_b03
+	JSR _EOR_16bit_plus2_b03	; прыжок еще не выполнялся
 bra_03_D9EB:
 	SEC
 	TXA
@@ -3603,9 +3603,7 @@ bra_03_D9EB:
 	TYA
 	SBC #$00
 	BCC bra_03_DA15
-
-; код еще не выполнялся, был лишь переход на RTS через BCC
-	LSR $041E
+	LSR $041E		; код еще не выполнялся, был лишь переход на RTS через BCC
 	ROR $041D
 	LDA ball_dir
 	EOR #$FF
@@ -3622,8 +3620,7 @@ bra_03_DA15:
 	RTS
 
 _loc_03_DA1A:
-; сравнение координат мяча с границами экрана
-; для проверки на гол и мяча вне игры, а также (возможно) касание сетки ворот
+; сравнение координат мяча с сеткой ворот, скорее всего для обработки касаний
 	LDA game_mode_opt
 	AND #$DF
 	STA game_mode_opt
@@ -3645,7 +3642,7 @@ _loc_03_DA1A:
 	STY $2B
 	SEC
 	TXA
-	SBC #$A4
+	SBC #$A4	; что-то связано с координатами сетки по вертикали
 	TYA
 	SBC #$00
 	BCC @continue2
