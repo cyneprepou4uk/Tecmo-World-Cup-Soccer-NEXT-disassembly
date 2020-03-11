@@ -2902,7 +2902,7 @@ _loc_03_D49F:
 	STA game_mode_flags
 	RTS
 
-_loc_03_D4D5:
+_loc_03_D4D5:		; D4D5
 	LDA game_mode_flags
 	AND #$DF
 	STA game_mode_flags		; можно пропустить STA + LDA, сразу делать ORA
@@ -2910,12 +2910,13 @@ _loc_03_D4D5:
 	ORA #FLAG_GM_UNKNOWN_04
 	STA game_mode_flags
 	JMP _loc_03_CDC1
+
 _loc_03_D4E8:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
-	BEQ bra_03_D4F3
+	BEQ @skip
 	JSR _EOR_16bit_plus2_b03
-bra_03_D4F3:
+@skip:
 	STX $2A
 	STY $2B
 	SEC
@@ -2933,9 +2934,9 @@ bra_03_D509:
 	LDX ball_pos_y_lo
 	LDY ball_pos_y_hi
 	CPY #$02
-	BCC bra_03_D516
+	BCC @ball_is_upstairs
 	JSR _EOR_16bit_plus4_b03
-bra_03_D516:
+@ball_is_upstairs:
 	STX $2C
 	STY $2D
 	LDA ball_z_hi
@@ -2944,12 +2945,12 @@ bra_03_D516:
 	CMP #$19
 	BCS bra_03_D569
 	LDX #$00
-bra_03_D528:
-	CMP table_03_D590,X
-	BCC bra_03_D530
+@loop:
+	CMP table_03_D939,X		;  возможно сравнение мяча с линиями аута
+	BCC @skip2
 	INX
-	BNE bra_03_D528
-bra_03_D530:
+	BNE @loop
+@skip2:
 	TXA
 	ASL
 	TAX
@@ -3004,11 +3005,6 @@ bra_03_D587:
 bra_03_D58E:
 	CLC
 	RTS
-
-table_03_D590:		; байты сравниваются с высотой подлета мяча 0424
-					; когда игрок владеет мячом
-					; такие же байты в table_03_D939
-.byte $08,$0E,$16,$1C,$FF
 
 table_03_D595:
 .byte $D4,$00
@@ -3513,9 +3509,7 @@ _loc_03_D8B3:
 @rts:
 	RTS
 
-table_03_D939:		; байты сравниваются с высотой подлета мяча 0424
-					; когда игрок НЕ владеет мячом
-					; такие же байты в table_03_D590
+table_03_D939:		; байты сравниваются с высотой подлета мяча 
 .byte $08,$0E,$16,$1C,$FF
 
 _loc_03_D93E:
