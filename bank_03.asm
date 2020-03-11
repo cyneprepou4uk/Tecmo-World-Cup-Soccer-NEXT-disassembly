@@ -2945,8 +2945,8 @@ bra_03_D509:
 	CMP #$19
 	BCS bra_03_D569
 	LDX #$00
-@loop:
-	CMP table_03_D939,X		;  возможно сравнение мяча с линиями аута
+@loop:		; возможно сравнение мяча с линиями аута
+	CMP table_03_D939,X		; вычисление степени подлета мяча от 00 до 05
 	BCC @skip2
 	INX
 	BNE @loop
@@ -3426,17 +3426,16 @@ bra_03_D899:
 	PLA
 	ADC (plr_data),Y
 	BPL bra_03_D8AC
-
-; код еще не выполнялся
-	LDX #$00
+	LDX #$00		; код еще не выполнялся
 	TXA
-
 bra_03_D8AC:
 	STX ball_pos_x_lo
 	STA ball_pos_x_hi
 	RTS
 
 _loc_03_D8B3:
+.scope
+index = $2B
 	LDA ball_z_hi
 	BNE @rts
 	LDA ball_z_lo
@@ -3444,7 +3443,7 @@ _loc_03_D8B3:
 	BCS @rts
 	LDY #$00
 @loop:
-	CMP table_03_D939,Y
+	CMP table_03_D939,Y		; вычисление степени подлета мяча от 00 до 05
 	BCC @skip
 	INY
 	BNE @loop
@@ -3452,7 +3451,7 @@ _loc_03_D8B3:
 	TYA
 	ASL
 	ASL
-	STA $2B
+	STA index
 	LDA ball_dir
 	LDX ball_pos_y_lo
 	LDY ball_pos_y_hi
@@ -3470,12 +3469,12 @@ _loc_03_D8B3:
 	CMP #$D0
 	BCS @rts
 	TXA
-	LDX $2B
+	LDX index
 	SEC
 	SBC table_03_D98F,X
 	TAX
 	TYA
-	LDY $2B
+	LDY index
 	SBC table_03_D98F + 1,Y
 	BCC @rts
 	BNE @rts
@@ -3491,11 +3490,11 @@ _loc_03_D8B3:
 	ROL $2C
 	SEC
 	TXA
-	LDX $2B
+	LDX index
 	SBC table_03_D98F + 2,X
 	TAX
 	TYA
-	LDY $2B
+	LDY index
 	SBC table_03_D98F + 3,Y
 	TAY
 	BCS @skip3
@@ -3508,8 +3507,9 @@ _loc_03_D8B3:
 	JSR _loc_03_D93E
 @rts:
 	RTS
+.endscope
 
-table_03_D939:		; байты сравниваются с высотой подлета мяча 
+table_03_D939:		; читается из 2х мест, сравниваются с высотой подлета мяча 
 .byte $08,$0E,$16,$1C,$FF
 
 _loc_03_D93E:
@@ -3552,16 +3552,12 @@ bra_03_D964:
 	RTS
 
 table_03_D98F:		; чтение из 2х мест
-.byte $A4,$00
-.byte $D1,$00		; начиная отсюда читается отдельно, тоже из 2х мест
-.byte $A3,$00
-.byte $D0,$00
-.byte $A2,$00
-.byte $CF,$00
-.byte $A1,$00
-.byte $CE,$00
-.byte $A0,$00
-.byte $CD,$00
+; y_lo, y_hi, x_lo, x_hi
+.byte $A4,$00,$D1,$00
+.byte $A3,$00,$D0,$00
+.byte $A2,$00,$CF,$00
+.byte $A1,$00,$CE,$00
+.byte $A0,$00,$CD,$00
 
 _loc_03_D9A3:
 	LDA ball_z_hi
