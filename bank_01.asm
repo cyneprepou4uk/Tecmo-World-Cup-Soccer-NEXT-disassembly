@@ -241,7 +241,7 @@ bra_01_81E0:
 	LDY #plr_pos_y_lo
 	LDA (plr_data),Y
 	SEC
-	SBC #$78
+	SBC #$78		; что-то связанное с координатой камеры относительно мяча
 	TAX
 	INY
 	INY
@@ -793,12 +793,12 @@ bra_01_85A3:
 	LDA #$01
 	STA $037D
 	LDX $03CE
-	LDA $03CE,X
+	LDA $03CE,X		; вычисление какую графику надо рисовать для ворот когда мяч касается сетки
 	ASL
 	TAX
-	LDA table_01_A446,X
+	LDA GoalNetHitGFX_table,X
 	STA $2A
-	LDA table_01_A446 + 1,X
+	LDA GoalNetHitGFX_table + 1,X
 	STA $2B
 	JSR _loc_01_860C
 	LDA #$08
@@ -813,13 +813,12 @@ bra_01_85A3:
 bra_01_85DD:
 	STA $03D2
 	JMP _loc_01_8596
-_loc_01_85E3:
-bra_01_85E3:
+
+_loc_01_85E3:		; перерисовка ворот при касании сетки мячом после гола
 	LDA #$01
 	JSR _FrameDelay_b03
 	LDA $037D
-	BNE bra_01_85E3
-; перерисовка ворот при касании сетки мячом после гола
+	BNE _loc_01_85E3
 	LDA #$01
 	STA $037D
 	LDX $03CE
@@ -3044,103 +3043,102 @@ table_01_97C6_A426:
 table_01_97C6_A445:
 .byte $01
 
-table_01_A446:
-.word table_01_A46A_A46A
-.word table_01_A46A_A473
-.word table_01_A46A_A47F
-.word table_01_A46A_A48C
-.word table_01_A46A_A499
-.word table_01_A46A_A4AC
-.word table_01_A46A_A4B9
-.word table_01_A46A_A4C6
-.word table_01_A46A_A4D2
-.word table_01_A46A_A4DB
-.word table_01_A46A_A4E4
-.word table_01_A46A_A4F0
-.word table_01_A46A_A4FD
-.word table_01_A46A_A50A
-.word table_01_A46A_A51D
-.word table_01_A46A_A52A
-.word table_01_A46A_A537
-.word table_01_A46A_A543
+GoalNetHitGFX_table:
+.word GoalNetHitGFX_table_00
+.word GoalNetHitGFX_table_01
+.word GoalNetHitGFX_table_02
+.word GoalNetHitGFX_table_03
+.word GoalNetHitGFX_table_04
+.word GoalNetHitGFX_table_05
+.word GoalNetHitGFX_table_06
+.word GoalNetHitGFX_table_07
+.word GoalNetHitGFX_table_08
+.word GoalNetHitGFX_table_09
+.word GoalNetHitGFX_table_0A
+.word GoalNetHitGFX_table_0B
+.word GoalNetHitGFX_table_0C
+.word GoalNetHitGFX_table_0D
+.word GoalNetHitGFX_table_0E
+.word GoalNetHitGFX_table_0F
+.word GoalNetHitGFX_table_10
+.word GoalNetHitGFX_table_11
 
-; table_01_A46A
 ; первый байт - количество чтения байтов после 3го
 ; 2й и 3й байты - видимо координаты PPU
 ; байт 00 - завершить чтение таблицы
-table_01_A46A_A46A:
+GoalNetHitGFX_table_00:
 .byte $01,$59,$22, 	$40
 .byte $01,$79,$22, 	$42
 .byte $00
-table_01_A46A_A473:
+GoalNetHitGFX_table_01:
 .byte $01,$3A,$22, 	$43
 .byte $04,$59,$22, 	$41,$44,$45,$4F
 .byte $00
-table_01_A46A_A47F:
+GoalNetHitGFX_table_02:
 .byte $02,$3B,$22, 	$48,$49
 .byte $04,$5A,$22, 	$4A,$4B,$4E,$4F
 .byte $00
-table_01_A46A_A48C:
+GoalNetHitGFX_table_03:
 .byte $02,$3D,$22, 	$48,$49
 .byte $04,$5C,$22, 	$4A,$4B,$4E,$4F
 .byte $00
-table_01_A46A_A499:
+GoalNetHitGFX_table_04:
 .byte $01,$3F,$22, 	$48
 .byte $01,$20,$26, 	$49
 .byte $02,$5E,$22, 	$4F,$4B
 .byte $02,$40,$26, 	$4E,$4F
 .byte $00
-table_01_A46A_A4AC:
+GoalNetHitGFX_table_05:
 .byte $02,$21,$26, 	$48,$49
 .byte $04,$40,$26, 	$4F,$4B,$4E,$4F
 .byte $00
-table_01_A46A_A4B9:
+GoalNetHitGFX_table_06:
 .byte $02,$23,$26, 	$48,$49
 .byte $04,$42,$26, 	$4F,$4B,$4E,$4F
 .byte $00
-table_01_A46A_A4C6:
+GoalNetHitGFX_table_07:
 .byte $01,$25,$26, 	$43
 .byte $04,$43,$26, 	$4F,$51,$54,$55
 .byte $00
-table_01_A46A_A4D2:
+GoalNetHitGFX_table_08:
 .byte $01,$46,$26, 	$56
 .byte $01,$66,$26, 	$57
 .byte $00
-table_01_A46A_A4DB:
+GoalNetHitGFX_table_09:
 .byte $01,$59,$22, 	$42
 .byte $01,$79,$22, 	$40
 .byte $00
-table_01_A46A_A4E4:
+GoalNetHitGFX_table_0A:
 .byte $04,$79,$22, 	$41,$44,$45,$4F
 .byte $01,$9A,$22, 	$43
 .byte $00
-table_01_A46A_A4F0:
+GoalNetHitGFX_table_0B:
 .byte $04,$7A,$22, 	$4A,$4B,$4E,$4F
 .byte $02,$9B,$22, 	$48,$49
 .byte $00
-table_01_A46A_A4FD:
+GoalNetHitGFX_table_0C:
 .byte $04,$7C,$22, 	$4F,$4B,$4E,$4F
 .byte $02,$9D,$22, 	$48,$49
 .byte $00
-table_01_A46A_A50A:
+GoalNetHitGFX_table_0D:
 .byte $02,$7E,$22, 	$4F,$4B
 .byte $02,$60,$26, 	$4E,$4F
 .byte $01,$9F,$22, 	$48
 .byte $01,$80,$26, 	$49
 .byte $00
-table_01_A46A_A51D:
+GoalNetHitGFX_table_0E:
 .byte $04,$60,$26, 	$4F,$4B,$4E,$4F
 .byte $02,$81,$26, 	$48,$49
 .byte $00
-table_01_A46A_A52A:
+GoalNetHitGFX_table_0F:
 .byte $04,$62,$26, 	$4F,$4B,$4E,$50
 .byte $02,$83,$26, 	$48,$49
 .byte $00
-table_01_A46A_A537:
+GoalNetHitGFX_table_10:
 .byte $04,$63,$26, 	$4F,$51,$54,$55
 .byte $01,$85,$26, 	$43
 .byte $00
-table_01_A46A_A543:
+GoalNetHitGFX_table_11:
 .byte $01,$46,$26, 	$57
 .byte $01,$66,$26, 	$56
 .byte $00

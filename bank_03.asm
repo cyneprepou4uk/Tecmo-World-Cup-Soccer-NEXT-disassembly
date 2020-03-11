@@ -3645,7 +3645,7 @@ bra_03_DA33:
 	JMP _loc_03_DB3A
 
 bra_03_DA3D:		; сравнение координат мяча с границами экрана
-				; для проверки на гол и мяча вне игры, а также касание сетки ворот
+					; для проверки на гол и мяча вне игры, а также касание сетки ворот
 	LDA #$00
 	STA $2E
 	LDX ball_pos_y_lo
@@ -3659,17 +3659,17 @@ bra_03_DA50:
 	STY $2B
 	SEC
 	TXA
-	SBC table_03_DB54
+	SBC #$A4
 	TYA
-	SBC table_03_DB54 + 1
+	SBC #$00
 	BCC bra_03_DA62
 	JMP _loc_03_DB3A
 bra_03_DA62:
 	SEC
 	TXA
-	SBC table_03_DB54 + 8
+	SBC #$92
 	TYA
-	SBC table_03_DB54 + 9
+	SBC #$00
 	BCS bra_03_DA70
 	JMP _loc_03_DB3A
 bra_03_DA70:
@@ -3682,9 +3682,9 @@ bra_03_DA70:
 bra_03_DA7F:
 	SEC
 	TXA
-	SBC table_03_DB54 + 2
+	SBC #$D0
 	TYA
-	SBC table_03_DB54 + 3
+	SBC #$00
 	BCS bra_03_DA8D
 	JMP _loc_03_DB3A
 bra_03_DA8D:
@@ -3694,9 +3694,9 @@ bra_03_DA8D:
 	LDA $03D7
 	BEQ bra_03_DAC8
 	TXA
-	SBC table_03_DB54 + 6
+	SBC #$D4
 	TYA
-	SBC table_03_DB54 + 7
+	SBC #$00
 	BCS bra_03_DAC8
 	LDX #$00
 	LDA $2E
@@ -3722,9 +3722,9 @@ bra_03_DABD:
 bra_03_DAC8:
 	SEC
 	LDA $2A
-	SBC table_03_DB54 + 4
+	SBC #$9A
 	LDA $2B
-	SBC table_03_DB54 + 5
+	SBC #$00
 	BCS bra_03_DB3A
 	LDA $2E
 	LSR
@@ -3737,16 +3737,13 @@ bra_03_DADE:
 	BEQ bra_03_DB3A
 	SEC
 	LDA ball_pos_x_lo
-	SBC table_03_DB54 + 2
+	SBC #$D0
 	STA $2A
 	LDA ball_pos_x_hi
-	SBC table_03_DB54 + 3
+	SBC #$00
 	BCS bra_03_DAFA
-
-; код еще не выполнялся
-	LDA #$00
+	LDA #$00		; код еще не выполнялся
 	STA $2A
-
 bra_03_DAFA:
 	LSR
 	ROR $2A
@@ -3755,8 +3752,7 @@ bra_03_DAFA:
 	LDY $2A
 	CPY #$19
 	BCC bra_03_DB08
-; инструкция еще не выполнялась
-	LDY #$18		; возможно plr_sub1_timer
+	LDY #$18		; инструкция еще не выполнялась
 bra_03_DB08:
 	LDX table_03_DB3B,Y
 	LDA ball_dir
@@ -3787,13 +3783,6 @@ bra_03_DB3A:
 table_03_DB3B:		; вероятно что-то с размером мяча
 .byte $01,$01,$02,$02,$02,$02,$03,$03,$03,$03,$04,$04,$04,$04,$05,$05
 .byte $05,$05,$06,$06,$06,$06,$07,$07,$07
-
-table_03_DB54:		; это не совсем таблица, байты читаются через Absolute
-.byte $A4,$00
-.byte $D0,$00		; эти 2 байта читаются из 2х мест
-.byte $9A,$00
-.byte $D4,$00
-.byte $92,$00
 
 _loc_03_DB5E:
 	LDX $03D5
