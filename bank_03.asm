@@ -2945,7 +2945,7 @@ bra_03_D509:
 	CMP #$19
 	BCS bra_03_D569
 	LDX #$00
-@loop:		; возможно сравнение мяча с линиями аута
+@loop:
 	CMP table_03_D939,X		; вычисление степени подлета мяча от 00 до 05
 	BCC @skip2
 	INX
@@ -3625,36 +3625,25 @@ table_03_DA16:		; это не совсем таблица, байты читаю
 .byte $A6,$00,$D0,$00
 
 _loc_03_DA1A:
+; сравнение координат мяча с границами экрана
+; для проверки на гол и мяча вне игры, а также касание сетки ворот
 	LDA game_mode_opt
 	AND #$DF
 	STA game_mode_opt
 	LDA $03D3
 	AND #$10
-	BNE bra_03_DA3D
+	BNE @continue1
 	RTS
-
-; код еще не выполнялся
-	SEC
-	LDA ball_z_hi
-	BEQ bra_03_DA33
-	JMP _loc_03_DB3A
-bra_03_DA33:
-	LDA ball_z_lo
-	CMP #$1D
-	BCC bra_03_DA3D
-	JMP _loc_03_DB3A
-
-bra_03_DA3D:		; сравнение координат мяча с границами экрана
-					; для проверки на гол и мяча вне игры, а также касание сетки ворот
+@continue1:	
 	LDA #$00
 	STA $2E
 	LDX ball_pos_y_lo
 	LDY ball_pos_y_hi
 	CPY #$02
-	BCC bra_03_DA50
+	BCC @ball_is_upstairs
 	JSR _EOR_16bit_plus4_b03
 	INC $2E
-bra_03_DA50:
+@ball_is_upstairs:
 	STX $2A
 	STY $2B
 	SEC
@@ -3662,34 +3651,34 @@ bra_03_DA50:
 	SBC #$A4
 	TYA
 	SBC #$00
-	BCC bra_03_DA62
-	JMP _loc_03_DB3A
-bra_03_DA62:
+	BCC @continue2
+	RTS
+@continue2:
 	SEC
 	TXA
-	SBC #$92
+	SBC #$92	; что-то связано с координатами сетки по вертикали
 	TYA
 	SBC #$00
-	BCS bra_03_DA70
-	JMP _loc_03_DB3A
-bra_03_DA70:
+	BCS @continue3
+	RTS
+@continue3:
 	LDX ball_pos_x_lo
 	LDY ball_pos_x_hi
-	BEQ bra_03_DA7F
+	BEQ @skip
 	INC $2E
 	INC $2E
 	JSR _EOR_16bit_plus2_b03
-bra_03_DA7F:
+@skip:
 	SEC
 	TXA
 	SBC #$D0
 	TYA
 	SBC #$00
-	BCS bra_03_DA8D
-	JMP _loc_03_DB3A
-bra_03_DA8D:
+	BCS @out_of_play
+	RTS
+@out_of_play:
 	LDA game_mode_opt
-	ORA #$20
+	ORA #F_OUT_OF_PLAY
 	STA game_mode_opt
 	LDA $03D7
 	BEQ bra_03_DAC8
@@ -3701,19 +3690,18 @@ bra_03_DA8D:
 	LDX #$00
 	LDA $2E
 	CMP #$02
-	BCC bra_03_DAAE
+	BCC @skip2
 	LDX #$08
-bra_03_DAAE:
+@skip2:
 	TXA
-	BEQ bra_03_DAB3
+	BEQ @skip3
 	LDA #$80
-bra_03_DAB3:
+@skip3:
 	EOR $03D7
 	AND #$80
-	BNE bra_03_DABD
-; прыжок еще не выполнялся
-	JMP _loc_03_DB3A
-bra_03_DABD:
+	BNE @continue4
+	RTS
+@continue4:
 	LDA ball_dir
 	EOR #$FF
 	CLC
@@ -3776,11 +3764,10 @@ bra_03_DB1D:
 	STA $0423
 	JSR _loc_03_DDDF
 	JSR _loc_03_DB5E
-_loc_03_DB3A:		; на loc есть 6 JMP
 bra_03_DB3A:
 	RTS
 
-table_03_DB3B:		; вероятно что-то с размером мяча
+table_03_DB3B:		; вроде что-то связано с сеткой при ее касании мячом
 .byte $01,$01,$02,$02,$02,$02,$03,$03,$03,$03,$04,$04,$04,$04,$05,$05
 .byte $05,$05,$06,$06,$06,$06,$07,$07,$07
 
